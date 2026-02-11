@@ -1,9 +1,9 @@
 # PRD: RALPH Public Share Repo
 
 Status: Active
-Updated: 2026-02-11 10:20
-Inputs: CR-20260211-0908, CR-20260211-0939, CR-20260211-1004, CR-20260211-1010, CR-20260211-1019
-Decisions: D-20260211-0940, D-20260211-1005, D-20260211-1012, D-20260211-1020
+Updated: 2026-02-11 13:26
+Inputs: CR-20260211-0908, CR-20260211-0939, CR-20260211-1004, CR-20260211-1010, CR-20260211-1019, CR-20260211-1325
+Decisions: D-20260211-0940, D-20260211-1005, D-20260211-1012, D-20260211-1020, D-20260211-1326
 
 ## Summary
 Public, clean RALPH framework repository for cross-agent usage (Codex + Claude) with scoped traceability artifacts for this repo only. (Sources: CR-20260211-0908, CR-20260211-0939; D-20260211-0940)
@@ -13,12 +13,14 @@ Public, clean RALPH framework repository for cross-agent usage (Codex + Claude) 
 - Keep repo artifacts clean and scoped only to this public share. (Sources: CR-20260211-0939; D-20260211-0940)
 - Harden the repo for open-source publication readiness. (Sources: CR-20260211-1010; D-20260211-1012)
 - Complete low-priority governance controls before public push. (Sources: CR-20260211-1019; D-20260211-1020)
+- Provide an onboarding walkthrough under `docs/examples/` that demonstrates end-to-end traceability. (Sources: CR-20260211-1325; D-20260211-1326)
 
 ## Functional requirements (shipped)
 - FR-RALPH-001: Provide canonical core workflow in `core/ralph-framework.md`. (Sources: CR-20260211-0908)
 - FR-RALPH-002: Provide Codex and Claude adapters in `adapters/`. (Sources: CR-20260211-0908)
 - FR-RALPH-003: Provide reusable RALPH templates in `templates/`. (Sources: CR-20260211-0908)
 - FR-RALPH-004: Maintain repo-scoped docs artifacts (`requests`, `decisions`, `PRD`, `specs`, `progress`, `TRACEABILITY`) under `docs/`. (Sources: CR-20260211-0939; D-20260211-0940)
+- FR-RALPH-005: Provide `docs/examples/` with one full CR -> D -> FR -> T walkthrough for onboarding. (Sources: CR-20260211-1325; D-20260211-1326)
 
 ## Non-functional requirements (shipped)
 - NFR-RALPH-001: Exclude local/generated artifacts from commits via `.gitignore`. (Sources: CR-20260211-0939, CR-20260211-1010; D-20260211-0940, D-20260211-1012)
@@ -35,4 +37,4 @@ Public, clean RALPH framework repository for cross-agent usage (Codex + Claude) 
 - Shipping imported historical docs from unrelated product repos as canonical artifacts in this share repo. (Sources: CR-20260211-0939; D-20260211-0940)
 
 ## Next / backlog
-- Add `docs/examples/` with one full CR -> D -> FR -> T walkthrough for onboarding.
+- (none currently)

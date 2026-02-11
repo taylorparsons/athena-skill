@@ -21,6 +21,7 @@ This repository packages:
 - `scripts/`: helper automation (`commit_with_traceability.py`, `bootstrap_git_audit.py`, `print_resume_prompt.py`)
 - `VERSION`: source-of-truth skill/repo version (SemVer)
 - `docs/`: this repo's own RALPH artifacts (`requests`, `decisions`, `PRD`, `specs`, `progress`)
+- `docs/examples/`: optional onboarding walkthroughs that demonstrate traceability flow
 
 ## Versioning
 

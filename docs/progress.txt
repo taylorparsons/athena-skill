@@ -1,13 +1,13 @@
-Session: 2026-02-11 10:21
+Session: 2026-02-11 13:28
 Agent: Codex CLI
 Model: GPT-5
-Skills: ralph, git-workflow-automation
-Feature: 20260211-public-release-hardening
-Input: CR-20260211-1019
-Decisions: D-20260211-1020
-Spec: docs/specs/20260211-public-release-hardening/spec.md
-Tasks: docs/specs/20260211-public-release-hardening/tasks.md
-Goal: Close low-priority hardening findings before public push.
+Skills: ralph
+Feature: 20260211-ralph-walkthrough-example
+Input: CR-20260211-1325
+Decisions: D-20260211-1326
+Spec: docs/specs/20260211-ralph-walkthrough-example/spec.md
+Tasks: docs/specs/20260211-ralph-walkthrough-example/tasks.md
+Goal: Resume execution and deliver an onboarding walkthrough in `docs/examples/`.
 
 DONE
 - [2026-02-11 10:16] T-001: Removed local absolute path strings from tracked docs content. (Skills: ralph)
@@ -18,14 +18,18 @@ DONE
 - [2026-02-11 10:21] T-006: Added single-owner `CODEOWNERS`. (Skills: ralph, git-workflow-automation)
 - [2026-02-11 10:21] T-007: Added `.github/dependabot.yml` and `.github/workflows/security.yml`. (Skills: ralph, git-workflow-automation)
 - [2026-02-11 10:21] T-008: Enabled repository-level `commit.gpgsign` and verified with hardening audit. (Skills: ralph, git-workflow-automation)
+- [2026-02-11 13:28] T-001: Added `docs/examples/01-cr-to-task-walkthrough.md` and linked it through PRD/spec/task artifacts. (Skills: ralph)
 
 IN PROGRESS
 - (none)
 
 NEXT
-- Add `docs/examples/` with one end-to-end RALPH walkthrough. (Skills: ralph)
+- (none)
 
 NOTES
 - Commands run: security audit before/after low-priority hardening plus git config update for signing.
 - Validation: audit findings for `CODEOWNERS`, Dependabot, workflow, and `commit.gpgsign` resolved.
 - Note: commit hashes from pre-rewrite history were intentionally discarded as part of clean-history publication requirement.
+- Commands run: targeted `rg` checks for traceability IDs and path hygiene plus file-presence checks for walkthrough artifacts.
+- Validation: walkthrough references resolved; no local absolute paths detected in new docs; required `docs/examples` and spec/task files exist.
+- Resume handling: provided UUID was not found in repo files, so execution resumed from tracked NEXT backlog item per `D-20260211-1326`.

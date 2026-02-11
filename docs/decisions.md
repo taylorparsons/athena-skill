@@ -76,3 +76,23 @@ Alternatives considered:
 
 Acceptance / test:
 - Security audit no longer reports missing `CODEOWNERS`, Dependabot config, workflow, or GPG signing configuration.
+
+## D-20260211-1326
+Date: 2026-02-11 13:26
+Inputs: CR-20260211-1325
+PRD: Resume execution handling and onboarding example backlog
+
+Decision:
+Interpret the resume command as instruction to continue from the existing `docs/progress.txt` NEXT backlog item and implement an onboarding walkthrough under `docs/examples/` as a new traceable feature.
+
+Rationale:
+No local artifact matched the provided resume UUID, and the safest deterministic continuation path is the explicit pending task already recorded in repo state.
+
+Alternatives considered:
+- Pause and ask for an external session export keyed to the UUID (rejected: unnecessary because a concrete pending task was already queued locally).
+- Resume by selecting an arbitrary new task (rejected: breaks ordered execution from tracked backlog).
+
+Acceptance / test:
+- A new feature spec/task pair exists for the walkthrough deliverable.
+- `docs/examples/` includes one end-to-end CR -> D -> FR -> T walkthrough.
+- `docs/progress.txt` marks the walkthrough task as done with validation notes.
