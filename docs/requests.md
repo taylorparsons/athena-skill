@@ -71,3 +71,16 @@ codex resume 019c48d0-95a1-72f0-a8cb-6243bd8b3c2
 
 Notes:
 - Resume RALPH execution from current repository state.
+
+## CR-20260211-1358
+Date: 2026-02-11 13:58
+Source: chat
+
+Request (verbatim):
+did you update the repos $ralph ? if not do so now, if true check-in with comments
+
+yes remove it
+
+Notes:
+- Complete repo updates and create a local check-in with traceability comments.
+- Keep public install guidance focused on `ralph` only.

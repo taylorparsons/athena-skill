@@ -1,13 +1,13 @@
-Session: 2026-02-11 13:28
+Session: 2026-02-11 14:03
 Agent: Codex CLI
 Model: GPT-5
 Skills: ralph
-Feature: 20260211-ralph-walkthrough-example
-Input: CR-20260211-1325
-Decisions: D-20260211-1326
-Spec: docs/specs/20260211-ralph-walkthrough-example/spec.md
-Tasks: docs/specs/20260211-ralph-walkthrough-example/tasks.md
-Goal: Resume execution and deliver an onboarding walkthrough in `docs/examples/`.
+Feature: 20260211-single-skill-install
+Input: CR-20260211-1358
+Decisions: D-20260211-1400
+Spec: docs/specs/20260211-single-skill-install/spec.md
+Tasks: docs/specs/20260211-single-skill-install/tasks.md
+Goal: Finalize a clean single-skill (`ralph`) install contract and check in traceable repo updates.
 
 DONE
 - [2026-02-11 10:16] T-001: Removed local absolute path strings from tracked docs content. (Skills: ralph)
@@ -19,6 +19,9 @@ DONE
 - [2026-02-11 10:21] T-007: Added `.github/dependabot.yml` and `.github/workflows/security.yml`. (Skills: ralph, git-workflow-automation)
 - [2026-02-11 10:21] T-008: Enabled repository-level `commit.gpgsign` and verified with hardening audit. (Skills: ralph, git-workflow-automation)
 - [2026-02-11 13:28] T-001: Added `docs/examples/01-cr-to-task-walkthrough.md` and linked it through PRD/spec/task artifacts. (Skills: ralph)
+- [2026-02-11 14:03] T-001: Removed packaged `skills/ralph-codex` target and kept `skills/ralph` as the only install package. (Skills: ralph)
+- [2026-02-11 14:03] T-002: Updated `README.md` and `AVAILABLE_SKILLS.md` to keep install guidance scoped to `ralph` only. (Skills: ralph)
+- [2026-02-11 14:03] T-003: Added install-target validation script/workflow and constrained validation to `skills/ralph`. (Skills: ralph)
 
 IN PROGRESS
 - (none)
@@ -35,3 +38,6 @@ NOTES
 - Resume handling: provided UUID was not found in repo files, so execution resumed from tracked NEXT backlog item per `D-20260211-1326`.
 - Commit: `b83fa08` (task implementation for `T-001`).
 - Commit note: `scripts/commit_with_traceability.py` failed in this environment due missing local GPG secret key; fallback used `git -c commit.gpgsign=false commit` to preserve traceable local history.
+- Commands run: repo status scans, install-path content checks, and traceability file reconciliation for single-skill install cleanup.
+- Validation: `python3 scripts/validate_install_targets.py` -> pass (`skills/ralph` only), `skills/ralph-codex/` absent, docs install commands reference only `skills/ralph`.
+- Validation note: `quick_validate.py` could not run in this environment because `PyYAML` is not installed (`ModuleNotFoundError: yaml`).

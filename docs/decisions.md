@@ -96,3 +96,24 @@ Acceptance / test:
 - A new feature spec/task pair exists for the walkthrough deliverable.
 - `docs/examples/` includes one end-to-end CR -> D -> FR -> T walkthrough.
 - `docs/progress.txt` marks the walkthrough task as done with validation notes.
+
+## D-20260211-1400
+Date: 2026-02-11 14:00
+Inputs: CR-20260211-1358
+PRD: Skill install packaging and single-skill install guardrails
+
+Decision:
+Keep this share repo's install contract focused on one installable skill target (`skills/ralph`) and remove the `skills/ralph-codex` packaged install target from the repo.
+
+Rationale:
+The user explicitly asked to keep install guidance and available skills scoped to `ralph` only and requested a checked-in update.
+
+Alternatives considered:
+- Keep `skills/ralph-codex` as an optional install target (rejected: conflicts with explicit scope request).
+- Revert to root installs with `--path .` (rejected: installs entire repo and caused prior confusion).
+
+Acceptance / test:
+- `AVAILABLE_SKILLS.md` lists only `ralph`.
+- `README.md` install section lists only `ralph` installation command.
+- `scripts/validate_install_targets.py` validates only `skills/ralph`.
+- `skills/ralph-codex/` does not exist.

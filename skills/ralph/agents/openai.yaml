@@ -1,0 +1,4 @@
+interface:
+  display_name: "RALPH Delivery Loop"
+  short_description: "PRD-to-shipped workflow with traceability"
+  default_prompt: "Use $ralph to capture my request, update PRD/specs, and track tasks to completion."

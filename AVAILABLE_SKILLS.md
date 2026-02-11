@@ -1,9 +1,17 @@
-# Skills For This Public RALPH Repo
+# Skills In This Repo
 
-## Core
-- `ralph`: PRD-driven traceability framework (version in `VERSION`).
+## Installable Skills
 
-## Activation Notes
-- Codex (primary/parity track): load `SKILL.md` and optionally add `.codex/instruction.md` with:
-  - `Use $ralph for PRD-driven, traceable delivery.`
-- Claude (staged compatibility track): use `adapters/claude/CLAUDE_PROMPT.md` and `adapters/claude/COMMANDS.md`.
+1. `ralph`
+- Path: `skills/ralph`
+- Install:
+  ```bash
+  python3 "$CODEX_HOME/skills/.system/skill-installer/scripts/install-skill-from-github.py" \
+    --repo taylorparsons/ralph-traceability-loop \
+    --path skills/ralph \
+    --name ralph
+  ```
+
+## Guardrail
+
+Do not use `--path .` when installing from this repository. It copies the entire repo.
