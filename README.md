@@ -3,14 +3,16 @@
 RALPH is an agent-agnostic delivery framework for PRD-driven, traceable software execution.
 
 This repository packages:
+- the full Codex `ralph` skill (`SKILL.md`) for parity with local usage,
 - a canonical core loop,
-- Codex and Claude adapters,
+- Codex and Claude adapter materials,
 - reusable templates,
 - core helper scripts,
 - and a clean `docs/` artifact trail scoped to this repo.
 
 ## Repository Layout
 
+- `SKILL.md`: full Codex `ralph` skill definition (parity target)
 - `core/ralph-framework.md`: canonical, agent-neutral RALPH loop
 - `adapters/codex/SKILL.md`: Codex adapter
 - `adapters/claude/CLAUDE_PROMPT.md`: Claude adapter prompt
@@ -30,12 +32,17 @@ This repository packages:
   - `MINOR`: additive capabilities (new templates/scripts/adapters) without breaking behavior
   - `MAJOR`: breaking workflow or contract changes
 
+## Compatibility Status
+
+- Codex: parity target with local `~/.codex/skills/ralph/SKILL.md` (no intentional capability reductions).
+- Claude: adapter materials are included, but parity with Codex behavior is treated as a later compatibility release.
+
 ## Compared to Claude `ralph-loop` Plugin
 
 | Dimension | `ralph-traceability-loop` (this repo) | Claude original `ralph-loop` plugin |
 |---|---|---|
 | Primary orientation | Agent-agnostic framework for PRD-driven traceability | Claude-native plugin for interactive AI loops |
-| Supported environments | Codex + Claude adapters | Claude Code plugin runtime |
+| Supported environments | Codex-first (`SKILL.md`) with Claude adapter docs staged | Claude Code plugin runtime |
 | Installation approach | Clone/use repo files (`core/`, `adapters/`, `templates/`, `scripts/`) | `claude plugin install ralph-loop@claude-plugins-official` |
 | Core operating model | `CR -> Decision -> PRD -> Spec -> Task -> Progress` artifacts under `docs/` | Iterative loop workflow inside Claude plugin UX |
 | Governance package | Includes `LICENSE`, `SECURITY.md`, `CODEOWNERS`, Dependabot and security workflow | Not specified on the plugin page |
@@ -48,7 +55,7 @@ Reference:
 ## Quick Start
 
 ### Codex
-1. Load `adapters/codex/SKILL.md`.
+1. Load `SKILL.md`.
 2. Keep `core/`, `templates/`, and `scripts/` available in the repo.
 3. Optional activation: add `.codex/instruction.md` with `Use $ralph for PRD-driven, traceable delivery.`
 4. Use bundled helpers:
@@ -58,8 +65,8 @@ Reference:
 5. If you need additional Codex-only helpers not bundled here, install the full `ralph` skill via `$skill-installer` into `$CODEX_HOME/skills`.
 
 ### Claude
-1. Use `adapters/claude/CLAUDE_PROMPT.md` as your project/system scaffold.
-2. Run examples from `adapters/claude/COMMANDS.md` with `ralph-loop`.
+1. Use `adapters/claude/CLAUDE_PROMPT.md` and `adapters/claude/COMMANDS.md` as staged compatibility materials.
+2. Treat Claude parity as a subsequent release track.
 
 ## Publishing
 
