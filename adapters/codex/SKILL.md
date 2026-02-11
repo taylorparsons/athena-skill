@@ -25,3 +25,8 @@ Initialize these files using templates from `../../templates/` when missing:
 - `docs/progress.txt`
 - `docs/specs/<feature-id>/spec.md`
 - `docs/specs/<feature-id>/tasks.md`
+
+## Optional Codex helper scripts
+
+This repository intentionally focuses on the public RALPH framework and templates.
+If you need the helper Python scripts commonly used in Codex workflows, use `$skill-installer` to install the full `ralph` skill package into `$CODEX_HOME/skills`, then run those scripts from `$CODEX_HOME/skills/ralph/scripts/`.

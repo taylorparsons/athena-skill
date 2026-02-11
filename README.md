@@ -21,12 +21,20 @@ This repository packages:
 
 | Capability | Codex Adapter | Claude Adapter |
 |---|---|---|
+| Canonical RALPH loop parity (`core/ralph-framework.md`) | Yes | Yes |
 | PRD-driven loop execution | Yes | Yes |
+| Capture request before PRD/code edits | Yes | Yes |
+| Decision log for scope/tradeoff interpretation | Yes | Yes |
 | CR -> Decision -> PRD -> Spec -> Task traceability | Yes | Yes |
-| Local commit traceability guidance | Yes | Yes |
-| Runtime loop controls (`max-iterations`, completion string) | Optional/manual | Native via `ralph-loop` |
-| Cancel active loop | Manual stop + resume log | Native via `/cancel-ralph` |
+| Enforce single `IN PROGRESS` task discipline | Yes | Yes |
+| Record command/check outcomes in progress log | Yes | Yes |
+| Evidence-based completion criteria | Yes | Yes |
 | Template-driven docs initialization | Yes | Yes |
+| Local commit traceability guidance | Yes | Yes |
+| Push protection (`never push unless explicitly requested`) | Yes | Yes |
+| Runtime loop controls (`--max-iterations`, completion promise) | Optional/manual | Native via `ralph-loop` command pattern |
+| Cancel active loop | Manual stop + resume from docs/progress | Native via `/cancel-ralph` |
+| Adapter activation mechanism | Load `adapters/codex/SKILL.md` (optionally via `.codex/instruction.md`) | Use `adapters/claude/CLAUDE_PROMPT.md` + `adapters/claude/COMMANDS.md` |
 
 ## Quick Start
 
@@ -34,6 +42,7 @@ This repository packages:
 1. Load `adapters/codex/SKILL.md`.
 2. Keep `core/` and `templates/` available in the repo.
 3. Optional activation: add `.codex/instruction.md` with `Use $ralph for PRD-driven, traceable delivery.`
+4. This public repo is framework/docs only. If you need Codex helper Python scripts (for example traceable commit/audit helpers), install the full `ralph` skill via `$skill-installer` into `$CODEX_HOME/skills`.
 
 ### Claude
 1. Use `adapters/claude/CLAUDE_PROMPT.md` as your project/system scaffold.
