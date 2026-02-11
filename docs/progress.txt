@@ -1,0 +1,28 @@
+Session: 2026-02-11 10:16
+Agent: Codex CLI
+Model: GPT-5
+Skills: ralph, git-workflow-automation
+Feature: 20260211-public-release-hardening
+Input: CR-20260211-1010
+Decisions: D-20260211-1012
+Spec: docs/specs/20260211-public-release-hardening/spec.md
+Tasks: docs/specs/20260211-public-release-hardening/tasks.md
+Goal: Prepare a truly clean public RALPH repo with security hardening and sanitized docs.
+
+DONE
+- [2026-02-11 10:16] T-001: Removed local absolute path strings from tracked docs content. (Skills: ralph)
+- [2026-02-11 10:16] T-002: Added `.gitignore` patterns for `.env`, `__pycache__/`, and `*.pyc`. (Skills: ralph, git-workflow-automation)
+- [2026-02-11 10:16] T-003: Added `SECURITY.md` with vulnerability disclosure process. (Skills: ralph, git-workflow-automation)
+- [2026-02-11 10:16] T-004: Added MIT `LICENSE`. (Skills: ralph)
+- [2026-02-11 10:16] T-005: Rewrote history to a clean baseline for public publishing. (Skills: ralph, git-workflow-automation)
+
+IN PROGRESS
+- (none)
+
+NEXT
+- Add `docs/examples/` with one end-to-end RALPH walkthrough. (Skills: ralph)
+
+NOTES
+- Commands run: security scans and secret scans using `git-workflow-automation` scripts.
+- Validation: local path strings removed from tracked docs and security baseline files added.
+- Note: commit hashes from pre-rewrite history were intentionally discarded as part of clean-history publication requirement.

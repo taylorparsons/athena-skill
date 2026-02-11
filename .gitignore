@@ -1,0 +1,6 @@
+.DS_Store
+TASK_SKILL_MAP.csv
+TASK_SKILL_MAP.md
+.env
+__pycache__/
+*.pyc
