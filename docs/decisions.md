@@ -58,3 +58,21 @@ Acceptance / test:
 - `.gitignore` includes `.env`, `__pycache__/`, and `*.pyc`.
 - `SECURITY.md` and `LICENSE` exist.
 - Repository history is rewritten to a clean public baseline.
+
+## D-20260211-1020
+Date: 2026-02-11 10:20
+Inputs: CR-20260211-1019
+PRD: Low-priority hardening controls for public repository governance
+
+Decision:
+Complete the low-priority hardening findings by adding a single-owner `CODEOWNERS`, adding `.github/dependabot.yml`, adding `.github/workflows/security.yml`, and enabling repo-level `commit.gpgsign`.
+
+Rationale:
+The user explicitly approved finishing the low-priority hardening items and confirmed there is one code owner.
+
+Alternatives considered:
+- Skip low-priority items before publish (rejected: user explicitly requested completion).
+- Use multiple owners in `CODEOWNERS` (rejected: conflicts with single-owner direction).
+
+Acceptance / test:
+- Security audit no longer reports missing `CODEOWNERS`, Dependabot config, workflow, or GPG signing configuration.

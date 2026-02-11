@@ -1,0 +1,27 @@
+name: security-baseline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "23 3 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  secret-pattern-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Scan for obvious secret patterns
+        run: |
+          set -euo pipefail
+          if git grep -nE '(BEGIN (RSA|EC|OPENSSH) PRIVATE KEY|AKIA[0-9A-Z]{16}|ghp_[0-9A-Za-z]{36}|xox[baprs]-[0-9A-Za-z-]{10,})' -- . ':!*.md' ':!LICENSE' ':!SECURITY.md'; then
+            echo "Potential secret pattern found."
+            exit 1
+          fi
+          echo "No obvious secret patterns found."
