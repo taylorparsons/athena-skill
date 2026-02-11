@@ -1,7 +1,7 @@
 # Skills For This Public RALPH Repo
 
 ## Core
-- `ralph`: PRD-driven traceability framework.
+- `ralph`: PRD-driven traceability framework (version in `VERSION`).
 
 ## Activation Notes
 - Codex (optional): add `.codex/instruction.md` with:

@@ -6,6 +6,7 @@ This repository packages:
 - a canonical core loop,
 - Codex and Claude adapters,
 - reusable templates,
+- core helper scripts,
 - and a clean `docs/` artifact trail scoped to this repo.
 
 ## Repository Layout
@@ -15,34 +16,46 @@ This repository packages:
 - `adapters/claude/CLAUDE_PROMPT.md`: Claude adapter prompt
 - `adapters/claude/COMMANDS.md`: Claude `ralph-loop` command examples
 - `templates/`: ready-to-copy traceability templates
+- `scripts/`: helper automation (`commit_with_traceability.py`, `bootstrap_git_audit.py`, `print_resume_prompt.py`)
+- `VERSION`: source-of-truth skill/repo version (SemVer)
 - `docs/`: this repo's own RALPH artifacts (`requests`, `decisions`, `PRD`, `specs`, `progress`)
 
-## Compatibility Matrix
+## Versioning
 
-| Capability | Codex Adapter | Claude Adapter |
+- Version source of truth: `VERSION`
+- Scheme: Semantic Versioning (`MAJOR.MINOR.PATCH`)
+- Git tag format: `v<MAJOR>.<MINOR>.<PATCH>`
+- Bump guidance:
+  - `PATCH`: docs fixes, clarifications, non-breaking script updates
+  - `MINOR`: additive capabilities (new templates/scripts/adapters) without breaking behavior
+  - `MAJOR`: breaking workflow or contract changes
+
+## Compared to Claude `ralph-loop` Plugin
+
+| Dimension | `ralph-traceability-loop` (this repo) | Claude original `ralph-loop` plugin |
 |---|---|---|
-| Canonical RALPH loop parity (`core/ralph-framework.md`) | Yes | Yes |
-| PRD-driven loop execution | Yes | Yes |
-| Capture request before PRD/code edits | Yes | Yes |
-| Decision log for scope/tradeoff interpretation | Yes | Yes |
-| CR -> Decision -> PRD -> Spec -> Task traceability | Yes | Yes |
-| Enforce single `IN PROGRESS` task discipline | Yes | Yes |
-| Record command/check outcomes in progress log | Yes | Yes |
-| Evidence-based completion criteria | Yes | Yes |
-| Template-driven docs initialization | Yes | Yes |
-| Local commit traceability guidance | Yes | Yes |
-| Push protection (`never push unless explicitly requested`) | Yes | Yes |
-| Runtime loop controls (`--max-iterations`, completion promise) | Optional/manual | Native via `ralph-loop` command pattern |
-| Cancel active loop | Manual stop + resume from docs/progress | Native via `/cancel-ralph` |
-| Adapter activation mechanism | Load `adapters/codex/SKILL.md` (optionally via `.codex/instruction.md`) | Use `adapters/claude/CLAUDE_PROMPT.md` + `adapters/claude/COMMANDS.md` |
+| Primary orientation | Agent-agnostic framework for PRD-driven traceability | Claude-native plugin for interactive AI loops |
+| Supported environments | Codex + Claude adapters | Claude Code plugin runtime |
+| Installation approach | Clone/use repo files (`core/`, `adapters/`, `templates/`, `scripts/`) | `claude plugin install ralph-loop@claude-plugins-official` |
+| Core operating model | `CR -> Decision -> PRD -> Spec -> Task -> Progress` artifacts under `docs/` | Iterative loop workflow inside Claude plugin UX |
+| Governance package | Includes `LICENSE`, `SECURITY.md`, `CODEOWNERS`, Dependabot and security workflow | Not specified on the plugin page |
+| Publisher/verification signal | Maintainer-owned open GitHub repository | Marked "Anthropic Verified" on plugin page |
+| Best fit | Teams needing explicit audit trails and cross-agent portability | Users prioritizing Claude-native loop execution commands |
+
+Reference:
+- https://claude.com/plugins/ralph-loop
 
 ## Quick Start
 
 ### Codex
 1. Load `adapters/codex/SKILL.md`.
-2. Keep `core/` and `templates/` available in the repo.
+2. Keep `core/`, `templates/`, and `scripts/` available in the repo.
 3. Optional activation: add `.codex/instruction.md` with `Use $ralph for PRD-driven, traceable delivery.`
-4. This public repo is framework/docs only. If you need Codex helper Python scripts (for example traceable commit/audit helpers), install the full `ralph` skill via `$skill-installer` into `$CODEX_HOME/skills`.
+4. Use bundled helpers:
+   - `python3 scripts/commit_with_traceability.py ...`
+   - `python3 scripts/bootstrap_git_audit.py --out docs/audit/git-history.md`
+   - `python3 scripts/print_resume_prompt.py --repo .`
+5. If you need additional Codex-only helpers not bundled here, install the full `ralph` skill via `$skill-installer` into `$CODEX_HOME/skills`.
 
 ### Claude
 1. Use `adapters/claude/CLAUDE_PROMPT.md` as your project/system scaffold.

@@ -6,6 +6,7 @@ description: Use the RALPH framework in Codex for PRD-driven, traceable delivery
 # RALPH Codex Adapter
 
 Use `../../core/ralph-framework.md` as the canonical process.
+Version source of truth: `../../VERSION`.
 
 ## Codex-specific operating notes
 
@@ -28,5 +29,14 @@ Initialize these files using templates from `../../templates/` when missing:
 
 ## Optional Codex helper scripts
 
-This repository intentionally focuses on the public RALPH framework and templates.
-If you need the helper Python scripts commonly used in Codex workflows, use `$skill-installer` to install the full `ralph` skill package into `$CODEX_HOME/skills`, then run those scripts from `$CODEX_HOME/skills/ralph/scripts/`.
+This repository includes helper scripts under `../../scripts/`:
+- `commit_with_traceability.py`
+- `bootstrap_git_audit.py`
+- `print_resume_prompt.py`
+
+If you need additional helper scripts beyond those bundled here, use `$skill-installer` to install the full `ralph` skill package into `$CODEX_HOME/skills`, then run scripts from `$CODEX_HOME/skills/ralph/scripts/`.
+
+## Versioning
+
+Use Semantic Versioning from `../../VERSION`.
+When process behavior changes in a breaking way, require a major version bump.
