@@ -4,22 +4,11 @@ RALPH is an agent-agnostic delivery framework for PRD-driven, traceable software
 
 ## Install (Recommended)
 
-Install from explicit skill paths so `skill-installer` copies only the intended skill package.
-
-### Install `ralph`
+Install with `skill-installer` using this repository URL:
 
 ```bash
-python3 "$CODEX_HOME/skills/.system/skill-installer/scripts/install-skill-from-github.py" \
-  --repo taylorparsons/ralph-traceability-loop \
-  --path skills/ralph \
-  --name ralph
+$skill-installer https://github.com/taylorparsons/ralph-traceability-loop/
 ```
-
-### Important
-
-Do **not** install with `--path .`.
-
-Why: `skill-installer` copies the entire selected directory. Using repo root (`.`) pulls the whole repository into your installed skill folder and can expose multiple `SKILL.md` files.
 
 ## Install Target
 
