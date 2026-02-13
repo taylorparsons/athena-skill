@@ -97,3 +97,14 @@ I have a multi ask and use $ralph to help process
 
 Notes:
 - Request includes both `athen` and `athena`; interpretation recorded in decisions log.
+
+## CR-20260213-0912
+Date: 2026-02-13 09:12
+Source: chat
+
+Request (verbatim):
+create two more versions, I would love to see an info logical flow from the calling of athena and a request with the loops to the completion of a checkin 
+2. clear instructions how to install it for both claude and codex embedded in the text a copy and paste code blocks is linkedIn supports that in a Post
+
+Notes:
+- User asked for two additional versions suitable for LinkedIn posting.

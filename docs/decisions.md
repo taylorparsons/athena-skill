@@ -155,3 +155,22 @@ Alternatives considered:
 Acceptance / test:
 - Mutable files reference `athena`/`ATHENA` and project name `athena-skill`.
 - Any remaining `ralph` references are limited to append-only historical entries or backward-compatibility notes explicitly documented.
+
+## D-20260213-0913
+Date: 2026-02-13 09:13
+Inputs: CR-20260213-0912
+PRD: Publishing collateral for onboarding and installation
+
+Decision:
+Interpret "two more versions" as two new LinkedIn-ready post drafts under `publishing/`, each covering the ATHENA request-to-checkin loop and including explicit install instructions for both Codex and Claude with copy/paste blocks.
+
+Rationale:
+The request explicitly asks for two versions and asks for logical flow plus clear install instructions in LinkedIn-compatible format.
+
+Alternatives considered:
+- Update only one existing file (`publishing/launch-checklist.md`) (rejected: does not satisfy "two more versions").
+- Put content only in README (rejected: request is for post-ready content, not repository setup docs).
+
+Acceptance / test:
+- Two new files exist in `publishing/` with distinct post drafts.
+- Each draft includes: ATHENA flow from invocation to check-in, Codex install instructions, Claude install instructions, and copy/paste code blocks.

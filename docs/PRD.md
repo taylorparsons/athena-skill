@@ -1,9 +1,9 @@
 # PRD: ATHENA Skill Repo
 
 Status: Active
-Updated: 2026-02-12 17:00
-Inputs: CR-20260211-0908, CR-20260211-0939, CR-20260211-1004, CR-20260211-1010, CR-20260211-1019, CR-20260211-1325, CR-20260211-1358, CR-20260212-1646
-Decisions: D-20260211-0940, D-20260211-1005, D-20260211-1012, D-20260211-1020, D-20260211-1326, D-20260211-1400, D-20260212-1647, D-20260212-1648
+Updated: 2026-02-13 09:14
+Inputs: CR-20260211-0908, CR-20260211-0939, CR-20260211-1004, CR-20260211-1010, CR-20260211-1019, CR-20260211-1325, CR-20260211-1358, CR-20260212-1646, CR-20260213-0912
+Decisions: D-20260211-0940, D-20260211-1005, D-20260211-1012, D-20260211-1020, D-20260211-1326, D-20260211-1400, D-20260212-1647, D-20260212-1648, D-20260213-0913
 
 ## Summary
 Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude) with scoped traceability artifacts for this repo only. (Sources: CR-20260211-0908, CR-20260211-0939, CR-20260212-1646; D-20260211-0940, D-20260212-1647)
@@ -16,6 +16,7 @@ Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude)
 - Provide an onboarding walkthrough under `docs/examples/` that demonstrates end-to-end traceability. (Sources: CR-20260211-1325; D-20260211-1326)
 - Ensure public install guidance stays single-skill (`athena`) with deterministic path-based packaging. (Sources: CR-20260211-1358, CR-20260212-1646; D-20260211-1400, D-20260212-1647)
 - Ensure mutable repository identity references use `athena-skill`. (Sources: CR-20260212-1646; D-20260212-1647, D-20260212-1648)
+- Provide two LinkedIn-ready post variants that explain ATHENA flow (invoke -> request -> loops -> check-in) and include clear install instructions for both Codex and Claude. (Sources: CR-20260213-0912; D-20260213-0913)
 
 ## Functional requirements
 - FR-ATHENA-001: Provide canonical core workflow in `core/athena-framework.md`. (Sources: CR-20260211-0908, CR-20260212-1646; D-20260212-1648)
@@ -26,6 +27,7 @@ Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude)
 - FR-ATHENA-006: Provide exactly one packaged install target at `skills/athena` and validate that target in CI/local checks. (Sources: CR-20260211-1358, CR-20260212-1646; D-20260211-1400, D-20260212-1647)
 - FR-ATHENA-007: Ensure mutable repository code/documentation references use `athena`/`ATHENA` naming consistently. (Sources: CR-20260212-1646; D-20260212-1647, D-20260212-1648)
 - FR-ATHENA-008: Ensure mutable repository identity references use `athena-skill`. (Sources: CR-20260212-1646; D-20260212-1647, D-20260212-1648)
+- FR-ATHENA-009: Provide two LinkedIn-ready draft posts under `publishing/` that describe ATHENA invocation-to-checkin loop execution and include copy/paste installation instructions for both Codex and Claude usage. (Sources: CR-20260213-0912; D-20260213-0913)
 
 ## Non-functional requirements
 - NFR-ATHENA-001: Exclude local/generated artifacts from commits via `.gitignore`. (Sources: CR-20260211-0939, CR-20260211-1010; D-20260211-0940, D-20260211-1012)
@@ -46,4 +48,4 @@ Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude)
 
 ## Next / backlog
 - (none currently)
-- Implemented in: `skills/athena/SKILL.md`, `core/athena-framework.md`, `README.md`, `AVAILABLE_SKILLS.md`, `adapters/codex/SKILL.md`, `adapters/claude/CLAUDE_PROMPT.md`, `scripts/validate_install_targets.py`.
+- Implemented in: `skills/athena/SKILL.md`, `core/athena-framework.md`, `README.md`, `AVAILABLE_SKILLS.md`, `adapters/codex/SKILL.md`, `adapters/claude/CLAUDE_PROMPT.md`, `scripts/validate_install_targets.py`, `publishing/linkedin-post-athena-flow-v1.md`, `publishing/linkedin-post-athena-flow-v2.md`.

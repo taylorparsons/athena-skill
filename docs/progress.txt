@@ -1,15 +1,18 @@
-Session: 2026-02-12 16:50
+Session: 2026-02-13 09:15
 Agent: Codex CLI
 Model: GPT-5
 Skills: athena
-Feature: 20260212-athena-rename
-Input: CR-20260212-1646
-Decisions: D-20260212-1647, D-20260212-1648
-Spec: docs/specs/20260212-athena-rename/spec.md
-Tasks: docs/specs/20260212-athena-rename/tasks.md
-Goal: Migrate mutable repository skill/project references to `athena` and repository slug references to `athena-skill`.
+Feature: 20260213-linkedin-post-variants
+Input: CR-20260213-0912
+Decisions: D-20260213-0913
+Spec: docs/specs/20260213-linkedin-post-variants/spec.md
+Tasks: docs/specs/20260213-linkedin-post-variants/tasks.md
+Goal: Create two LinkedIn-ready ATHENA post variants with loop-flow narrative and clear Codex/Claude install blocks.
 
 DONE
+- [2026-02-13 09:19] T-003: Reconciled PRD/spec/tasks/progress status and validated both LinkedIn drafts. (Skills: athena)
+- [2026-02-13 09:18] T-002: Drafted LinkedIn post version 2 with alternate framing and Codex/Claude install blocks. (Skills: athena)
+- [2026-02-13 09:17] T-001: Drafted LinkedIn post version 1 with ATHENA loop flow and Codex/Claude install blocks. (Skills: athena)
 - [2026-02-12 17:00] T-003: Ran rename validation checks and reconciled PRD/spec/tasks/progress to shipped state. (Skills: athena)
 - [2026-02-12 16:58] T-002: Updated mutable docs, adapters, scripts, and templates to `athena` naming and `athena-skill` identity. (Skills: athena)
 - [2026-02-12 16:52] T-001: Migrated core/skill paths to `athena` naming and updated install-target validation to `skills/athena`. (Skills: athena)
@@ -49,3 +52,6 @@ NOTES
 - Commands run: `git remote set-url origin https://github.com/taylorparsons/athena-skill.git` -> success; `git remote -v` confirms fetch/push URL now points to `athena-skill`.
 - Commit: `13ad76c` (`T-003: Complete ATHENA rename and repo identity migration (Feature: 20260212-athena-rename)`).
 - Merge evidence: `7491d8d` (`Merge origin/main after ATHENA rename sync`) integrated remote `release: v1.0.1` before push.
+- Commands run: content review of `publishing/linkedin-post-athena-flow-v1.md` and `publishing/linkedin-post-athena-flow-v2.md` plus file-presence checks in `publishing/`.
+- Validation: both drafts include ATHENA flow narrative (invoke -> request -> loop -> check-in) and include Codex + Claude copy/paste install blocks.
+- Reconciliation: set `docs/specs/20260213-linkedin-post-variants/spec.md` to `Status: Done`, moved `T-003` to DONE, and cleared PRD backlog item with implemented file evidence.
