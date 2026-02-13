@@ -1,0 +1,27 @@
+{
+  "duplicates_removed": 6,
+  "generated_at": "2026-02-13T19:57:02.142520Z",
+  "invalid_lines": [
+    {
+      "line_number": 15,
+      "raw": "!!!",
+      "reason": "no-usable-chars"
+    },
+    {
+      "line_number": 16,
+      "raw": "",
+      "reason": "empty-line"
+    },
+    {
+      "line_number": 17,
+      "raw": "  ",
+      "reason": "empty-line"
+    }
+  ],
+  "output_count": 10,
+  "source_file": "input.txt",
+  "total_lines": 19,
+  "unicode_normalized_count": 5,
+  "unique_count": 10,
+  "valid_lines": 16
+}

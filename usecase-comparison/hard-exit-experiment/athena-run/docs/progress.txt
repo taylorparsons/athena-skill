@@ -1,0 +1,28 @@
+Session: 2026-02-13 14:00
+Agent: Codex CLI
+Model: GPT-5
+Skills: athena
+Feature: 20260213-slug-hardening
+Input: CR-20260213-1400
+Decisions: D-20260213-1400
+Spec: docs/specs/20260213-slug-hardening/spec.md
+Tasks: docs/specs/20260213-slug-hardening/tasks.md
+Goal: Compare persistence behavior under stricter output criteria.
+
+DONE
+- [2026-02-13 19:56:45-19:56:48] T-001 complete (baseline slugifier). (Skills: athena)
+- [2026-02-13 19:56:48] T-002 complete: deterministic normalization, dedupe/sort, invalid report, run-end metadata. (Skills: athena)
+
+IN PROGRESS
+- 
+
+NEXT
+-
+
+NOTES
+- ATHENA_RUN_START_UTC: 2026-02-13T19:56:45Z
+- ATHENA_RUN_END_UTC: 2026-02-13T19:56:48Z
+- Commands run:
+  - `python3 src/slugify.py` -> iteration 1
+  - `python3 src/slugify.py` -> iteration 2
+- Risks / open questions: none
