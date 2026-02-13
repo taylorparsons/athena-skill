@@ -47,3 +47,4 @@ NOTES
 - Commands run: `python3 scripts/validate_install_targets.py` -> pass; `rg -n "\\bralph\\b|RALPH|Ralph|ralph-traceability-loop" -S . --glob '!docs/requests.md' --glob '!docs/decisions.md'` -> no matches; `rg -n "athena-skill|skills/athena|core/athena-framework\\.md"` -> expected references present.
 - Reconciliation: Set `docs/specs/20260212-athena-rename/spec.md` to `Status: Done`, moved `T-003` to DONE, and cleared PRD backlog with implementation evidence paths.
 - Commands run: `git remote set-url origin https://github.com/taylorparsons/athena-skill.git` -> success; `git remote -v` confirms fetch/push URL now points to `athena-skill`.
+- Commit: `13ad76c` (`T-003: Complete ATHENA rename and repo identity migration (Feature: 20260212-athena-rename)`).
