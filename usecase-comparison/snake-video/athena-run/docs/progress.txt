@@ -22,3 +22,4 @@ NOTES
 - Commands run: Added `run.sh` and updated ATHENA traceability docs for `CR-20260213-1231`.
 - Decisions: Implemented a local one-command entrypoint; no gameplay logic changes.
 - Risks / open questions: `run.sh` requires `ffmpeg` for video generation.
+- Commit: `a9c9e27` (adds usecase-comparison artifacts under local ATHENA git tree with traceability updates for this task).
