@@ -55,3 +55,4 @@ NOTES
 - Commands run: content review of `publishing/linkedin-post-athena-flow-v1.md` and `publishing/linkedin-post-athena-flow-v2.md` plus file-presence checks in `publishing/`.
 - Validation: both drafts include ATHENA flow narrative (invoke -> request -> loop -> check-in) and include Codex + Claude copy/paste install blocks.
 - Reconciliation: set `docs/specs/20260213-linkedin-post-variants/spec.md` to `Status: Done`, moved `T-003` to DONE, and cleared PRD backlog item with implemented file evidence.
+- Commit: `1e5d22d` (`T-003: Add two LinkedIn ATHENA post variants with install blocks (Feature: 20260213-linkedin-post-variants)`).
