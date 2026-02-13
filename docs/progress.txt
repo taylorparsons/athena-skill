@@ -62,3 +62,4 @@ NOTES
 - Commands run: `rg -n '## Problem|## Constraint|## Decision|## Evidence Path|\$athena|check-?in|Install for Codex|Setup for Claude' publishing/linkedin-post-athena-flow-v3-personal-style.md` -> required sections present.
 - Validation: `python3 scripts/validate_install_targets.py` -> pass; `ls -la publishing | rg 'linkedin-post-athena-flow-v[123]'` -> v1/v2/v3 drafts present.
 - Reconciliation: set `docs/specs/20260213-linkedin-personal-style/spec.md` to `Status: Done`, moved T-003 to DONE, and cleared PRD backlog with v3 evidence path.
+- Commit: `07240b7` (`T-003: Add personal-style LinkedIn ATHENA post variant (Feature: 20260213-linkedin-personal-style)`).
