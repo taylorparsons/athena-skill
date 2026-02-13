@@ -48,3 +48,4 @@ NOTES
 - Reconciliation: Set `docs/specs/20260212-athena-rename/spec.md` to `Status: Done`, moved `T-003` to DONE, and cleared PRD backlog with implementation evidence paths.
 - Commands run: `git remote set-url origin https://github.com/taylorparsons/athena-skill.git` -> success; `git remote -v` confirms fetch/push URL now points to `athena-skill`.
 - Commit: `13ad76c` (`T-003: Complete ATHENA rename and repo identity migration (Feature: 20260212-athena-rename)`).
+- Merge evidence: `7491d8d` (`Merge origin/main after ATHENA rename sync`) integrated remote `release: v1.0.1` before push.
