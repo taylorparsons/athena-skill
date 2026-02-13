@@ -1,4 +1,4 @@
-# RALPH Publishing Checklist
+# ATHENA Publishing Checklist
 
 ## 1) Prepare the repo
 - Confirm `core/`, `adapters/`, and `templates/` are complete.

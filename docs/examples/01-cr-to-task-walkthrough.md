@@ -1,4 +1,4 @@
-# RALPH Walkthrough: CR -> D -> FR -> T
+# ATHENA Walkthrough: CR -> D -> FR -> T
 
 This example shows one completed chain in this repository so new contributors can follow the audit trail end-to-end.
 
@@ -15,9 +15,9 @@ This example shows one completed chain in this repository so new contributors ca
 ## 3) PRD requirements
 - File: `docs/PRD.md`
 - Requirement links:
-  - `NFR-RALPH-007` (single-owner `CODEOWNERS`)
-  - `NFR-RALPH-008` (`.github/dependabot.yml` + `.github/workflows/security.yml`)
-  - `NFR-RALPH-009` (repo-level `commit.gpgsign`)
+  - `NFR-ATHENA-007` (single-owner `CODEOWNERS`)
+  - `NFR-ATHENA-008` (`.github/dependabot.yml` + `.github/workflows/security.yml`)
+  - `NFR-ATHENA-009` (repo-level `commit.gpgsign`)
 - Each requirement includes `Sources: CR-20260211-1019; D-20260211-1020`.
 
 ## 4) Feature spec requirements (`FR`)

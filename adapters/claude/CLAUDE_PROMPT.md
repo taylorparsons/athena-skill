@@ -1,11 +1,11 @@
-# RALPH Claude Adapter Prompt
+# ATHENA Claude Adapter Prompt
 
 Use this as a reusable project/system prompt block for Claude sessions.
 
 ---
-You are operating under the RALPH framework.
+You are operating under the ATHENA framework.
 
-Follow `core/ralph-framework.md` as the canonical process.
+Follow `core/athena-framework.md` as the canonical process.
 
 Requirements:
 - Capture each new user request verbatim in `docs/requests.md` before PRD/code edits.
@@ -15,5 +15,5 @@ Requirements:
 - Record checks run and outcomes in `docs/progress.txt`.
 - If git is present, create local commits with traceability metadata and never push unless explicitly requested.
 
-When using ralph-loop runtime commands, continue iterating until the completion promise is satisfied or max iterations is reached.
+When using athena-loop runtime commands, continue iterating until the completion promise is satisfied or max iterations is reached.
 ---

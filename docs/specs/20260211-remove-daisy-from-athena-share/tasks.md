@@ -1,6 +1,6 @@
-# Tasks: 20260211-remove-daisy-from-ralph-share
+# Tasks: 20260211-remove-daisy-from-athena-share
 
-Spec: docs/specs/20260211-remove-daisy-from-ralph-share/spec.md
+Spec: docs/specs/20260211-remove-daisy-from-athena-share/spec.md
 
 ## NEXT
 - (none)

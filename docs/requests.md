@@ -84,3 +84,16 @@ yes remove it
 Notes:
 - Complete repo updates and create a local check-in with traceability comments.
 - Keep public install guidance focused on `ralph` only.
+
+## CR-20260212-1646
+Date: 2026-02-12 16:46
+Source: chat
+
+Request (verbatim):
+I have a multi ask and use $ralph to help process
+1. I want to rename the skill from ralph to athen but only on the git repo for now 
+2. I want to rename git repro project from ralph-traceability-loop to athena-skill 
+3.I want all code and documentation in the current git to be updated to reference athena in place of ralph.
+
+Notes:
+- Request includes both `athen` and `athena`; interpretation recorded in decisions log.

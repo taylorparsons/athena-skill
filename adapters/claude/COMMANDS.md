@@ -1,21 +1,21 @@
-# Claude `ralph-loop` Command Examples
+# Claude `athena-loop` Command Examples
 
 ## Basic run
 
 ```bash
-/ralph-loop "Implement FR-001 and update traceability docs" --max-iterations 8 --completion-promise "DONE"
+/athena-loop "Implement FR-001 and update traceability docs" --max-iterations 8 --completion-promise "DONE"
 ```
 
 ## Tight loop for small changes
 
 ```bash
-/ralph-loop "Fix failing tests for T-003 and update progress log" --max-iterations 4 --completion-promise "DONE"
+/athena-loop "Fix failing tests for T-003 and update progress log" --max-iterations 4 --completion-promise "DONE"
 ```
 
 ## Cancel current run
 
 ```bash
-/cancel-ralph
+/cancel-athena
 ```
 
 ## Recommended usage pattern

@@ -66,7 +66,7 @@ def _format_skill_triggers(skills: list[str]) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Generate a pasteable resume prompt from docs/progress.txt (RALPH)."
+        description="Generate a pasteable resume prompt from docs/progress.txt (ATHENA)."
     )
     parser.add_argument(
         "--repo",
@@ -80,7 +80,7 @@ def main() -> int:
 
     if not os.path.exists(progress_path):
         sys.stderr.write(f"Missing file: {progress_path}\n")
-        sys.stderr.write("Expected a RALPH progress log at docs/progress.txt.\n")
+        sys.stderr.write("Expected a ATHENA progress log at docs/progress.txt.\n")
         return 2
 
     text = _read_text(progress_path)
@@ -100,7 +100,7 @@ def main() -> int:
     active_skills = per_task_skills or header_skills
 
     print("# Paste into Codex")
-    triggers = _format_skill_triggers(active_skills or ["ralph"])
+    triggers = _format_skill_triggers(active_skills or ["athena"])
     print(triggers)
     print("Resume from repo state:")
     print(f"- Feature: {feature}")
@@ -112,7 +112,7 @@ def main() -> int:
     if active_skills:
         print(f"Skills for current task: {', '.join(active_skills)}")
     else:
-        print("Skills for current task: <unknown> (default to ralph)")
+        print("Skills for current task: <unknown> (default to athena)")
     print("Continue the current task and keep docs/progress.txt updated (including Skills: tags).")
 
     return 0

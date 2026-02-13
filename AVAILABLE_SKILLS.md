@@ -2,14 +2,14 @@
 
 ## Installable Skills
 
-1. `ralph`
-- Path: `skills/ralph`
+1. `athena`
+- Path: `skills/athena`
 - Install:
   ```bash
   python3 "$CODEX_HOME/skills/.system/skill-installer/scripts/install-skill-from-github.py" \
-    --repo taylorparsons/ralph-traceability-loop \
-    --path skills/ralph \
-    --name ralph
+    --repo taylorparsons/athena-skill \
+    --path skills/athena \
+    --name athena
   ```
 
 ## Guardrail

@@ -1,7 +1,7 @@
 Session: YYYY-MM-DD HH:MM
 Agent: <agent>
 Model: <model>
-Skills: ralph[, ...]
+Skills: athena[, ...]
 Feature: <FEATURE_ID>
 Input: CR-YYYYMMDD-HHMM
 Decisions: D-YYYYMMDD-HHMM[, D-...]
@@ -10,10 +10,10 @@ Tasks: docs/specs/<FEATURE_ID>/tasks.md
 Goal: <one sentence>
 
 DONE
-- [YYYY-MM-DD HH:MM] <task>. (Skills: ralph[, ...])
+- [YYYY-MM-DD HH:MM] <task>. (Skills: athena[, ...])
 
 IN PROGRESS
-- <task>. (Skills: ralph[, ...])
+- <task>. (Skills: athena[, ...])
 
 NEXT
 - <task>

@@ -1,18 +1,18 @@
-# RALPH Framework
+# ATHENA Framework
 
-RALPH is an agent-agnostic delivery framework for PRD-driven, traceable software execution.
+ATHENA is an agent-agnostic delivery framework for PRD-driven, traceable software execution.
 
 ## Install (Recommended)
 
 Install from explicit skill paths so `skill-installer` copies only the intended skill package.
 
-### Install `ralph`
+### Install `athena`
 
 ```bash
 python3 "$CODEX_HOME/skills/.system/skill-installer/scripts/install-skill-from-github.py" \
-  --repo taylorparsons/ralph-traceability-loop \
-  --path skills/ralph \
-  --name ralph
+  --repo taylorparsons/athena-skill \
+  --path skills/athena \
+  --name athena
 ```
 
 ### Important
@@ -23,19 +23,19 @@ Why: `skill-installer` copies the entire selected directory. Using repo root (`.
 
 ## Install Target
 
-- `skills/ralph`: canonical full `ralph` skill for Codex
+- `skills/athena`: canonical full `athena` skill for Codex
 
 This install target is designed to contain exactly one `SKILL.md`.
 
 ## Repository Layout
 
-- `skills/ralph/`: installable `ralph` package
-- `core/ralph-framework.md`: canonical, agent-neutral RALPH loop
+- `skills/athena/`: installable `athena` package
+- `core/athena-framework.md`: canonical, agent-neutral ATHENA loop
 - `adapters/`: framework adapter source materials
 - `templates/`: traceability templates
 - `scripts/`: helper automation (`commit_with_traceability.py`, `bootstrap_git_audit.py`, `print_resume_prompt.py`)
 - `VERSION`: source-of-truth framework version (SemVer)
-- `docs/`: this repo's own RALPH artifacts and examples
+- `docs/`: this repo's own ATHENA artifacts and examples
 
 ## Validation
 

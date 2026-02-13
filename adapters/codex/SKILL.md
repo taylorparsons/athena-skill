@@ -1,11 +1,11 @@
 ---
-name: ralph-codex
-description: Use the RALPH framework in Codex for PRD-driven, traceable delivery. Trigger when the user wants iterative execution with auditable CR/Decision/Spec/Task/Progress artifacts and disciplined one-task-at-a-time implementation.
+name: athena-codex
+description: Use the ATHENA framework in Codex for PRD-driven, traceable delivery. Trigger when the user wants iterative execution with auditable CR/Decision/Spec/Task/Progress artifacts and disciplined one-task-at-a-time implementation.
 ---
 
-# RALPH Codex Adapter
+# ATHENA Codex Adapter
 
-Use `../../core/ralph-framework.md` as the canonical process.
+Use `../../core/athena-framework.md` as the canonical process.
 Version source of truth: `../../VERSION`.
 
 ## Codex-specific operating notes
@@ -34,7 +34,7 @@ This repository includes helper scripts under `../../scripts/`:
 - `bootstrap_git_audit.py`
 - `print_resume_prompt.py`
 
-If you need additional helper scripts beyond those bundled here, use `$skill-installer` to install the full `ralph` skill package into `$CODEX_HOME/skills`, then run scripts from `$CODEX_HOME/skills/ralph/scripts/`.
+If you need additional helper scripts beyond those bundled here, use `$skill-installer` to install the full `athena` skill package into `$CODEX_HOME/skills`, then run scripts from `$CODEX_HOME/skills/athena/scripts/`.
 
 ## Versioning
 

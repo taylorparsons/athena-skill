@@ -1,4 +1,4 @@
-# Feature Spec: 20260211-remove-daisy-from-ralph-share
+# Feature Spec: 20260211-remove-daisy-from-athena-share
 
 Status: Done
 Created: 2026-02-11 10:06
@@ -6,16 +6,16 @@ Inputs: CR-20260211-1004
 Decisions: D-20260211-1005
 
 ## Summary
-- Remove Daisy companion-skill references from this public RALPH share repo so the published version is scoped only to RALPH.
+- Remove Daisy companion-skill references from this public ATHENA share repo so the published version is scoped only to ATHENA.
 
 ## User Stories & Acceptance
 
-### US1: Share RALPH-only version (Priority: P1)
+### US1: Share ATHENA-only version (Priority: P1)
 Narrative:
-- As the repo owner, I want this public share version to describe only RALPH, so there is no confusion about bundled companion skills.
+- As the repo owner, I want this public share version to describe only ATHENA, so there is no confusion about bundled companion skills.
 
 Acceptance scenarios:
-1. Given the root docs, When a reviewer reads README and skill listing, Then only RALPH is presented for this public version. (Verifies: FR-001, FR-002)
+1. Given the root docs, When a reviewer reads README and skill listing, Then only ATHENA is presented for this public version. (Verifies: FR-001, FR-002)
 2. Given the public-facing docs, When searching `README.md` and `AVAILABLE_SKILLS.md`, Then no Daisy references remain. (Verifies: FR-003)
 
 ## Requirements

@@ -57,7 +57,7 @@ def _commit_body(feature: str, cr: str | None, decisions: str | None) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Stage and create a local git commit with RALPH traceability pointers. Never pushes.",
+        description="Stage and create a local git commit with ATHENA traceability pointers. Never pushes.",
     )
     parser.add_argument("--repo", default=".", help="Path inside the git repo (default: .).")
     parser.add_argument("--feature", required=True, help="FEATURE_ID (e.g., 20260129-peas-guardrails).")

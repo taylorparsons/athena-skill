@@ -1,0 +1,4 @@
+interface:
+  display_name: "ATHENA Delivery Loop"
+  short_description: "PRD-to-shipped workflow with traceability"
+  default_prompt: "Use $athena to capture my request, update PRD/specs, and track tasks to completion."

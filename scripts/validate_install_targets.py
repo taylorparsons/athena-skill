@@ -9,7 +9,7 @@ import sys
 
 
 EXPECTED_TARGETS = {
-    "skills/ralph": "ralph",
+    "skills/athena": "athena",
 }
 
 FRONTMATTER_DELIM = "---"

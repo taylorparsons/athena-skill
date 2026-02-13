@@ -1,9 +1,9 @@
 ---
-name: ralph
-description: Turn a PRD into shipped changes using a strict, repeatable RALPH loop that captures customer requests in docs/requests.md, decisions in docs/decisions.md, and per-feature specs in docs/specs/FEATURE_ID/spec.md (with Sources/Verifies/Implements traceability), then reads docs/PRD.md and docs/progress.txt to execute one small task at a time with validation and session notes. Use when the user wants iterative PRD-driven delivery with explicit task tracking and an audit trail from raw requests to final requirements.
+name: athena
+description: Turn a PRD into shipped changes using a strict, repeatable ATHENA loop that captures customer requests in docs/requests.md, decisions in docs/decisions.md, and per-feature specs in docs/specs/FEATURE_ID/spec.md (with Sources/Verifies/Implements traceability), then reads docs/PRD.md and docs/progress.txt to execute one small task at a time with validation and session notes. Use when the user wants iterative PRD-driven delivery with explicit task tracking and an audit trail from raw requests to final requirements.
 ---
 
-# RALPH Loop
+# ATHENA Loop
 
 Follow this loop every session.
 
@@ -30,12 +30,12 @@ If you do not have an explicit customer request for the current session:
 
 ## 0.25) Capture the Agent / Skill Context (for context resets)
 
-RALPH does not automatically track which skills/agents were used. To make sessions recoverable after a context reset, explicitly record the execution context in `docs/progress.txt`.
+ATHENA does not automatically track which skills/agents were used. To make sessions recoverable after a context reset, explicitly record the execution context in `docs/progress.txt`.
 
 At the start of each session, set these header fields in `docs/progress.txt`:
 - `Agent:` (e.g., `Codex CLI`)
 - `Model:` (if known)
-- `Skills:` (e.g., `ralph`, plus any other skills you actually used during the session)
+- `Skills:` (e.g., `athena`, plus any other skills you actually used during the session)
 
 ## Task ↔ Skill Mapping Convention
 
@@ -44,7 +44,7 @@ To preserve a clear mapping between the task you are working on and the skill(s)
 Format (recommended):
 
 ```text
-- <task line...> (Skills: ralph, <other-skill>, ...)
+- <task line...> (Skills: athena, <other-skill>, ...)
 ```
 
 Rules:
@@ -87,11 +87,11 @@ When creating missing files:
 
 ## 1.25) Bootstrap Historical Audit from Git History (for adopted repos)
 
-If you are adding RALPH to an existing project that:
+If you are adding ATHENA to an existing project that:
 - has Git enabled (a `.git/` directory), and
-- is not already using the RALPH audit files,
+- is not already using the ATHENA audit files,
 
-create a **historical audit trail derived from Git history** so there is an explicit “before RALPH” record.
+create a **historical audit trail derived from Git history** so there is an explicit “before ATHENA” record.
 
 Rules:
 - Do **not** fabricate customer requests. Git history is not “verbatim customer input”.
@@ -99,7 +99,7 @@ Rules:
 - Store derived history in `docs/audit/git-history.md` and clearly label it as derived.
 
 Preferred implementation:
-- Run the bundled script: `python3 <CODEX_HOME>/skills/ralph/scripts/bootstrap_git_audit.py --out docs/audit/git-history.md`
+- Run the bundled script: `python3 <CODEX_HOME>/skills/athena/scripts/bootstrap_git_audit.py --out docs/audit/git-history.md`
 - Then update `docs/TRACEABILITY.md` to include a pointer to `docs/audit/git-history.md`.
 
 ## 2) Read First, Then Act
@@ -176,7 +176,7 @@ If the PRD is unclear:
 - Choose the safest, smallest unambiguous task, or stop and ask the user.
 
 When you move a task into `IN PROGRESS`:
-- Add `(Skills: ...)` to that task line (minimum: `ralph`).
+- Add `(Skills: ...)` to that task line (minimum: `athena`).
 
 ## 4) Implement One Small Task
 
@@ -257,7 +257,7 @@ Goal: enhance the audit trail for long-running work and provide a local backup.
 
 If `.git/` exists:
 - Stage and commit changes at least when a task moves to `DONE` (and optionally after each meaningful checkpoint).
-- The commit message MUST include traceability pointers back to the RALPH artifacts (CR/D/FEATURE_ID/T-... and docs paths).
+- The commit message MUST include traceability pointers back to the ATHENA artifacts (CR/D/FEATURE_ID/T-... and docs paths).
 - Record the commit hash in `docs/progress.txt` under `NOTES` (or next to the task) so the audit trail links to Git history.
 
 Hard rules:
@@ -268,7 +268,7 @@ Recommended workflow:
 - Stage: `git add -A`
 - Review: `git diff --cached`
 - Commit using the helper script:
-  - `python3 <CODEX_HOME>/skills/ralph/scripts/commit_with_traceability.py --feature <FEATURE_ID> --task <T-001> --summary "<what changed>" --cr <CR-...> --decisions <D-...,...>`
+  - `python3 <CODEX_HOME>/skills/athena/scripts/commit_with_traceability.py --feature <FEATURE_ID> --task <T-001> --summary "<what changed>" --cr <CR-...> --decisions <D-...,...>`
 
 Commit message format (recommended):
 - Subject: `T-001: <summary> (Feature: <FEATURE_ID>)`
@@ -284,7 +284,7 @@ Commit message format (recommended):
 When context is lost, regenerate a “resume prompt” from repo state and paste it into the new chat so the relevant skills re-trigger.
 
 Preferred:
-- Run: `python3 <CODEX_HOME>/skills/ralph/scripts/print_resume_prompt.py --repo .`
+- Run: `python3 <CODEX_HOME>/skills/athena/scripts/print_resume_prompt.py --repo .`
 - Paste the printed prompt into Codex.
 
 ## Plan Interaction (Use create-plan Skill)
@@ -292,7 +292,7 @@ Preferred:
 When the user explicitly asks for a plan:
 - Use the `create-plan` skill.
 - Keep planning read-only.
-- After planning, resume the RALPH loop for execution.
+- After planning, resume the ATHENA loop for execution.
 
 ## Customer Request Log Template (`docs/requests.md`)
 
@@ -320,7 +320,7 @@ Use this structure:
 # Traceability (How to follow the audit trail)
 
 Start here:
-0) If this repo adopted RALPH after it already had history, review `docs/audit/git-history.md` (derived from Git; not customer verbatim).
+0) If this repo adopted ATHENA after it already had history, review `docs/audit/git-history.md` (derived from Git; not customer verbatim).
 1) Find the relevant raw request in `docs/requests.md` (CR-...).
 2) Read linked interpretations/tradeoffs in `docs/decisions.md` (D-...).
 3) Open the feature spec at `docs/specs/<FEATURE_ID>/spec.md`.
@@ -421,7 +421,7 @@ Use this structure:
 Session: YYYY-MM-DD HH:MM
 Agent: Codex CLI
 Model: <if known>
-Skills: ralph[, ...]
+Skills: athena[, ...]
 Feature: <FEATURE_ID>
 Input: CR-YYYYMMDD-HHMM
 Decisions: D-YYYYMMDD-HHMM[, D-...]
@@ -431,10 +431,10 @@ Git history (optional): docs/audit/git-history.md
 Goal: <one sentence>
 
 DONE
-- [YYYY-MM-DD HH:MM] <task>. (Skills: ralph[, ...])
+- [YYYY-MM-DD HH:MM] <task>. (Skills: athena[, ...])
 
 IN PROGRESS
-- <task>. (Skills: ralph[, ...])
+- <task>. (Skills: athena[, ...])
 
 NEXT
 - <task>

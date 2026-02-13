@@ -117,3 +117,41 @@ Acceptance / test:
 - `README.md` install section lists only `ralph` installation command.
 - `scripts/validate_install_targets.py` validates only `skills/ralph`.
 - `skills/ralph-codex/` does not exist.
+
+## D-20260212-1647
+Date: 2026-02-12 16:47
+Inputs: CR-20260212-1646
+PRD: Product/skill naming and repository identity
+
+Decision:
+Treat `athena` as the canonical replacement name for this repository and skill references, and treat `athen` in request item 1 as a typo.
+
+Rationale:
+The same request explicitly uses `athena` in items 2 and 3 and asks for all code/documentation references to be updated to that name.
+
+Alternatives considered:
+- Preserve `athen` literally for skill name while using `athena` elsewhere (rejected: inconsistent naming and conflicts with item 3 global replacement intent).
+- Pause execution to ask for clarification (rejected: request is actionable and interpretation is low risk).
+
+Acceptance / test:
+- Repository/docs/code references are updated from `ralph` to `athena` where this repo defines its own naming.
+- Project identity references use `athena-skill`.
+
+## D-20260212-1648
+Date: 2026-02-12 16:48
+Inputs: CR-20260212-1646
+PRD: Rename execution scope and audit-log immutability
+
+Decision:
+Apply rename changes across mutable repository code/docs/configuration, including path renames (`skills/ralph` -> `skills/athena`, `core/ralph-framework.md` -> `core/athena-framework.md`), and preserve append-only historical logs in `docs/requests.md` and `docs/decisions.md` as factual records.
+
+Rationale:
+The request requires broad replacement to `athena`, while RALPH audit rules require historical request/decision entries to stay append-only and customer-verbatim.
+
+Alternatives considered:
+- Edit historical request/decision entries to fully eliminate legacy naming (rejected: breaks append-only/verbatim audit contract).
+- Limit rename only to README and skill metadata (rejected: does not satisfy global code/documentation update intent).
+
+Acceptance / test:
+- Mutable files reference `athena`/`ATHENA` and project name `athena-skill`.
+- Any remaining `ralph` references are limited to append-only historical entries or backward-compatibility notes explicitly documented.

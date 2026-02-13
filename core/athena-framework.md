@@ -1,4 +1,4 @@
-# RALPH Core Framework (Agent-Agnostic)
+# ATHENA Core Framework (Agent-Agnostic)
 
 ## Purpose
 
@@ -25,7 +25,7 @@ Run a strict, repeatable loop that converts raw requests into traceable delivery
 7. If Git is present, commit with traceability pointers and record commit hashes.
 8. Never push unless explicitly requested.
 
-## RALPH Loop
+## ATHENA Loop
 
 1. Capture request.
 2. Ensure core docs exist.

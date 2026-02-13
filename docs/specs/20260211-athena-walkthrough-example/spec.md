@@ -1,4 +1,4 @@
-# Feature Spec: 20260211-ralph-walkthrough-example
+# Feature Spec: 20260211-athena-walkthrough-example
 
 Status: Done
 Created: 2026-02-11 13:26
@@ -10,7 +10,7 @@ Decisions: D-20260211-1326
 
 ## User Stories & Acceptance
 
-### US1: Learn the RALPH artifact chain quickly (Priority: P1)
+### US1: Learn the ATHENA artifact chain quickly (Priority: P1)
 Narrative:
 - As a new maintainer, I want one concrete walkthrough document so I can follow traceability links in this repo without guessing.
 
