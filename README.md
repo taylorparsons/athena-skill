@@ -15,12 +15,6 @@ python3 "$CODEX_HOME/skills/.system/skill-installer/scripts/install-skill-from-g
   --name athena
 ```
 
-### Important
-
-Do **not** install with `--path .`.
-
-Why: `skill-installer` copies the entire selected directory. Using repo root (`.`) pulls the whole repository into your installed skill folder and can expose multiple `SKILL.md` files.
-
 ## Install Target
 
 - `skills/athena`: canonical full `athena` skill for Codex
