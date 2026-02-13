@@ -174,3 +174,22 @@ Alternatives considered:
 Acceptance / test:
 - Two new files exist in `publishing/` with distinct post drafts.
 - Each draft includes: ATHENA flow from invocation to check-in, Codex install instructions, Claude install instructions, and copy/paste code blocks.
+
+## D-20260213-1959
+Date: 2026-02-13 19:59
+Inputs: CR-20260213-1958
+PRD: Publishing tone/style requirements for additional personal-style variant
+
+Decision:
+Create one additional LinkedIn-ready draft that preserves ATHENA invoke-to-checkin flow and installation sections while adopting the provided personal style traits: direct language, framework structure, grounded reflection, operator evidence orientation, and low-marketing tone.
+
+Rationale:
+The request explicitly asks for one more version in the user's personal writing style and provides concrete style guardrails.
+
+Alternatives considered:
+- Reuse an existing version with minor wording tweaks (rejected: does not meaningfully reflect the provided style profile).
+- Write a purely personal narrative with no setup blocks (rejected: inconsistent with prior request context requiring install clarity and flow).
+
+Acceptance / test:
+- A new `publishing/` draft exists and is distinct from v1/v2.
+- Draft includes direct, structured sections (problem/constraint/decision/evidence style), ATHENA loop narrative, and Codex/Claude copy/paste setup blocks.

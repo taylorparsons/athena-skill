@@ -1,15 +1,18 @@
-Session: 2026-02-13 09:15
+Session: 2026-02-13 20:01
 Agent: Codex CLI
 Model: GPT-5
 Skills: athena
-Feature: 20260213-linkedin-post-variants
-Input: CR-20260213-0912
-Decisions: D-20260213-0913
-Spec: docs/specs/20260213-linkedin-post-variants/spec.md
-Tasks: docs/specs/20260213-linkedin-post-variants/tasks.md
-Goal: Create two LinkedIn-ready ATHENA post variants with loop-flow narrative and clear Codex/Claude install blocks.
+Feature: 20260213-linkedin-personal-style
+Input: CR-20260213-1958
+Decisions: D-20260213-1959
+Spec: docs/specs/20260213-linkedin-personal-style/spec.md
+Tasks: docs/specs/20260213-linkedin-personal-style/tasks.md
+Goal: Create one additional LinkedIn-ready ATHENA post in personal operator style with clear setup and invoke-to-checkin flow.
 
 DONE
+- [2026-02-13 20:05] T-003: Validated personal-style draft content and reconciled PRD/spec/tasks/progress to done. (Skills: athena)
+- [2026-02-13 20:03] T-002: Added Codex and Claude setup blocks and tightened wording for low-hype personal style in v3 draft. (Skills: athena)
+- [2026-02-13 20:03] T-001: Drafted personal-style LinkedIn ATHENA post (v3) with direct framework sections and loop narrative. (Skills: athena)
 - [2026-02-13 09:19] T-003: Reconciled PRD/spec/tasks/progress status and validated both LinkedIn drafts. (Skills: athena)
 - [2026-02-13 09:18] T-002: Drafted LinkedIn post version 2 with alternate framing and Codex/Claude install blocks. (Skills: athena)
 - [2026-02-13 09:17] T-001: Drafted LinkedIn post version 1 with ATHENA loop flow and Codex/Claude install blocks. (Skills: athena)
@@ -56,3 +59,6 @@ NOTES
 - Validation: both drafts include ATHENA flow narrative (invoke -> request -> loop -> check-in) and include Codex + Claude copy/paste install blocks.
 - Reconciliation: set `docs/specs/20260213-linkedin-post-variants/spec.md` to `Status: Done`, moved `T-003` to DONE, and cleared PRD backlog item with implemented file evidence.
 - Commit: `1e5d22d` (`T-003: Add two LinkedIn ATHENA post variants with install blocks (Feature: 20260213-linkedin-post-variants)`).
+- Commands run: `rg -n '## Problem|## Constraint|## Decision|## Evidence Path|\$athena|check-?in|Install for Codex|Setup for Claude' publishing/linkedin-post-athena-flow-v3-personal-style.md` -> required sections present.
+- Validation: `python3 scripts/validate_install_targets.py` -> pass; `ls -la publishing | rg 'linkedin-post-athena-flow-v[123]'` -> v1/v2/v3 drafts present.
+- Reconciliation: set `docs/specs/20260213-linkedin-personal-style/spec.md` to `Status: Done`, moved T-003 to DONE, and cleared PRD backlog with v3 evidence path.
