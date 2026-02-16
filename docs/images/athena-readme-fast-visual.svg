@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" role="img" aria-labelledby="title desc">
+  <title id="title">How the ATHENA Skill Works</title>
+  <desc id="desc">Fast visual diagram of ATHENA loop from request through planning, traceability, execution, and check-in.</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#faf8f2"/>
+      <stop offset="100%" stop-color="#f5f2e8"/>
+    </linearGradient>
+    <pattern id="lines" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="32" x2="40" y2="32" stroke="#d9e7fb" stroke-width="2"/>
+    </pattern>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f1f1f"/>
+    </marker>
+    <style>
+      .ink { fill: #1f1f1f; stroke: #1f1f1f; }
+      .title { font-family: "Comic Sans MS", "Marker Felt", "Bradley Hand", cursive; font-size: 64px; font-weight: 700; }
+      .label { font-family: "Comic Sans MS", "Marker Felt", "Bradley Hand", cursive; font-size: 37px; font-weight: 700; }
+      .small { font-family: "Comic Sans MS", "Marker Felt", "Bradley Hand", cursive; font-size: 30px; font-weight: 600; }
+      .tiny { font-family: "Comic Sans MS", "Marker Felt", "Bradley Hand", cursive; font-size: 24px; font-weight: 600; }
+      .box { fill: #ffffff; stroke: #1f1f1f; stroke-width: 5; rx: 18; ry: 18; }
+      .wire { fill: none; stroke: #1f1f1f; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="900" fill="url(#paper)"/>
+  <rect x="0" y="0" width="1400" height="900" fill="url(#lines)" opacity="0.85"/>
+
+  <text x="700" y="92" text-anchor="middle" class="title ink">How the ATHENA Skill Works</text>
+  <path d="M250 112 Q700 142 1140 112" class="wire"/>
+
+  <g transform="translate(86,170)">
+    <ellipse cx="165" cy="52" rx="155" ry="48" class="box"/>
+    <text x="165" y="64" text-anchor="middle" class="label ink">Get Request!</text>
+  </g>
+
+  <g transform="translate(892,145)">
+    <rect x="0" y="0" width="300" height="220" class="box"/>
+    <text x="150" y="52" text-anchor="middle" class="label ink">Write PRD</text>
+    <line x1="50" y1="88" x2="250" y2="88" class="wire"/>
+    <line x1="50" y1="122" x2="250" y2="122" class="wire"/>
+    <line x1="50" y1="156" x2="250" y2="156" class="wire"/>
+  </g>
+
+  <text x="600" y="235" text-anchor="middle" class="label ink">Revise &amp; Plan</text>
+  <path d="M405 225 Q660 110 892 212" class="wire" marker-end="url(#arrow)"/>
+  <path d="M892 268 Q660 380 405 250" class="wire" marker-end="url(#arrow)"/>
+
+  <g transform="translate(510,335)">
+    <rect x="0" y="0" width="360" height="176" class="box"/>
+    <line x1="180" y1="12" x2="180" y2="164" class="wire"/>
+    <text x="90" y="54" text-anchor="middle" class="label ink">Spec</text>
+    <text x="270" y="54" text-anchor="middle" class="label ink">Risks</text>
+    <line x1="44" y1="92" x2="134" y2="92" class="wire"/>
+    <line x1="224" y1="92" x2="314" y2="92" class="wire"/>
+    <line x1="44" y1="124" x2="134" y2="124" class="wire"/>
+    <line x1="224" y1="124" x2="314" y2="124" class="wire"/>
+  </g>
+
+  <text x="700" y="548" text-anchor="middle" class="label ink">Revise &amp; Plan</text>
+  <text x="700" y="582" text-anchor="middle" class="tiny ink">import { Skill } from "athena"</text>
+
+  <g transform="translate(960,500)">
+    <rect x="0" y="0" width="310" height="200" class="box"/>
+    <text x="155" y="52" text-anchor="middle" class="label ink">TRACES</text>
+    <line x1="44" y1="90" x2="266" y2="90" class="wire"/>
+    <text x="155" y="134" text-anchor="middle" class="small ink">Input/Output</text>
+    <text x="155" y="168" text-anchor="middle" class="small ink">Interfaces</text>
+  </g>
+
+  <g transform="translate(620,598)">
+    <rect x="0" y="0" width="210" height="154" class="box"/>
+    <text x="105" y="50" text-anchor="middle" class="small ink">Do &amp; Log Work</text>
+    <line x1="34" y1="86" x2="176" y2="86" class="wire"/>
+    <line x1="34" y1="118" x2="176" y2="118" class="wire"/>
+  </g>
+
+  <g transform="translate(140,560)">
+    <rect x="0" y="0" width="230" height="154" class="box"/>
+    <text x="115" y="52" text-anchor="middle" class="label ink">Commit</text>
+    <line x1="44" y1="92" x2="184" y2="92" class="wire"/>
+    <line x1="44" y1="124" x2="184" y2="124" class="wire"/>
+  </g>
+
+  <text x="300" y="742" text-anchor="middle" class="small ink">TRACE</text>
+
+  <g transform="translate(420,738)">
+    <rect x="0" y="0" width="340" height="128" class="box"/>
+    <text x="170" y="76" text-anchor="middle" class="label ink">Ralph Log</text>
+  </g>
+
+  <path d="M304 270 Q180 360 130 515" class="wire" marker-end="url(#arrow)"/>
+  <path d="M165 715 Q245 785 420 802" class="wire" marker-end="url(#arrow)"/>
+  <path d="M760 802 Q930 784 1040 700" class="wire" marker-end="url(#arrow)"/>
+  <path d="M1120 700 Q1185 540 1110 365" class="wire" marker-end="url(#arrow)"/>
+  <path d="M962 600 Q896 590 830 635" class="wire" marker-end="url(#arrow)"/>
+  <path d="M620 635 Q495 615 370 644" class="wire" marker-end="url(#arrow)"/>
+  <path d="M700 510 Q700 520 700 535" class="wire" marker-end="url(#arrow)"/>
+
+  <text x="700" y="890" text-anchor="middle" class="label ink">QA · Security · Traceability · Productivity</text>
+</svg>

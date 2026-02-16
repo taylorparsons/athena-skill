@@ -1,15 +1,18 @@
-Session: 2026-02-13 20:01
+Session: 2026-02-13 14:52
 Agent: Codex CLI
 Model: GPT-5
 Skills: athena
-Feature: 20260213-linkedin-personal-style
-Input: CR-20260213-1958
-Decisions: D-20260213-1959
-Spec: docs/specs/20260213-linkedin-personal-style/spec.md
-Tasks: docs/specs/20260213-linkedin-personal-style/tasks.md
-Goal: Create one additional LinkedIn-ready ATHENA post in personal operator style with clear setup and invoke-to-checkin flow.
+Feature: 20260213-checkin-merge-remote
+Input: CR-20260213-1452
+Decisions: D-20260213-1453
+Spec: docs/specs/20260213-checkin-merge-remote/spec.md
+Tasks: docs/specs/20260213-checkin-merge-remote/tasks.md
+Goal: Check in intended README visual changes, merge with remote main, and push while leaving unrelated local edits untouched.
 
 DONE
+- [2026-02-13 14:49] T-003: Applied scope correction to keep only the top image change and restored normal README prose structure. (Skills: athena)
+- [2026-02-13 14:37] T-002: Validated README visual/style changes and reconciled PRD/spec/tasks/progress to done. (Skills: athena, taylor-style-voice)
+- [2026-02-13 14:36] T-001: Added `docs/images/athena-readme-fast-visual.svg` and rewrote `README.md` in Taylor-style voice with a top fast-visual block. (Skills: athena, taylor-style-voice)
 - [2026-02-13 20:05] T-003: Validated personal-style draft content and reconciled PRD/spec/tasks/progress to done. (Skills: athena)
 - [2026-02-13 20:03] T-002: Added Codex and Claude setup blocks and tightened wording for low-hype personal style in v3 draft. (Skills: athena)
 - [2026-02-13 20:03] T-001: Drafted personal-style LinkedIn ATHENA post (v3) with direct framework sections and loop narrative. (Skills: athena)
@@ -39,6 +42,12 @@ NEXT
 - (none)
 
 NOTES
+- Commands run: `rg -n 'docs/images/athena-readme-fast-visual\\.svg|^context:|^tension:|^decision:|^execution:|^outcome:|^reflection:' README.md`; `python3 scripts/validate_install_targets.py`.
+- Validation: README retains the new top image and no literal style-label lines; install-target validation passed.
+- Reconciliation: updated PRD/spec/tasks/progress to reflect scope correction from style rewrite to image-only README change.
+- Commands run: `python3 /Users/taylorparsons/.codex/skills/taylor-style-voice/scripts/validate_style.py --file README.md --json`; `python3 scripts/validate_install_targets.py`; `rg -n 'athena-napkin-loop\\.svg|docs/images/athena-readme-fast-visual\\.svg' README.md`.
+- Validation: style validator passed with zero warnings/errors; install-target validation passed; README references the new tracked visual and does not reference the excluded untracked SVG.
+- Reconciliation: set `docs/specs/20260213-readme-fast-visual/spec.md` to `Status: Done`; moved T-001/T-002 to DONE and cleared NEXT/IN PROGRESS in the feature task list.
 - Commands run: security audit before/after low-priority hardening plus git config update for signing.
 - Validation: audit findings for `CODEOWNERS`, Dependabot, workflow, and `commit.gpgsign` resolved.
 - Note: commit hashes from pre-rewrite history were intentionally discarded as part of clean-history publication requirement.

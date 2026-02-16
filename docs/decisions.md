@@ -193,3 +193,79 @@ Alternatives considered:
 Acceptance / test:
 - A new `publishing/` draft exists and is distinct from v1/v2.
 - Draft includes direct, structured sections (problem/constraint/decision/evidence style), ATHENA loop narrative, and Codex/Claude copy/paste setup blocks.
+
+## D-20260213-1437
+Date: 2026-02-13 14:35
+Inputs: CR-20260213-1434, CR-20260213-1435
+PRD: README onboarding visual placement and asset source constraint
+
+Decision:
+Add a new tracked visual asset at `docs/images/athena-readme-fast-visual.svg` and place it at the top of `README.md`, while explicitly not using `docs/athena-napkin-loop.svg`.
+
+Rationale:
+The user requested a top README visual from the provided image and explicitly excluded the existing untracked SVG path.
+
+Alternatives considered:
+- Use `docs/athena-napkin-loop.svg` directly (rejected: explicitly disallowed by user).
+- Keep README text-only (rejected: conflicts with fast-visual request).
+
+Acceptance / test:
+- `README.md` references `docs/images/athena-readme-fast-visual.svg`.
+- `README.md` does not reference `docs/athena-napkin-loop.svg`.
+
+## D-20260213-1438
+Date: 2026-02-13 14:36
+Inputs: CR-20260213-1436
+PRD: README voice and documentation tone
+
+Decision:
+Rewrite `README.md` in Taylor-style voice using direct, structured sections (context, tension, decision, execution, outcome, reflection) while preserving existing install and validation facts.
+
+Rationale:
+The user explicitly asked for Taylor-style voice in README text, and the style skill defines concrete wording and structure constraints.
+
+Alternatives considered:
+- Keep current README wording with only the image insertion (rejected: does not satisfy explicit style request).
+- Apply heavy marketing framing to emphasize launch messaging (rejected: conflicts with provided style profile).
+
+Acceptance / test:
+- README headings and prose are direct, concrete, and structured.
+- Install commands and repository facts remain intact and executable.
+
+## D-20260213-1448
+Date: 2026-02-13 14:48
+Inputs: CR-20260213-1448
+PRD: README update scope correction
+
+Decision:
+Narrow the README change to image-only: keep the new top visual and restore normal README prose structure by removing literal style labels such as `context:`/`decision:`/`execution:`.
+
+Rationale:
+The user explicitly corrected the prior wording and asked to leave only the new image change.
+
+Alternatives considered:
+- Keep the Taylor-style labeled sections (rejected: conflicts with explicit user correction).
+- Remove both image and style edits (rejected: conflicts with "just add the image").
+
+Acceptance / test:
+- `README.md` retains `docs/images/athena-readme-fast-visual.svg` at the top.
+- `README.md` does not contain literal labels like `context:` `tension:` `decision:` `execution:` `outcome:` `reflection:`.
+
+## D-20260213-1453
+Date: 2026-02-13 14:52
+Inputs: CR-20260213-1452
+PRD: Check-in and remote merge execution policy
+
+Decision:
+Interpret "checkin a marge to remote" as a request to commit current intended ATHENA changes, merge with `origin/main`, and push to the remote repository. Stage only the intended README/docs/image changes and leave unrelated local modifications untouched.
+
+Rationale:
+The request explicitly asks for check-in and remote merge, and the working tree contains unrelated modified files that should not be included without explicit user direction.
+
+Alternatives considered:
+- Stage all modified files with `git add -A` (rejected: would include unrelated local changes).
+- Defer push and only make a local commit (rejected: conflicts with explicit remote merge request).
+
+Acceptance / test:
+- Local commit exists containing only intended README/docs/image updates.
+- Local `main` is merged with `origin/main` and pushed successfully.
