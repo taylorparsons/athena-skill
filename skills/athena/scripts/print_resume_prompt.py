@@ -54,6 +54,10 @@ def _find_section_first_task_line(lines: list[str], section: str) -> str | None:
         if stripped in SECTION_HEADERS:
             return None
         if stripped.startswith("-"):
+            # Skip placeholder bullets like "- (none)".
+            task_text = stripped[1:].strip().lower()
+            if task_text in {"(none)", "none"}:
+                continue
             return stripped
     return None
 
@@ -120,4 +124,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

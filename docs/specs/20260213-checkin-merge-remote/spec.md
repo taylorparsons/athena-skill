@@ -1,6 +1,6 @@
 # Feature Spec: 20260213-checkin-merge-remote
 
-Status: In Progress
+Status: Done
 Created: 2026-02-13 14:52
 Inputs: CR-20260213-1452
 Decisions: D-20260213-1453

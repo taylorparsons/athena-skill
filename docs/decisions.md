@@ -269,3 +269,21 @@ Alternatives considered:
 Acceptance / test:
 - Local commit exists containing only intended README/docs/image updates.
 - Local `main` is merged with `origin/main` and pushed successfully.
+
+## D-20260216-1318
+Date: 2026-02-16 13:18
+Inputs: CR-20260216-1317
+PRD: Review remediation for findings 1-5
+
+Decision:
+Interpret `on on 1-5` as approval to implement all five findings from the prior review in one scoped remediation feature.
+
+Rationale:
+The immediate prior message presented findings numbered 1 through 5 and asked whether to fix them; the user response references that exact set.
+
+Alternatives considered:
+- Ask for clarification before editing (rejected: likely unnecessary delay with clear local context).
+- Implement only finding #1 first (rejected: user referenced the full 1-5 set).
+
+Acceptance / test:
+- Findings 1-5 are remediated in code/docs and captured in PRD/spec/tasks/progress artifacts.

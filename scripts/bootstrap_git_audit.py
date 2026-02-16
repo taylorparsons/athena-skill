@@ -111,11 +111,12 @@ def main() -> int:
     args = parser.parse_args()
 
     repo = Path(args.repo).resolve()
+    repo_root = _repo_root(repo)
+
     out_path = Path(args.out)
     if not out_path.is_absolute():
-        out_path = (repo / out_path).resolve()
+        out_path = (repo_root / out_path).resolve()
 
-    repo_root = _repo_root(repo)
     total = _commit_count(repo_root)
     if total <= 0:
         raise RuntimeError("repository has no commits")

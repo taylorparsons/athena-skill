@@ -1,15 +1,18 @@
-Session: 2026-02-13 14:52
+Session: 2026-02-16 13:17
 Agent: Codex CLI
 Model: GPT-5
 Skills: athena
-Feature: 20260213-checkin-merge-remote
-Input: CR-20260213-1452
-Decisions: D-20260213-1453
-Spec: docs/specs/20260213-checkin-merge-remote/spec.md
-Tasks: docs/specs/20260213-checkin-merge-remote/tasks.md
-Goal: Check in intended README visual changes, merge with remote main, and push while leaving unrelated local edits untouched.
+Feature: 20260216-review-findings-remediation
+Input: CR-20260216-1317
+Decisions: D-20260216-1318
+Spec: docs/specs/20260216-review-findings-remediation/spec.md
+Tasks: docs/specs/20260216-review-findings-remediation/tasks.md
+Goal: Remediate review findings 1-5 across traceability docs, helper scripts, and security scanning coverage.
 
 DONE
+- [2026-02-16 13:18] T-001: Reconciled stale completion state in `20260213-checkin-merge-remote` spec/tasks artifacts. (Skills: athena)
+- [2026-02-16 13:19] T-002: Fixed helper script reliability for placeholder task parsing and repo-root output anchoring in both root and packaged copies. (Skills: athena)
+- [2026-02-16 13:20] T-003: Expanded markdown secret scan coverage and removed local absolute path residue from tracked progress notes. (Skills: athena)
 - [2026-02-13 14:49] T-003: Applied scope correction to keep only the top image change and restored normal README prose structure. (Skills: athena)
 - [2026-02-13 14:37] T-002: Validated README visual/style changes and reconciled PRD/spec/tasks/progress to done. (Skills: athena, taylor-style-voice)
 - [2026-02-13 14:36] T-001: Added `docs/images/athena-readme-fast-visual.svg` and rewrote `README.md` in Taylor-style voice with a top fast-visual block. (Skills: athena, taylor-style-voice)
@@ -42,10 +45,15 @@ NEXT
 - (none)
 
 NOTES
+- Commands run: `python3 scripts/validate_install_targets.py` -> pass (`skills/athena` target validated); `python3 -m py_compile scripts/print_resume_prompt.py scripts/bootstrap_git_audit.py skills/athena/scripts/print_resume_prompt.py skills/athena/scripts/bootstrap_git_audit.py` -> pass.
+- Commands run: `shasum scripts/print_resume_prompt.py skills/athena/scripts/print_resume_prompt.py scripts/bootstrap_git_audit.py skills/athena/scripts/bootstrap_git_audit.py` -> matching hashes per script pair.
+- Commands run: `rg -n '/Users/' docs/progress.txt docs/PRD.md docs/requests.md docs/decisions.md` -> no matches (exit 1 expected for no hits).
+- Validation: remediation updates compile and install-target CI guardrail check passes locally.
+- Decisions: Interpreted `on on 1-5` as approval to implement all five findings from the immediately prior review (D-20260216-1318).
 - Commands run: `rg -n 'docs/images/athena-readme-fast-visual\\.svg|^context:|^tension:|^decision:|^execution:|^outcome:|^reflection:' README.md`; `python3 scripts/validate_install_targets.py`.
 - Validation: README retains the new top image and no literal style-label lines; install-target validation passed.
 - Reconciliation: updated PRD/spec/tasks/progress to reflect scope correction from style rewrite to image-only README change.
-- Commands run: `python3 /Users/taylorparsons/.codex/skills/taylor-style-voice/scripts/validate_style.py --file README.md --json`; `python3 scripts/validate_install_targets.py`; `rg -n 'athena-napkin-loop\\.svg|docs/images/athena-readme-fast-visual\\.svg' README.md`.
+- Commands run: `python3 "$CODEX_HOME/skills/taylor-style-voice/scripts/validate_style.py" --file README.md --json`; `python3 scripts/validate_install_targets.py`; `rg -n 'athena-napkin-loop\\.svg|docs/images/athena-readme-fast-visual\\.svg' README.md`.
 - Validation: style validator passed with zero warnings/errors; install-target validation passed; README references the new tracked visual and does not reference the excluded untracked SVG.
 - Reconciliation: set `docs/specs/20260213-readme-fast-visual/spec.md` to `Status: Done`; moved T-001/T-002 to DONE and cleared NEXT/IN PROGRESS in the feature task list.
 - Commands run: security audit before/after low-priority hardening plus git config update for signing.

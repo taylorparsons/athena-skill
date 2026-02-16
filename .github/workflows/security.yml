@@ -20,7 +20,7 @@ jobs:
       - name: Scan for obvious secret patterns
         run: |
           set -euo pipefail
-          if git grep -nE '(BEGIN (RSA|EC|OPENSSH) PRIVATE KEY|AKIA[0-9A-Z]{16}|ghp_[0-9A-Za-z]{36}|xox[baprs]-[0-9A-Za-z-]{10,})' -- . ':!*.md' ':!LICENSE' ':!SECURITY.md'; then
+          if git grep -nE '(BEGIN (RSA|EC|OPENSSH) PRIVATE KEY|AKIA[0-9A-Z]{16}|ghp_[0-9A-Za-z]{36}|xox[baprs]-[0-9A-Za-z-]{10,})' -- . ':!LICENSE'; then
             echo "Potential secret pattern found."
             exit 1
           fi

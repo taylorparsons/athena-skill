@@ -282,3 +282,13 @@ checkin a marge to remote
 
 Notes:
 - Interpret as: create a local check-in commit and merge/push to remote.
+
+## CR-20260216-1317
+Date: 2026-02-16 13:17
+Source: chat
+
+Request (verbatim):
+on on 1-5
+
+Notes:
+- Interpreted as instruction to implement findings 1-5 from the immediately preceding project review.
