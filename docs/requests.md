@@ -292,3 +292,23 @@ on on 1-5
 
 Notes:
 - Interpreted as instruction to implement findings 1-5 from the immediately preceding project review.
+
+## CR-20260217-0846
+Date: 2026-02-17 08:46
+Source: chat
+
+Request (verbatim):
+to the athena skill create an svg asset for skill icon that invokes the warrier
+
+Notes:
+- Interpreted `warrier` as `warrior` for the icon concept.
+
+## CR-20260217-1417
+Date: 2026-02-17 14:17
+Source: chat
+
+Request (verbatim):
+$skill-creator update athena install in .codex to inlude the /assets/athena-warrior-icon.svg
+
+Notes:
+- Update ATHENA install metadata/packaging so the warrior icon asset is included at install time.

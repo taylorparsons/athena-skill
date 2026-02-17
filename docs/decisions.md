@@ -287,3 +287,41 @@ Alternatives considered:
 
 Acceptance / test:
 - Findings 1-5 are remediated in code/docs and captured in PRD/spec/tasks/progress artifacts.
+
+## D-20260217-0847
+Date: 2026-02-17 08:47
+Inputs: CR-20260217-0846
+PRD: ATHENA skill visual asset packaging
+
+Decision:
+Create a new SVG icon asset at `skills/athena/assets/athena-warrior-icon.svg` to represent a warrior motif for the ATHENA skill package.
+
+Rationale:
+The request is specifically for an SVG skill icon invoking a warrior concept. Adding the asset under the installable skill path keeps it packaged with the `athena` skill.
+
+Alternatives considered:
+- Store the icon only under `docs/images/` (rejected: not part of the installable skill path).
+- Add raster image instead of SVG (rejected: request explicitly asks for SVG).
+
+Acceptance / test:
+- `skills/athena/assets/athena-warrior-icon.svg` exists and renders as a valid SVG icon.
+- ATHENA docs reflect the new request/decision/spec/task/progress trail for this change.
+
+## D-20260217-1419
+Date: 2026-02-17 14:19
+Inputs: CR-20260217-1417
+PRD: ATHENA install metadata for warrior icon asset
+
+Decision:
+Add explicit icon metadata in `skills/athena/agents/openai.yaml` (`icon_small` and `icon_large` -> `./assets/athena-warrior-icon.svg`) and extend install-target validation to require the icon asset and those metadata bindings.
+
+Rationale:
+The request specifically targets the `.codex` ATHENA install to include the warrior icon asset path. Declaring icon fields in installable skill metadata and enforcing them in validation provides deterministic packaging behavior.
+
+Alternatives considered:
+- Keep only the asset file without metadata bindings (rejected: install UI/config would not explicitly reference the icon).
+- Update only local `~/.codex/skills/athena` without repo guardrails (rejected: not durable for future installs).
+
+Acceptance / test:
+- `skills/athena/agents/openai.yaml` contains `icon_small` and `icon_large` set to `./assets/athena-warrior-icon.svg`.
+- `scripts/validate_install_targets.py` fails if required install asset/metadata bindings are missing and passes in current repo state.
