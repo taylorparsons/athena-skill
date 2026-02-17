@@ -213,15 +213,53 @@ def run_play(width: int, height: int, seed: int, max_ticks: int, frame_delay_ms:
         nonlocal food
         nonlocal score
         nonlocal direction
-        screen.nodelay(True)
+        tick_delay_ms = max(frame_delay_ms, 250)
+        screen.timeout(tick_delay_ms)
+        color_enabled = False
+        if curses.has_colors():
+            curses.start_color()
+            curses.use_default_colors()
+            curses.init_pair(1, curses.COLOR_GREEN, -1)
+            curses.init_pair(2, curses.COLOR_GREEN, -1)
+            curses.init_pair(3, curses.COLOR_RED, -1)
+            color_enabled = True
+
+        def render_row(row: str, y: int):
+            symbols = {
+                "#": "█",
+                "*": "■",
+                "H": "■",
+                "S": "■",
+                " ": " ",
+            }
+            for x, ch in enumerate(row):
+                display = symbols.get(ch, ch)
+                if not color_enabled:
+                    screen.addstr(y, x, display)
+                    continue
+                if ch == "H":
+                    attr = curses.color_pair(1) | curses.A_BOLD
+                elif ch == "S":
+                    attr = curses.color_pair(2)
+                elif ch == "*":
+                    attr = curses.color_pair(3)
+                else:
+                    attr = 0
+                screen.addstr(y, x, display, attr)
+
         curses.curs_set(0)
         alive = True
         collision = None
         board = draw_board(width, height, snake, food)
         end_reason = "in_progress"
+        screen.addstr(
+            height + 2,
+            0,
+            "Press a direction key to start (Q quits).",
+        )
+        screen.refresh()
 
         for tick in range(1, max_ticks + 1):
-            start_ms = time.time() * 1000
             key = screen.getch()
             if key in (ord("q"), ord("Q")):
                 end_reason = "quit"
@@ -234,7 +272,7 @@ def run_play(width: int, height: int, seed: int, max_ticks: int, frame_delay_ms:
 
             screen.clear()
             for y, row in enumerate(board):
-                screen.addstr(y, 0, row)
+                render_row(row, y)
             screen.addstr(
                 height,
                 0,
@@ -265,11 +303,6 @@ def run_play(width: int, height: int, seed: int, max_ticks: int, frame_delay_ms:
             if not alive:
                 end_reason = collision
                 break
-
-            elapsed_ms = int((time.time() * 1000) - start_ms)
-            delay = max(0, frame_delay_ms - elapsed_ms)
-            if delay > 0:
-                curses.napms(delay)
 
         if not alive:
             screen.addstr(
@@ -311,7 +344,7 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--max-ticks", type=int, default=80)
     parser.add_argument("--moves-file", default="moves.txt")
-    parser.add_argument("--frame-delay-ms", type=int, default=0)
+    parser.add_argument("--frame-delay-ms", type=int, default=250)
     parser.add_argument("--output", default="game-metrics.json")
     parser.add_argument("--play", action="store_true", help="Open interactive terminal game")
     args = parser.parse_args()

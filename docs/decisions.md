@@ -325,3 +325,40 @@ Alternatives considered:
 Acceptance / test:
 - `skills/athena/agents/openai.yaml` contains `icon_small` and `icon_large` set to `./assets/athena-warrior-icon.svg`.
 - `scripts/validate_install_targets.py` fails if required install asset/metadata bindings are missing and passes in current repo state.
+
+## D-20260217-1452
+Date: 2026-02-17 14:52
+Inputs: CR-20260217-1451
+PRD: Absolute-path hygiene follow-up remediation
+
+Decision:
+Patch tracked docs that still include local absolute-path tokens and verify resolution by rerunning the repository security audit.
+
+Rationale:
+The user requested absolute-path remediation, and the current audit reports a `HIGH` finding limited to two documentation lines.
+
+Alternatives considered:
+- Suppress the audit rule instead of fixing docs (rejected: hides a hygiene issue instead of resolving it).
+- Leave legacy user-home absolute path examples in completed artifacts (rejected: continues to trigger `HIGH` findings).
+
+Acceptance / test:
+- `rg -n 'user-home absolute path' docs/` returns only policy wording and no literal local home-directory path tokens.
+- `audit_repository_security.py` no longer reports a `HIGH` absolute-path finding.
+
+## D-20260217-1536
+Date: 2026-02-17 15:36
+Inputs: CR-20260217-1535
+PRD: ATHENA hardening documentation planning
+
+Decision:
+Treat this request as a documentation/planning feature in the ATHENA repository: define traceable requirements/tasks for the four hardening items and generate an `aipm-agentic-workflow` JSON artifact, without implementing script/code behavior changes in this session.
+
+Rationale:
+The user asked to create documents and explicitly clarified the target repository path for documentation placement.
+
+Alternatives considered:
+- Implement all four hardening changes immediately (rejected: request is to create docs; implementation should run as follow-up tasks).
+
+Acceptance / test:
+- `docs/specs/20260217-athena-hardening-plan/spec.md` and `docs/specs/20260217-athena-hardening-plan/tasks.md` exist with traceability links.
+- `artifacts/agentic_workflow/20260217-1535-athena-hardening-plan.json` exists with `task_graph`, `agents`, and `interventions`.

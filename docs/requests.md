@@ -312,3 +312,30 @@ $skill-creator update athena install in .codex to inlude the /assets/athena-warr
 
 Notes:
 - Update ATHENA install metadata/packaging so the warrior icon asset is included at install time.
+
+## CR-20260217-1451
+Date: 2026-02-17 14:51
+Source: chat
+
+Request (verbatim):
+address absolute paths
+
+Notes:
+- Remediate repository absolute-path audit findings in tracked docs.
+
+## CR-20260217-1535
+Date: 2026-02-17 15:35
+Source: chat
+
+Request (verbatim):
+$aipm-agentic-workflow create the documents for this Add a traceability linter that validates Sources, Verifies, and Implements references.
+Consolidate overlapping merge-sync sections into one canonical checklist.
+Make path-scoped staging the default in traceable commit helper usage.
+Add schema validation for docs/progress.txt to reduce restore failures. process through $athena
+
+this /Volumes/T9/code/pm_reflection/docs/specs/20260217-athena-hardening should be in the repo for Athena
+
+here is the repo /Volumes/T9/code/SKILLS/athena the docs should be in
+
+Notes:
+- Scope is documentation artifacts in the ATHENA repo for the four hardening items.

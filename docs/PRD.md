@@ -1,9 +1,9 @@
 # PRD: ATHENA Skill Repo
 
 Status: Active
-Updated: 2026-02-17 14:22
-Inputs: CR-20260211-0908, CR-20260211-0939, CR-20260211-1004, CR-20260211-1010, CR-20260211-1019, CR-20260211-1325, CR-20260211-1358, CR-20260212-1646, CR-20260213-0912, CR-20260213-1958, CR-20260213-1434, CR-20260213-1435, CR-20260213-1436, CR-20260213-1448, CR-20260213-1452, CR-20260216-1317, CR-20260217-0846, CR-20260217-1417
-Decisions: D-20260211-0940, D-20260211-1005, D-20260211-1012, D-20260211-1020, D-20260211-1326, D-20260211-1400, D-20260212-1647, D-20260212-1648, D-20260213-0913, D-20260213-1959, D-20260213-1437, D-20260213-1438, D-20260213-1448, D-20260213-1453, D-20260216-1318, D-20260217-0847, D-20260217-1419
+Updated: 2026-02-17 15:36
+Inputs: CR-20260211-0908, CR-20260211-0939, CR-20260211-1004, CR-20260211-1010, CR-20260211-1019, CR-20260211-1325, CR-20260211-1358, CR-20260212-1646, CR-20260213-0912, CR-20260213-1958, CR-20260213-1434, CR-20260213-1435, CR-20260213-1436, CR-20260213-1448, CR-20260213-1452, CR-20260216-1317, CR-20260217-0846, CR-20260217-1417, CR-20260217-1451, CR-20260217-1535
+Decisions: D-20260211-0940, D-20260211-1005, D-20260211-1012, D-20260211-1020, D-20260211-1326, D-20260211-1400, D-20260212-1647, D-20260212-1648, D-20260213-0913, D-20260213-1959, D-20260213-1437, D-20260213-1438, D-20260213-1448, D-20260213-1453, D-20260216-1318, D-20260217-0847, D-20260217-1419, D-20260217-1452, D-20260217-1536
 
 ## Summary
 Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude) with scoped traceability artifacts for this repo only. (Sources: CR-20260211-0908, CR-20260211-0939, CR-20260212-1646; D-20260211-0940, D-20260212-1647)
@@ -24,6 +24,8 @@ Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude)
 - Remediate findings 1-5 from the review with scoped fixes in docs/workflows/scripts and reconcile stale traceability state. (Sources: CR-20260216-1317; D-20260216-1318)
 - Add a warrior-themed SVG icon asset to the installable ATHENA skill package. (Sources: CR-20260217-0846; D-20260217-0847)
 - Ensure ATHENA install metadata binds the packaged warrior icon path and is covered by install-target validation. (Sources: CR-20260217-1417; D-20260217-1419)
+- Remediate follow-up absolute-path residues in tracked docs so repository security audit no longer reports a `HIGH` path finding. (Sources: CR-20260217-1451; D-20260217-1452)
+- Document and sequence the next ATHENA hardening workstreams (traceability linting, merge-sync checklist consolidation, path-scoped staging defaults, and `docs/progress.txt` schema validation) with explicit task traceability and agentic workflow output. (Sources: CR-20260217-1535; D-20260217-1536)
 
 ## Functional requirements
 - FR-ATHENA-001: Provide canonical core workflow in `core/athena-framework.md`. (Sources: CR-20260211-0908, CR-20260212-1646; D-20260212-1648)
@@ -42,6 +44,8 @@ Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude)
 - FR-ATHENA-014: Resolve review findings 1-5 by reconciling stale feature status, hardening helper scripts, expanding markdown secret scanning, and removing remaining local absolute path residue from tracked docs. (Sources: CR-20260216-1317; D-20260216-1318)
 - FR-ATHENA-015: Provide a warrior-themed SVG icon asset at `skills/athena/assets/athena-warrior-icon.svg` for ATHENA skill packaging and reuse. (Sources: CR-20260217-0846; D-20260217-0847)
 - FR-ATHENA-016: Ensure installable ATHENA metadata (`skills/athena/agents/openai.yaml`) sets `icon_small`/`icon_large` to `./assets/athena-warrior-icon.svg` and validate this contract in `scripts/validate_install_targets.py`. (Sources: CR-20260217-1417; D-20260217-1419)
+- FR-ATHENA-017: Remove remaining absolute-path residues from tracked docs and verify remediation using repository security audit checks. (Sources: CR-20260217-1451; D-20260217-1452)
+- FR-ATHENA-018: Produce ATHENA hardening planning artifacts in `docs/specs/20260217-athena-hardening-plan/` and `artifacts/agentic_workflow/20260217-1535-athena-hardening-plan.json`, and define implementation backlog tasks for the four hardening items. (Sources: CR-20260217-1535; D-20260217-1536)
 
 ## Non-functional requirements
 - NFR-ATHENA-001: Exclude local/generated artifacts from commits via `.gitignore`. (Sources: CR-20260211-0939, CR-20260211-1010; D-20260211-0940, D-20260211-1012)
@@ -61,8 +65,13 @@ Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude)
 - Shipping imported historical docs from unrelated product repos as canonical artifacts in this share repo. (Sources: CR-20260211-0939; D-20260211-0940)
 
 ## Next / backlog
-- (none currently)
+- Implement traceability linter for `Sources`/`Verifies`/`Implements` reference integrity checks. (Sources: CR-20260217-1535)
+- Consolidate overlapping merge-sync sections into one canonical checklist. (Sources: CR-20260217-1535)
+- Make path-scoped staging the default for traceable commit helper usage. (Sources: CR-20260217-1535)
+- Add `docs/progress.txt` schema validation and integrate it with context-restore flows. (Sources: CR-20260217-1535)
+- Implemented in: `docs/specs/20260217-athena-hardening-plan/spec.md`, `docs/specs/20260217-athena-hardening-plan/tasks.md`, `artifacts/agentic_workflow/20260217-1535-athena-hardening-plan.json`.
 - Implemented in: `skills/athena/SKILL.md`, `core/athena-framework.md`, `README.md`, `AVAILABLE_SKILLS.md`, `adapters/codex/SKILL.md`, `adapters/claude/CLAUDE_PROMPT.md`, `scripts/validate_install_targets.py`, `publishing/linkedin-post-athena-flow-v1.md`, `publishing/linkedin-post-athena-flow-v2.md`, `publishing/linkedin-post-athena-flow-v3-personal-style.md`, `docs/images/athena-readme-fast-visual.svg`.
 - Implemented in: `docs/specs/20260213-checkin-merge-remote/spec.md`, `docs/specs/20260213-checkin-merge-remote/tasks.md`, `scripts/print_resume_prompt.py`, `skills/athena/scripts/print_resume_prompt.py`, `scripts/bootstrap_git_audit.py`, `skills/athena/scripts/bootstrap_git_audit.py`, `.github/workflows/security.yml`, `docs/progress.txt`, `docs/specs/20260216-review-findings-remediation/spec.md`, `docs/specs/20260216-review-findings-remediation/tasks.md`.
 - Implemented in: `skills/athena/assets/athena-warrior-icon.svg`, `docs/specs/20260217-athena-warrior-icon/spec.md`, `docs/specs/20260217-athena-warrior-icon/tasks.md`.
 - Implemented in: `skills/athena/agents/openai.yaml`, `scripts/validate_install_targets.py`, `docs/specs/20260217-athena-install-icon-metadata/spec.md`, `docs/specs/20260217-athena-install-icon-metadata/tasks.md`.
+- Implemented in: `docs/specs/20260217-absolute-path-hygiene/spec.md`, `docs/specs/20260217-absolute-path-hygiene/tasks.md`, `docs/specs/20260216-review-findings-remediation/spec.md`, `docs/progress.txt`.

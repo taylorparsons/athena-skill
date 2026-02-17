@@ -31,7 +31,7 @@ Narrative:
 
 Acceptance scenarios:
 1. Given markdown-heavy audit docs, When the security workflow runs, Then markdown files are included in secret-pattern scanning. (Verifies: FR-003)
-2. Given tracked docs, When path hygiene is checked, Then no local absolute `/Users/...` path remains in `docs/progress.txt`. (Verifies: FR-004)
+2. Given tracked docs, When path hygiene is checked, Then no local absolute user-home path token remains in `docs/progress.txt`. (Verifies: FR-004)
 
 ## Requirements
 
