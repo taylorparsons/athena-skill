@@ -1,34 +1,54 @@
 # Feature Spec: 20260217-athena-hardening-plan
 
-Status: Done
+Status: Active
 Created: 2026-02-17 15:36
-Inputs: CR-20260217-1535
-Decisions: D-20260217-1536
+Inputs: CR-20260217-1535, CR-20260217-1550
+Decisions: D-20260217-1536, D-20260217-1551
 
 ## Summary
-- Define execution-ready ATHENA documentation for four hardening improvements and capture a structured agentic workflow artifact for implementation handoff.
+- Implement all remaining ATHENA hardening workstreams after the planning phase: traceability linting, canonical merge/check-in checklist consolidation, path-scoped staging defaults, and progress-log schema validation integrated with resume flow.
 
 ## User Stories & Acceptance
 
-### US1: Plan ATHENA hardening changes with traceability (Priority: P1)
+### US1: Enforce traceability integrity automatically (Priority: P1)
 Narrative:
-- As a maintainer, I want a documented plan for the four hardening items, so implementation can proceed with clear requirements, ownership, and risk controls.
+- As a maintainer, I want automated checks for `Sources`, `Verifies`, and `Implements`, so broken traceability links are caught before task closeout.
 
 Acceptance scenarios:
-1. Given this feature spec, When reviewed, Then it defines requirements for traceability linting, merge-sync checklist consolidation, path-scoped staging defaults, and progress schema validation. (Verifies: FR-001, FR-002, FR-003, FR-004)
-2. Given agentic planning needs, When workflow output is produced, Then `artifacts/agentic_workflow/20260217-1535-athena-hardening-plan.json` exists and includes `task_graph`, `agents`, and `interventions`. (Verifies: FR-005)
-3. Given ATHENA process requirements, When the planning task is closed, Then tracking docs (`docs/PRD.md`, tasks file, and `docs/progress.txt`) reflect completion and next implementation tasks. (Verifies: FR-006)
+1. Given PRD/spec/task docs, When traceability lint runs, Then it fails on missing/mismatched references and passes on valid links. (Verifies: FR-001)
+
+### US2: Remove merge-sync ambiguity (Priority: P1)
+Narrative:
+- As a maintainer, I want one canonical merge/check-in reconciliation checklist, so operators do not execute overlapping sections inconsistently.
+
+Acceptance scenarios:
+1. Given ATHENA guidance, When merge/check-in reconciliation is reviewed, Then only one canonical checklist exists for this control point. (Verifies: FR-002)
+
+### US3: Make safer staging the default (Priority: P1)
+Narrative:
+- As a maintainer, I want traceable commits to default to path-scoped staging, so unrelated files are not accidentally included.
+
+Acceptance scenarios:
+1. Given commit helper usage without explicit overrides, When staging runs, Then it stages scoped paths by default and requires explicit opt-in for broad staging. (Verifies: FR-003)
+
+### US4: Prevent restore failures from malformed progress logs (Priority: P1)
+Narrative:
+- As a maintainer, I want progress-log schema validation in restore flow, so malformed `docs/progress.txt` is surfaced early.
+
+Acceptance scenarios:
+1. Given malformed progress logs, When resume prompt generation runs, Then schema errors are reported and execution stops (unless explicitly overridden). (Verifies: FR-004)
+2. Given valid logs, When resume prompt generation runs, Then resume output remains available and task selection works. (Verifies: FR-004)
 
 ## Requirements
 
 Functional requirements:
-- FR-001: Define an implementation task for a traceability linter that validates `Sources`, `Verifies`, and `Implements` reference integrity across PRD/spec/tasks docs. (Sources: CR-20260217-1535; D-20260217-1536)
-- FR-002: Define an implementation task to consolidate overlapping merge-sync sections into one canonical checklist in ATHENA guidance. (Sources: CR-20260217-1535; D-20260217-1536)
-- FR-003: Define an implementation task to make path-scoped staging the default behavior for traceable commit helper usage. (Sources: CR-20260217-1535; D-20260217-1536)
-- FR-004: Define an implementation task to add schema validation for `docs/progress.txt` to reduce context-restore failures. (Sources: CR-20260217-1535; D-20260217-1536)
-- FR-005: Produce structured `aipm-agentic-workflow` output at `artifacts/agentic_workflow/20260217-1535-athena-hardening-plan.json`. (Sources: CR-20260217-1535; D-20260217-1536)
-- FR-006: Record planning completion and implementation backlog in ATHENA tracking artifacts. (Sources: CR-20260217-1535)
+- FR-001: Add a traceability linter script that validates `Sources`, `Verifies`, and `Implements` references across `docs/PRD.md`, `docs/specs/*/spec.md`, and `docs/specs/*/tasks.md`. (Sources: CR-20260217-1535, CR-20260217-1550; D-20260217-1551)
+- FR-002: Consolidate overlapping merge-sync guidance in ATHENA skill docs into one canonical merge/check-in reconciliation checklist. (Sources: CR-20260217-1535, CR-20260217-1550; D-20260217-1551)
+- FR-003: Update traceable commit helper behavior to default to path-scoped staging, with explicit override for staging all changes. (Sources: CR-20260217-1535, CR-20260217-1550; D-20260217-1551)
+- FR-004: Add schema validation for `docs/progress.txt` and integrate it with `print_resume_prompt.py` execution flow. (Sources: CR-20260217-1535, CR-20260217-1550; D-20260217-1551)
+- FR-005: Preserve the structured hardening planning artifact at `artifacts/agentic_workflow/20260217-1535-athena-hardening-plan.json`. (Sources: CR-20260217-1535; D-20260217-1536)
+- FR-006: Preserve audit-traceable planning completion history for `T-001` in feature tasks/progress artifacts. (Sources: CR-20260217-1535; D-20260217-1536)
 
 ## Edge cases
-- Progress schema validation should allow explicit placeholders like `- (none)` while still rejecting malformed section structure. (Verifies: FR-004)
-- Path-scoped staging defaults must avoid accidental omission of required traceability docs in commits. (Verifies: FR-003)
+- Progress schema validation allows placeholders such as `- (none)` while still enforcing required headers and section order. (Verifies: FR-004)
+- Path-scoped staging defaults do not silently skip missing paths and provide actionable errors. (Verifies: FR-003)

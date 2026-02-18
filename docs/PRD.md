@@ -1,9 +1,9 @@
 # PRD: ATHENA Skill Repo
 
 Status: Active
-Updated: 2026-02-17 15:36
-Inputs: CR-20260211-0908, CR-20260211-0939, CR-20260211-1004, CR-20260211-1010, CR-20260211-1019, CR-20260211-1325, CR-20260211-1358, CR-20260212-1646, CR-20260213-0912, CR-20260213-1958, CR-20260213-1434, CR-20260213-1435, CR-20260213-1436, CR-20260213-1448, CR-20260213-1452, CR-20260216-1317, CR-20260217-0846, CR-20260217-1417, CR-20260217-1451, CR-20260217-1535
-Decisions: D-20260211-0940, D-20260211-1005, D-20260211-1012, D-20260211-1020, D-20260211-1326, D-20260211-1400, D-20260212-1647, D-20260212-1648, D-20260213-0913, D-20260213-1959, D-20260213-1437, D-20260213-1438, D-20260213-1448, D-20260213-1453, D-20260216-1318, D-20260217-0847, D-20260217-1419, D-20260217-1452, D-20260217-1536
+Updated: 2026-02-17 15:50
+Inputs: CR-20260211-0908, CR-20260211-0939, CR-20260211-1004, CR-20260211-1010, CR-20260211-1019, CR-20260211-1325, CR-20260211-1358, CR-20260212-1646, CR-20260213-0912, CR-20260213-1958, CR-20260213-1434, CR-20260213-1435, CR-20260213-1436, CR-20260213-1448, CR-20260213-1452, CR-20260216-1317, CR-20260217-0846, CR-20260217-1417, CR-20260217-1451, CR-20260217-1535, CR-20260217-1550
+Decisions: D-20260211-0940, D-20260211-1005, D-20260211-1012, D-20260211-1020, D-20260211-1326, D-20260211-1400, D-20260212-1647, D-20260212-1648, D-20260213-0913, D-20260213-1959, D-20260213-1437, D-20260213-1438, D-20260213-1448, D-20260213-1453, D-20260216-1318, D-20260217-0847, D-20260217-1419, D-20260217-1452, D-20260217-1536, D-20260217-1551
 
 ## Summary
 Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude) with scoped traceability artifacts for this repo only. (Sources: CR-20260211-0908, CR-20260211-0939, CR-20260212-1646; D-20260211-0940, D-20260212-1647)
@@ -26,6 +26,7 @@ Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude)
 - Ensure ATHENA install metadata binds the packaged warrior icon path and is covered by install-target validation. (Sources: CR-20260217-1417; D-20260217-1419)
 - Remediate follow-up absolute-path residues in tracked docs so repository security audit no longer reports a `HIGH` path finding. (Sources: CR-20260217-1451; D-20260217-1452)
 - Document and sequence the next ATHENA hardening workstreams (traceability linting, merge-sync checklist consolidation, path-scoped staging defaults, and `docs/progress.txt` schema validation) with explicit task traceability and agentic workflow output. (Sources: CR-20260217-1535; D-20260217-1536)
+- Complete implementation of all queued ATHENA hardening workstreams in the current feature execution cycle. (Sources: CR-20260217-1550; D-20260217-1551)
 
 ## Functional requirements
 - FR-ATHENA-001: Provide canonical core workflow in `core/athena-framework.md`. (Sources: CR-20260211-0908, CR-20260212-1646; D-20260212-1648)
@@ -46,6 +47,7 @@ Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude)
 - FR-ATHENA-016: Ensure installable ATHENA metadata (`skills/athena/agents/openai.yaml`) sets `icon_small`/`icon_large` to `./assets/athena-warrior-icon.svg` and validate this contract in `scripts/validate_install_targets.py`. (Sources: CR-20260217-1417; D-20260217-1419)
 - FR-ATHENA-017: Remove remaining absolute-path residues from tracked docs and verify remediation using repository security audit checks. (Sources: CR-20260217-1451; D-20260217-1452)
 - FR-ATHENA-018: Produce ATHENA hardening planning artifacts in `docs/specs/20260217-athena-hardening-plan/` and `artifacts/agentic_workflow/20260217-1535-athena-hardening-plan.json`, and define implementation backlog tasks for the four hardening items. (Sources: CR-20260217-1535; D-20260217-1536)
+- FR-ATHENA-019: Implement the four ATHENA hardening workstreams in repo scripts/docs: traceability linter, canonical merge/check-in checklist, path-scoped staging default, and progress schema validation integrated with resume flow. (Sources: CR-20260217-1550; D-20260217-1551)
 
 ## Non-functional requirements
 - NFR-ATHENA-001: Exclude local/generated artifacts from commits via `.gitignore`. (Sources: CR-20260211-0939, CR-20260211-1010; D-20260211-0940, D-20260211-1012)
