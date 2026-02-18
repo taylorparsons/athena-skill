@@ -382,3 +382,21 @@ Acceptance / test:
 - ATHENA guidance contains one canonical merge/check-in checklist section.
 - Commit helper defaults to path-scoped staging unless explicitly overridden.
 - `docs/progress.txt` schema validation is implemented and integrated with resume prompt flow.
+
+## D-20260218-0903
+Date: 2026-02-18 09:03
+Inputs: CR-20260218-0902
+PRD: ATHENA release versioning
+
+Decision:
+Implement the request as a repository version bump by updating `VERSION` from `1.0.1` to `1.1.0`, with ATHENA traceability docs for this change.
+
+Rationale:
+The user requested only a version update; the minimal correct change is updating the canonical version file.
+
+Alternatives considered:
+- Update additional release artifacts without request (rejected: unnecessary scope expansion).
+
+Acceptance / test:
+- `VERSION` equals `1.1.0`.
+- ATHENA spec/tasks/progress records show the version bump task completed.

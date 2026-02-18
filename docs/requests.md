@@ -351,3 +351,13 @@ complete all of the work
 
 Notes:
 - Interpreted as implementation request to finish all remaining tasks for feature `20260217-athena-hardening-plan`.
+
+## CR-20260218-0902
+Date: 2026-02-18 09:02
+Source: chat
+
+Request (verbatim):
+update the version to 1.1.0
+
+Notes:
+- Apply version bump in the ATHENA repo.
