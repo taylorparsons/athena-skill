@@ -10,6 +10,8 @@ Tasks: docs/specs/20260217-athena-hardening-plan/tasks.md
 Goal: Complete all remaining ATHENA hardening implementation tasks (T-002 through T-005).
 
 DONE
+- [2026-02-17 16:02] T-004: Updated traceable commit helper defaults to path-scoped staging with explicit `--all-changes` override and synced docs. (Skills: athena)
+- [2026-02-17 16:01] T-003: Consolidated merge/check-in guidance into one canonical checklist in root and packaged ATHENA skill docs. (Skills: athena)
 - [2026-02-17 15:54] T-002: Implemented traceability linter for `Sources`, `Verifies`, and `Implements` references in root and packaged scripts. (Skills: athena)
 - [2026-02-17 15:36] T-001: Created hardening planning docs and structured agentic workflow output in the ATHENA repo. (Skills: athena, aipm-agentic-workflow)
 - [2026-02-17 14:56] T-001: Removed remaining absolute-path doc residues and revalidated repository security audit path hygiene. (Skills: athena, git-workflow-automation)
@@ -44,11 +46,10 @@ DONE
 - [2026-02-11 14:03] T-003: Added install-target validation script/workflow and constrained validation to `skills/athena`. (Skills: athena)
 
 IN PROGRESS
-- T-003: Consolidate overlapping merge-sync sections into one canonical checklist in ATHENA guidance. (Skills: athena)
+- T-005: Add schema validation for `docs/progress.txt` and integrate it with context-restore flows. (Skills: athena)
 
 NEXT
-- T-004: Make path-scoped staging the default for traceable commit helper usage.
-- T-005: Add schema validation for `docs/progress.txt` and integrate it with context-restore flows.
+- (none)
 
 NOTES
 - Commands run: `python3 -m json.tool artifacts/agentic_workflow/20260217-1535-athena-hardening-plan.json >/dev/null && echo 'json:ok'` -> `json:ok`.
