@@ -1,15 +1,16 @@
-Session: 2026-02-18 09:04
+Session: 2026-02-18 11:00
 Agent: Codex CLI
 Model: GPT-5
 Skills: athena
-Feature: 20260218-version-bump-1-1-0
-Input: CR-20260218-0902
-Decisions: D-20260218-0903
-Spec: docs/specs/20260218-version-bump-1-1-0/spec.md
-Tasks: docs/specs/20260218-version-bump-1-1-0/tasks.md
-Goal: Update ATHENA repository version marker to `1.1.0`.
+Feature: 20260218-staging-precheck-guardrails
+Input: CR-20260218-1059
+Decisions: D-20260218-1100
+Spec: docs/specs/20260218-staging-precheck-guardrails/spec.md
+Tasks: docs/specs/20260218-staging-precheck-guardrails/tasks.md
+Goal: Restore broad staging with pre-stage safety checks in the ATHENA commit helper.
 
 DONE
+- [2026-02-18 11:00] T-001: Restored broad staging defaults with pre-stage checks for `.DS_Store`, temp/cache patterns, likely secret markers, and large artifacts; added `--docs-only` scoped fallback and updated guidance docs. (Skills: athena)
 - [2026-02-18 09:04] T-001: Updated root `VERSION` from `1.0.1` to `1.1.0` and reconciled ATHENA traceability artifacts for feature completion. (Skills: athena)
 - [2026-02-17 16:04] T-005: Added progress schema validation and integrated it with resume flow in root and packaged scripts. (Skills: athena)
 - [2026-02-17 16:02] T-004: Updated traceable commit helper defaults to path-scoped staging with explicit `--all-changes` override and synced docs. (Skills: athena)
@@ -54,6 +55,12 @@ NEXT
 - (none)
 
 NOTES
+- Commands run: `python3 -m py_compile scripts/commit_with_traceability.py skills/athena/scripts/commit_with_traceability.py` -> pass.
+- Commands run: `python3 scripts/commit_with_traceability.py --help` -> confirms `--docs-only`, `--skip-staging-precheck`, and `--max-file-size-mb` options.
+- Commands run: `shasum scripts/commit_with_traceability.py skills/athena/scripts/commit_with_traceability.py` -> matching hashes.
+- Commands run: temp repo smoke test with `.DS_Store` candidate -> helper blocked staging with `pre-stage security check failed`; safe file follow-up committed with staged mode `all`.
+- Commands run: `python3 scripts/validate_traceability_links.py --repo .` -> `[ok] Traceability links validated`.
+- Commands run: `python3 scripts/validate_progress_log.py --repo .` -> `[ok] progress schema validated`.
 - Commands run: `cat VERSION` -> `1.1.0`.
 - Commands run: `python3 scripts/validate_traceability_links.py --repo .` -> `[ok] Traceability links validated`.
 - Commands run: `python3 scripts/validate_progress_log.py --repo .` -> `[ok] progress schema validated`.

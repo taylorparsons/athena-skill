@@ -361,3 +361,16 @@ update the version to 1.1.0
 
 Notes:
 - Apply version bump in the ATHENA repo.
+
+## CR-20260218-1059
+Date: 2026-02-18 10:59
+Source: chat
+
+Request (verbatim):
+what if we added a security check before git add that makes sure that this is not checked in: DS_Store, secrets, temp files, large
+    artifacts
+add that
+use $athena to help
+
+Notes:
+- Add pre-stage guardrails so broad staging remains usable while blocking risky files.

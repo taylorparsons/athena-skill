@@ -2,8 +2,25 @@
 from __future__ import annotations
 
 import argparse
+import re
 import subprocess
 from pathlib import Path
+
+BLOCKED_BASENAMES = {".DS_Store"}
+BLOCKED_DIR_NAMES = {"__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
+TEMP_SUFFIXES = (".tmp", ".temp", ".swp", ".swo", ".bak", ".orig", ".rej", "~")
+DEFAULT_MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024
+MAX_SECRET_SCAN_BYTES = 1024 * 1024
+SECRET_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
+    ("private-key", re.compile(r"-----BEGIN [A-Z0-9 ]*PRIVATE KEY-----")),
+    ("aws-access-key", re.compile(r"\bAKIA[0-9A-Z]{16}\b")),
+    ("github-token", re.compile(r"\bgh[pousr]_[A-Za-z0-9]{20,}\b")),
+    ("slack-token", re.compile(r"\bxox[baprs]-[A-Za-z0-9-]{10,}\b")),
+    (
+        "generic-secret-assignment",
+        re.compile(r"""(?i)\b(api[_-]?key|secret|token|password)\b\s*[:=]\s*['"][^'"]{8,}['"]"""),
+    ),
+]
 
 
 def _run(repo: Path, args: list[str]) -> str:
@@ -75,20 +92,120 @@ def _existing_paths(repo_root: Path, paths: list[str]) -> list[str]:
     return existing
 
 
-def _stage_changes(repo_root: Path, feature: str, explicit_paths: list[str] | None, all_changes: bool) -> str:
-    if all_changes:
+def _is_temp_or_blocked_path(rel_path: Path) -> str | None:
+    name = rel_path.name
+    if name in BLOCKED_BASENAMES:
+        return "blocked file pattern"
+    if name == ".env" or name.startswith(".env."):
+        return "blocked env file pattern"
+    if name.endswith(TEMP_SUFFIXES) or name.startswith(".#"):
+        return "temporary file pattern"
+    if any(part in BLOCKED_DIR_NAMES for part in rel_path.parts):
+        return "cache/temp directory pattern"
+    return None
+
+
+def _collect_candidate_paths_for_all_changes(repo_root: Path) -> list[str]:
+    candidates: set[str] = set()
+    commands = [
+        ["diff", "--name-only", "--diff-filter=ACMRTUXB"],
+        ["diff", "--cached", "--name-only", "--diff-filter=ACMRTUXB"],
+        ["ls-files", "--others", "--exclude-standard"],
+    ]
+    for cmd in commands:
+        out = _git(repo_root, cmd)
+        for line in out.splitlines():
+            rel = line.strip()
+            if rel:
+                candidates.add(rel)
+    return sorted(candidates)
+
+
+def _scan_secrets(path: Path) -> list[str]:
+    if not path.exists() or not path.is_file():
+        return []
+    with path.open("rb") as f:
+        chunk = f.read(MAX_SECRET_SCAN_BYTES)
+    text = chunk.decode("utf-8", errors="ignore")
+    findings: list[str] = []
+    for label, pattern in SECRET_PATTERNS:
+        if pattern.search(text):
+            findings.append(label)
+    return findings
+
+
+def _format_bytes(num: int) -> str:
+    return f"{num / (1024 * 1024):.2f} MiB"
+
+
+def _run_pre_stage_checks(repo_root: Path, candidate_paths: list[str], max_file_size_bytes: int) -> None:
+    violations: list[str] = []
+
+    for rel in candidate_paths:
+        rel_path = Path(rel)
+        abs_path = repo_root / rel_path
+
+        blocked_reason = _is_temp_or_blocked_path(rel_path)
+        if blocked_reason:
+            violations.append(f"{rel}: {blocked_reason}")
+            continue
+
+        if not abs_path.exists() or not abs_path.is_file():
+            continue
+
+        size = abs_path.stat().st_size
+        if size > max_file_size_bytes:
+            violations.append(
+                f"{rel}: large artifact ({_format_bytes(size)} > {_format_bytes(max_file_size_bytes)})"
+            )
+
+        findings = _scan_secrets(abs_path)
+        if findings:
+            violations.append(f"{rel}: potential secret pattern(s): {', '.join(findings)}")
+
+    if violations:
+        lines = [
+            "pre-stage security check failed; refusing to stage.",
+            "Resolve or explicitly narrow scope before committing:",
+        ]
+        lines.extend(f"- {entry}" for entry in violations)
+        lines.append(
+            "Tip: use --paths <...> for narrow staging, --docs-only for ATHENA docs only, "
+            "or --skip-staging-precheck if this inclusion is intentional."
+        )
+        raise RuntimeError("\n".join(lines))
+
+
+def _stage_changes(
+    repo_root: Path,
+    feature: str,
+    explicit_paths: list[str] | None,
+    all_changes: bool,
+    docs_only: bool,
+    skip_staging_precheck: bool,
+    max_file_size_bytes: int,
+) -> str:
+    if docs_only:
+        candidate_paths = _default_stage_paths(feature)
+        stage_paths = _existing_paths(repo_root, candidate_paths)
+        if not stage_paths:
+            raise RuntimeError("no stageable ATHENA docs paths found; pass --paths <...> or use --all-changes")
+        if not skip_staging_precheck:
+            _run_pre_stage_checks(repo_root, stage_paths, max_file_size_bytes)
+        _git(repo_root, ["add", "--", *stage_paths])
+        return "docs"
+
+    stage_all = all_changes or not explicit_paths
+    if stage_all:
+        candidate_paths = _collect_candidate_paths_for_all_changes(repo_root)
+        if not skip_staging_precheck:
+            _run_pre_stage_checks(repo_root, candidate_paths, max_file_size_bytes)
         _git(repo_root, ["add", "-A"])
         return "all"
 
-    candidate_paths = explicit_paths if explicit_paths else _default_stage_paths(feature)
-    stage_paths = _existing_paths(repo_root, candidate_paths)
-
-    if not stage_paths:
-        raise RuntimeError(
-            "no stageable paths found; pass --paths <...> or --all-changes explicitly"
-        )
-
-    _git(repo_root, ["add", "--", *stage_paths])
+    if not skip_staging_precheck:
+        _run_pre_stage_checks(repo_root, explicit_paths or [], max_file_size_bytes)
+    _git(repo_root, ["add", "--", *(explicit_paths or [])])
     return "paths"
 
 
@@ -106,14 +223,30 @@ def main() -> int:
         "--paths",
         nargs="+",
         help=(
-            "Optional explicit paths to stage. If omitted, the helper stages default ATHENA "
-            "traceability paths for the feature."
+            "Optional explicit paths to stage. If omitted, helper defaults to broad staging "
+            "with pre-stage security checks."
         ),
     )
     parser.add_argument(
         "--all-changes",
         action="store_true",
-        help="Stage all changes with git add -A (explicit opt-in).",
+        help="Stage all changes with git add -A (explicit). This is also the default when --paths is omitted.",
+    )
+    parser.add_argument(
+        "--docs-only",
+        action="store_true",
+        help="Stage default ATHENA docs paths only (legacy path-scoped behavior).",
+    )
+    parser.add_argument(
+        "--skip-staging-precheck",
+        action="store_true",
+        help="Bypass pre-stage security checks (use only when inclusion is intentional).",
+    )
+    parser.add_argument(
+        "--max-file-size-mb",
+        type=float,
+        default=DEFAULT_MAX_FILE_SIZE_BYTES / (1024 * 1024),
+        help="Maximum file size allowed by pre-stage checks before blocking (default: 5 MB).",
     )
     parser.add_argument(
         "--allow-empty",
@@ -124,6 +257,10 @@ def main() -> int:
 
     if args.paths and args.all_changes:
         raise RuntimeError("use either --paths or --all-changes, not both")
+    if args.paths and args.docs_only:
+        raise RuntimeError("use either --paths or --docs-only, not both")
+    if args.all_changes and args.docs_only:
+        raise RuntimeError("use either --all-changes or --docs-only, not both")
 
     repo = Path(args.repo).resolve()
     if not _is_git_repo(repo):
@@ -136,6 +273,9 @@ def main() -> int:
         feature=args.feature,
         explicit_paths=args.paths,
         all_changes=args.all_changes,
+        docs_only=args.docs_only,
+        skip_staging_precheck=args.skip_staging_precheck,
+        max_file_size_bytes=max(1, int(args.max_file_size_mb * 1024 * 1024)),
     )
 
     subject = _commit_subject(task=args.task, summary=args.summary, feature=args.feature)

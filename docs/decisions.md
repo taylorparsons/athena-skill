@@ -400,3 +400,23 @@ Alternatives considered:
 Acceptance / test:
 - `VERSION` equals `1.1.0`.
 - ATHENA spec/tasks/progress records show the version bump task completed.
+
+## D-20260218-1100
+Date: 2026-02-18 11:00
+Inputs: CR-20260218-1059
+PRD: ATHENA traceable staging guardrails
+
+Decision:
+Change `commit_with_traceability.py` default staging back to broad staging (`git add -A`) but enforce pre-stage guardrails that block `.DS_Store`, common temp/cache paths, likely secret patterns, and large artifacts before staging. Keep scoped alternatives via `--paths` and add `--docs-only` for legacy path-scoped behavior.
+
+Rationale:
+The user wants broad staging behavior for clean working flow while preventing accidental inclusion of risky files.
+
+Alternatives considered:
+- Keep path-scoped default and require `--all-changes` each time (rejected: does not restore desired user workflow).
+- Restore broad staging with no checks (rejected: reintroduces accidental staging risk).
+
+Acceptance / test:
+- Helper defaults to broad staging when no `--paths`/`--docs-only` is provided.
+- Pre-stage checks fail with actionable errors when blocked patterns, secret markers, or large files are detected.
+- `--docs-only` preserves the prior scoped ATHENA docs staging option.
