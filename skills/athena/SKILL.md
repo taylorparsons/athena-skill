@@ -269,6 +269,7 @@ Commit message format (recommended):
 When context is lost, regenerate a “resume prompt” from repo state and paste it into the new chat so the relevant skills re-trigger.
 
 Preferred:
+- Run: `python3 <CODEX_HOME>/skills/athena/scripts/validate_progress_log.py --repo .`
 - Run: `python3 <CODEX_HOME>/skills/athena/scripts/print_resume_prompt.py --repo .`
 - Paste the printed prompt into Codex.
 

@@ -1,6 +1,6 @@
 # Feature Spec: 20260217-athena-hardening-plan
 
-Status: Active
+Status: Done
 Created: 2026-02-17 15:36
 Inputs: CR-20260217-1535, CR-20260217-1550
 Decisions: D-20260217-1536, D-20260217-1551

@@ -10,6 +10,7 @@ Tasks: docs/specs/20260217-athena-hardening-plan/tasks.md
 Goal: Complete all remaining ATHENA hardening implementation tasks (T-002 through T-005).
 
 DONE
+- [2026-02-17 16:04] T-005: Added progress schema validation and integrated it with resume flow in root and packaged scripts. (Skills: athena)
 - [2026-02-17 16:02] T-004: Updated traceable commit helper defaults to path-scoped staging with explicit `--all-changes` override and synced docs. (Skills: athena)
 - [2026-02-17 16:01] T-003: Consolidated merge/check-in guidance into one canonical checklist in root and packaged ATHENA skill docs. (Skills: athena)
 - [2026-02-17 15:54] T-002: Implemented traceability linter for `Sources`, `Verifies`, and `Implements` references in root and packaged scripts. (Skills: athena)
@@ -46,12 +47,18 @@ DONE
 - [2026-02-11 14:03] T-003: Added install-target validation script/workflow and constrained validation to `skills/athena`. (Skills: athena)
 
 IN PROGRESS
-- T-005: Add schema validation for `docs/progress.txt` and integrate it with context-restore flows. (Skills: athena)
+- (none)
 
 NEXT
 - (none)
 
 NOTES
+- Commands run: `python3 scripts/validate_traceability_links.py --repo .` -> `[ok] Traceability links validated` after adding FR-005/FR-006 consistency in the hardening spec.
+- Commands run: `python3 -m py_compile scripts/commit_with_traceability.py skills/athena/scripts/commit_with_traceability.py` -> pass.
+- Commands run: `python3 scripts/commit_with_traceability.py --help` -> confirms new `--paths` and `--all-changes` options.
+- Commands run: `python3 -m py_compile scripts/progress_schema.py skills/athena/scripts/progress_schema.py scripts/validate_progress_log.py skills/athena/scripts/validate_progress_log.py scripts/print_resume_prompt.py skills/athena/scripts/print_resume_prompt.py` -> pass.
+- Commands run: `python3 scripts/validate_progress_log.py --repo .` -> `[ok] progress schema validated`.
+- Commands run: `python3 scripts/print_resume_prompt.py --repo .` -> resume prompt generated successfully with schema validation enabled.
 - Commands run: `python3 -m json.tool artifacts/agentic_workflow/20260217-1535-athena-hardening-plan.json >/dev/null && echo 'json:ok'` -> `json:ok`.
 - Commands run: `rg -n "Sources:|Verifies:|Implements:" docs/PRD.md docs/specs/20260217-athena-hardening-plan/spec.md docs/specs/20260217-athena-hardening-plan/tasks.md` -> planning traceability tags verified.
 - Decisions: Scoped this session to ATHENA documentation/planning artifacts only in the requested repository path (`D-20260217-1536`).

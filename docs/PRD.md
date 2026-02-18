@@ -67,11 +67,8 @@ Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude)
 - Shipping imported historical docs from unrelated product repos as canonical artifacts in this share repo. (Sources: CR-20260211-0939; D-20260211-0940)
 
 ## Next / backlog
-- Implement traceability linter for `Sources`/`Verifies`/`Implements` reference integrity checks. (Sources: CR-20260217-1535)
-- Consolidate overlapping merge-sync sections into one canonical checklist. (Sources: CR-20260217-1535)
-- Make path-scoped staging the default for traceable commit helper usage. (Sources: CR-20260217-1535)
-- Add `docs/progress.txt` schema validation and integrate it with context-restore flows. (Sources: CR-20260217-1535)
-- Implemented in: `docs/specs/20260217-athena-hardening-plan/spec.md`, `docs/specs/20260217-athena-hardening-plan/tasks.md`, `artifacts/agentic_workflow/20260217-1535-athena-hardening-plan.json`.
+- (none currently)
+- Implemented in: `docs/specs/20260217-athena-hardening-plan/spec.md`, `docs/specs/20260217-athena-hardening-plan/tasks.md`, `artifacts/agentic_workflow/20260217-1535-athena-hardening-plan.json`, `scripts/validate_traceability_links.py`, `skills/athena/scripts/validate_traceability_links.py`, `scripts/commit_with_traceability.py`, `skills/athena/scripts/commit_with_traceability.py`, `scripts/progress_schema.py`, `skills/athena/scripts/progress_schema.py`, `scripts/validate_progress_log.py`, `skills/athena/scripts/validate_progress_log.py`, `scripts/print_resume_prompt.py`, `skills/athena/scripts/print_resume_prompt.py`, `SKILL.md`, `skills/athena/SKILL.md`.
 - Implemented in: `skills/athena/SKILL.md`, `core/athena-framework.md`, `README.md`, `AVAILABLE_SKILLS.md`, `adapters/codex/SKILL.md`, `adapters/claude/CLAUDE_PROMPT.md`, `scripts/validate_install_targets.py`, `publishing/linkedin-post-athena-flow-v1.md`, `publishing/linkedin-post-athena-flow-v2.md`, `publishing/linkedin-post-athena-flow-v3-personal-style.md`, `docs/images/athena-readme-fast-visual.svg`.
 - Implemented in: `docs/specs/20260213-checkin-merge-remote/spec.md`, `docs/specs/20260213-checkin-merge-remote/tasks.md`, `scripts/print_resume_prompt.py`, `skills/athena/scripts/print_resume_prompt.py`, `scripts/bootstrap_git_audit.py`, `skills/athena/scripts/bootstrap_git_audit.py`, `.github/workflows/security.yml`, `docs/progress.txt`, `docs/specs/20260216-review-findings-remediation/spec.md`, `docs/specs/20260216-review-findings-remediation/tasks.md`.
 - Implemented in: `skills/athena/assets/athena-warrior-icon.svg`, `docs/specs/20260217-athena-warrior-icon/spec.md`, `docs/specs/20260217-athena-warrior-icon/tasks.md`.

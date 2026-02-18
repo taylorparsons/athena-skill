@@ -5,8 +5,7 @@ import os
 import re
 import sys
 
-
-SECTION_HEADERS = {"DONE", "IN PROGRESS", "NEXT", "NOTES"}
+from progress_schema import SECTION_HEADERS, validate_progress_schema
 
 
 def _read_text(path: str) -> str:
@@ -51,7 +50,7 @@ def _find_section_first_task_line(lines: list[str], section: str) -> str | None:
         stripped = line.strip()
         if not stripped:
             continue
-        if stripped in SECTION_HEADERS:
+        if stripped in set(SECTION_HEADERS):
             return None
         if stripped.startswith("-"):
             # Skip placeholder bullets like "- (none)".
@@ -77,6 +76,11 @@ def main() -> int:
         default=".",
         help="Repo root (default: current directory).",
     )
+    parser.add_argument(
+        "--allow-invalid-progress",
+        action="store_true",
+        help="Continue and print warnings even when progress schema validation fails.",
+    )
     args = parser.parse_args()
 
     repo_root = os.path.abspath(args.repo)
@@ -89,6 +93,17 @@ def main() -> int:
 
     text = _read_text(progress_path)
     lines = text.splitlines()
+
+    schema_errors = validate_progress_schema(lines)
+    if schema_errors:
+        sys.stderr.write("Progress schema validation failed:\n")
+        for err in schema_errors:
+            sys.stderr.write(f"- {err}\n")
+        if not args.allow_invalid_progress:
+            sys.stderr.write(
+                "Use --allow-invalid-progress to emit a best-effort resume prompt despite schema errors.\n"
+            )
+            return 2
 
     feature = _first_header_value(lines, "Feature:") or "<unknown>"
     input_id = _first_header_value(lines, "Input:") or "<unknown>"
