@@ -1,9 +1,10 @@
 # Feature Spec: 20260216-review-findings-remediation
 
-Status: Done
-Created: 2026-02-16 13:17
-Inputs: CR-20260216-1317
-Decisions: D-20260216-1318
+## Metadata
+- **Status:** Done
+- **Created:** 2026-02-16 13:17
+- **Inputs:** CR-20260216-1317
+- **Decisions:** D-20260216-1318
 
 ## Summary
 - Remediate findings 1-5 from the project review: traceability state drift, resume prompt placeholder parsing, markdown secret-scan coverage, local path hygiene, and git-audit output path anchoring.

@@ -1,3 +1,153 @@
+Session: 2026-02-20 17:10
+Agent: Codex CLI
+Model: GPT-5
+Skills: athena
+Feature: 20260220-docs-readability-format
+Input: CR-20260219-1710
+Decisions: D-20260219-1710
+Spec: docs/specs/20260220-docs-readability-format/spec.md
+Tasks: docs/specs/20260220-docs-readability-format/tasks.md
+Goal: Resolve local reader link rendering for PRD numbered references and keep in-reader section navigation.
+
+IN PROGRESS
+- (none)
+
+DONE
+- [2026-02-20 17:10] T-004: Update PRD numbered references to document-relative markdown links and add preview click handling via `/api/open-link` for in-reader navigation and section anchors. (Implements: FR-001)
+
+NOTES
+- Command run: `rg -n '/api/file\?path=' docs/PRD.md` (no API query-string targets remain)
+- Command run: `rg -n '\((requests|decisions|PRD)\.md#' docs/PRD.md | wc -l` (59)
+- Command run: `node --check /Volumes/T9/code/md/app/static/js/app.js`
+- Command run: `curl -s -w '%{http_code}' 'http://localhost:8765/api/file?path=requests.md#cr-20260211-0939'` (200)
+- Command run: `curl -s -w '%{http_code}' 'http://localhost:8765/api/open-link' -X POST -H 'Content-Type: application/json' -d '{"href":"requests.md#cr-20260211-0939"}'` (200)
+- Command run: `curl -s -w '%{http_code}' 'http://localhost:8765/api/open-link' -X POST -H 'Content-Type: application/json' -d '{"href":"/api/file?path=requests.md#cr-20260211-0939"}'` (400; raw path requires client-side normalization)
+- Note: Updated reader behavior requires app-side normalization to convert `/api/file?path=...` links before calling `/api/open-link`.
+
+Session: 2026-02-20 17:07
+Agent: Codex CLI
+Model: GPT-5
+Skills: athena
+Feature: 20260220-docs-readability-format
+Input: CR-20260220-1707
+Decisions: D-20260220-1707
+Spec: docs/specs/20260220-docs-readability-format/spec.md
+Tasks: docs/specs/20260220-docs-readability-format/tasks.md
+Goal: Use reader-compatible traceability targets in PRD links without host-dependent absolute paths.
+
+IN PROGRESS
+- (none)
+
+DONE
+- [2026-02-20 17:07] T-003: Normalized `docs/PRD.md` `/api/file?path=...` targets from absolute filesystem paths to portable file names and preserved all anchors. (Implements: FR-001)
+
+NOTES
+- Command run: `rg -n '/Volumes/T9/code/SKILLS/athena/docs/PRD.md\\?path=|/Volumes/T9/code/SKILLS/athena/docs/' docs/PRD.md` (no absolute path prefixes remain in link targets)
+- Command run: `curl -s -w '%{http_code}' 'http://localhost:8765/api/file?path=requests.md#cr-20260211-0939'` (200)
+- Command run: `curl -s -w '%{http_code}' 'http://localhost:8765/api/file?path=/Volumes/T9/code/SKILLS/athena/docs/requests.md#cr-20260211-0939'` (200)
+- Command run: `curl -s -w '%{http_code}' 'http://localhost:8765/docs/requests.md#cr-20260211-0939'` (404)
+
+Session: 2026-02-19 17:02
+Agent: Codex CLI
+Model: GPT-5
+Skills: athena
+Feature: 20260220-docs-readability-format
+Input: CR-20260219-1702
+Decisions: D-20260219-1702
+Spec: docs/specs/20260220-docs-readability-format/spec.md
+Tasks: docs/specs/20260220-docs-readability-format/tasks.md
+Goal: Ensure PRD link targets use the local preview API route and avoid `/docs/...` 404s.
+
+IN PROGRESS
+- (none)
+
+DONE
+- [2026-02-19 17:02] T-002: Revalidated PRD link target behavior in local preview and confirmed `/api/file?...` links remain route-compatible; `/docs/...` references are not emitted by PRD link targets. (Implements: FR-001)
+
+NOTES
+- Command run: `rg -n '/api/file\\?path=' /Volumes/T9/code/SKILLS/athena/docs/PRD.md` (verified API route prefix on all linked references)
+- Command run: `curl -s -o /tmp/athena-docs-preview.json -w '%{http_code}' 'http://localhost:8765/api/file?path=/Volumes/T9/code/SKILLS/athena/docs/requests.md'` (200)
+- Command run: `curl -s -o /tmp/athena-docs-404.txt -w '%{http_code}' 'http://localhost:8765/docs/requests.md'` (404)
+- Command run: `python3 - <<'PY'
+from pathlib import Path
+text = Path('/Volumes/T9/code/SKILLS/athena/docs/PRD.md').read_text()
+print('/docs/requests.md' not in text and '/docs/decisions.md' not in text and '/docs/PRD.md' not in text)
+PY` (verification: True)
+
+Session: 2026-02-19 17:00
+Agent: Codex CLI
+Model: GPT-5
+Skills: athena
+Feature: 20260220-docs-readability-format
+Input: CR-20260219-1700
+Decisions: D-20260219-1700
+Spec: docs/specs/20260220-docs-readability-format/spec.md
+Tasks: docs/specs/20260220-docs-readability-format/tasks.md
+Goal: Fix PRD link base-path behavior for local markdown viewers.
+
+IN PROGRESS
+- (none)
+
+DONE
+- [2026-02-19 17:00] T-003: Updated `docs/PRD.md` link targets from `docs/...` to `./...` for local relative resolution and avoided duplicate `/docs/` path segments.
+
+NOTES
+- Command run: `perl -pi -e 's#\\(docs/requests\\.md#(./requests.md#g; s#\\(docs/decisions\\.md#(./decisions.md#g; s#\\(docs/PRD\\.md#(./PRD.md#g' docs/PRD.md`
+- Command run: `rg -n 'docs/requests\\.md#|docs/decisions\\.md#|\\(docs/PRD\\.md#' docs/PRD.md` (confirmed all replaced with relative `./...` targets).
+
+Session: 2026-02-19 16:58
+Agent: Codex CLI
+Model: GPT-5
+Skills: athena
+Feature: 20260220-docs-readability-format
+Input: CR-20260219-1658
+Decisions: D-20260219-1658
+Spec: docs/specs/20260220-docs-readability-format/spec.md
+Tasks: docs/specs/20260220-docs-readability-format/tasks.md
+Goal: Make PRD numbered references directly navigable.
+
+IN PROGRESS
+- (none)
+
+DONE
+- [2026-02-19 16:58] T-002: Converted all CR-/D-/FR-/NFR- numbered references in `docs/PRD.md` into document/location links. (Skills: athena)
+
+NOTES
+- Command run: `perl -0pi -e 's\\{\\bCR-(\\d{8}-\\d{4})\\b\\}{[CR-$1](docs/requests.md#cr-$1)}g; ...' docs/PRD.md`
+- Linkified all `CR-`, `D-`, `FR-ATHENA-`, and `NFR-ATHENA-` references to direct in-repo anchors.
+- Updated `docs/requests.md` and `docs/decisions.md` with request/decision artifacts for this change.
+
+Session: 2026-02-20 17:00
+Agent: Codex CLI
+Model: GPT-5
+Skills: athena
+Feature: 20260220-docs-readability-format
+Input: CR-20260219-1638, CR-20260219-1639, CR-20260219-1640, CR-20260219-1641, CR-20260219-1642
+Decisions: D-20260219-1643
+Spec: docs/specs/20260220-docs-readability-format/spec.md
+Tasks: docs/specs/20260220-docs-readability-format/tasks.md
+Goal: Improve markdown readability and scanability in ATHENA documentation artifacts.
+
+IN PROGRESS
+- (none)
+
+DONE
+- [2026-02-20 17:00] T-001: Reformat root docs and spec markdown files with clearer heading hierarchy and bold metadata labels. (Skills: athena)
+
+IN PROGRESS
+- (none)
+
+NEXT
+- (none)
+
+NOTES
+- Commands run:
+  - `rg --files /Volumes/T9/code/SKILLS/athena/docs/specs -g '*.md'` (verified all spec targets exist).
+  - `python3 -c "import pathlib; p=pathlib.Path('/Volumes/T9/code/SKILLS/athena/docs/specs'); print(sum(1 for _ in p.glob('*/spec.md')))"` (counted spec files).
+  - `git -C /Volumes/T9/code/SKILLS/athena status --short` (tracked only docs-related updates from this request).
+  - `sed -n '1,80p' /Volumes/T9/code/SKILLS/athena/docs/specs/20260220-docs-readability-format/spec.md` (verified updated narrative and acceptance wording).
+- Validation: No executable behavior changes; readability-only edits were scoped to markdown formatting for human scanning.
+
 Session: 2026-02-18 11:00
 Agent: Codex CLI
 Model: GPT-5

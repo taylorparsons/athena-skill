@@ -1,9 +1,10 @@
 # Feature Spec: 20260218-version-bump-1-1-0
 
-Status: Done
-Created: 2026-02-18 09:03
-Inputs: CR-20260218-0902
-Decisions: D-20260218-0903
+## Metadata
+- **Status:** Done
+- **Created:** 2026-02-18 09:03
+- **Inputs:** CR-20260218-0902
+- **Decisions:** D-20260218-0903
 
 ## Summary
 - Bump ATHENA repository version from `1.0.1` to `1.1.0` in the canonical `VERSION` file with full ATHENA traceability.

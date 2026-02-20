@@ -1,9 +1,10 @@
 # Feature Spec: 20260217-absolute-path-hygiene
 
-Status: Done
-Created: 2026-02-17 14:52
-Inputs: CR-20260217-1451
-Decisions: D-20260217-1452
+## Metadata
+- **Status:** Done
+- **Created:** 2026-02-17 14:52
+- **Inputs:** CR-20260217-1451
+- **Decisions:** D-20260217-1452
 
 ## Summary
 - Remove remaining absolute-path residues from tracked ATHENA docs so repository security audit no longer reports `HIGH` path findings.

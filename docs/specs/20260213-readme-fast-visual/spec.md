@@ -1,9 +1,10 @@
 # Feature Spec: 20260213-readme-fast-visual
 
-Status: Done
-Created: 2026-02-13 14:34
-Inputs: CR-20260213-1434, CR-20260213-1435, CR-20260213-1436, CR-20260213-1448
-Decisions: D-20260213-1437, D-20260213-1438, D-20260213-1448
+## Metadata
+- **Status:** Done
+- **Created:** 2026-02-13 14:34
+- **Inputs:** CR-20260213-1434, CR-20260213-1435, CR-20260213-1436, CR-20260213-1448
+- **Decisions:** D-20260213-1437, D-20260213-1438, D-20260213-1448
 
 ## Summary
 - Add a fast visual at the top of `README.md` using a new tracked diagram asset derived from the customer-provided image, explicitly avoiding the untracked `docs/athena-napkin-loop.svg` file.

@@ -1,9 +1,10 @@
 # Feature Spec: 20260211-remove-daisy-from-athena-share
 
-Status: Done
-Created: 2026-02-11 10:06
-Inputs: CR-20260211-1004
-Decisions: D-20260211-1005
+## Metadata
+- **Status:** Done
+- **Created:** 2026-02-11 10:06
+- **Inputs:** CR-20260211-1004
+- **Decisions:** D-20260211-1005
 
 ## Summary
 - Remove Daisy companion-skill references from this public ATHENA share repo so the published version is scoped only to ATHENA.

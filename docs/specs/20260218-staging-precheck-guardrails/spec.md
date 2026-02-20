@@ -1,9 +1,10 @@
 # Feature Spec: 20260218-staging-precheck-guardrails
 
-Status: Done
-Created: 2026-02-18 11:00
-Inputs: CR-20260218-1059
-Decisions: D-20260218-1100
+## Metadata
+- **Status:** Done
+- **Created:** 2026-02-18 11:00
+- **Inputs:** CR-20260218-1059
+- **Decisions:** D-20260218-1100
 
 ## Summary
 - Restore broad staging workflow in traceable commits while adding pre-stage guardrails for risky files.
