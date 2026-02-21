@@ -1,9 +1,10 @@
 # Feature Spec: 20260211-public-share-cleanup
 
-Status: Done
-Created: 2026-02-11 09:55
-Inputs: CR-20260211-0939
-Decisions: D-20260211-0940
+## Metadata
+- **Status:** Done
+- **Created:** 2026-02-11 09:55
+- **Inputs:** CR-20260211-0939
+- **Decisions:** D-20260211-0940
 
 ## Summary
 - Remove imported artifacts and rebuild a clean, repo-scoped ATHENA documentation trail for public sharing.

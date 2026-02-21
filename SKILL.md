@@ -210,46 +210,29 @@ At the end of the session, update `docs/progress.txt`:
 
 Always keep `IN PROGRESS` to a single task.
 
-## 6.25) Merge / Check-in Reconciliation (Required)
+## 6.25) Canonical Merge / Check-in Reconciliation (Required)
 
-Before finalizing a task **and immediately after merging to main**, reconcile tracking documents so the PRD reflects shipped work.
+Use this single checklist before finalizing a task and again after any merge to `main` (local or remote) so PRD/spec/tasks/progress remain synchronized.
 
 Checklist:
 1) Spec status update
-- If code/tests now satisfy the spec FRs, set `Status: Done` in `docs/specs/<FEATURE_ID>/spec.md`.
+- If code/tests now satisfy feature FRs, set `Status: Done` in `docs/specs/<FEATURE_ID>/spec.md`.
 
 2) PRD backlog reconciliation
-- Update `docs/PRD.md` “Next / backlog” to remove or move shipped items.
-- Add a short “Implemented in: <file paths>” note next to any removed items (optional but recommended).
+- Update `docs/PRD.md` “Next / backlog” to remove, move, or mark shipped items.
+- Include the CR ID on shipped items when applicable.
+- Include at least one concrete evidence path per shipped item (for example `app/static/js/ui.js`).
 
 3) Progress log sync
-- Ensure `docs/progress.txt` shows the task as DONE with timestamp.
-- If DONE exists but PRD/spec still show backlog/active, reconcile them now.
+- Ensure `docs/progress.txt` marks completed tasks as `DONE` with timestamp.
+- If PRD/spec status and DONE state diverge, reconcile immediately.
 
-4) Evidence trail check (minimum)
-- For each backlog item removed, list at least one file path that proves it shipped.
-- Prefer concrete paths like `app/static/js/ui.js` or `app/services/pdf_service.py`.
+4) Merge evidence
+- If merge has happened, record merge commit hash (or merge PR ID) in `docs/progress.txt` under `NOTES`.
+- If merge has not happened yet, record `pending merge` in `docs/progress.txt` under `NOTES` and do not mark PRD items as shipped.
 
-5) If any step cannot be completed, record the reason in `docs/progress.txt` under `NOTES`.
-
-## 6.3) Post-merge PRD Sync (Required when merged to main)
-
-After a merge to `main` (local or remote), update the PRD and spec so the backlog is correct.
-
-Checklist:
-1) Mark spec shipped
-- If the merged code satisfies FRs, set `Status: Done` in `docs/specs/<FEATURE_ID>/spec.md`.
-
-2) Update PRD backlog
-- Move shipped backlog items out of “Next / backlog” and into the shipped section or add an explicit “Implemented” note.
-- Include the CR hash (CR-YYYYMMDD-HHMM) on the shipped item.
-- Include at least one concrete file path as evidence.
-
-3) Record merge evidence
-- Add the merge commit hash (or merge PR ID) to `docs/progress.txt` under `NOTES`.
-
-4) If merge has not happened yet
-- Record “pending merge” in `docs/progress.txt` under `NOTES` and do not update PRD to shipped.
+5) Exception handling
+- If any reconciliation step cannot be completed, record the reason in `docs/progress.txt` under `NOTES`.
 
 ## 6.5) Create a Traceable Local Commit (Git repos only)
 
@@ -265,10 +248,13 @@ Hard rules:
 - Do not commit secrets. If secrets are discovered, remove them and note the incident in `docs/progress.txt`.
 
 Recommended workflow:
-- Stage: `git add -A`
+- Stage (default): broad stage with guardrails via helper prechecks (blocks `.DS_Store`, common temp/cache paths, likely secret patterns, and large artifacts).
+- Stage (explicit): pass `--paths <path1> <path2> ...` for custom scope.
+- Stage (docs-only): pass `--docs-only` to use ATHENA traceability docs path-scoped staging (`spec/tasks/progress/PRD/TRACEABILITY/requests/decisions`).
+- Stage (override): pass `--skip-staging-precheck` only when blocked files are intentionally included.
 - Review: `git diff --cached`
 - Commit using the helper script:
-  - `python3 <CODEX_HOME>/skills/athena/scripts/commit_with_traceability.py --feature <FEATURE_ID> --task <T-001> --summary "<what changed>" --cr <CR-...> --decisions <D-...,...>`
+  - `python3 <CODEX_HOME>/skills/athena/scripts/commit_with_traceability.py --feature <FEATURE_ID> --task <T-001> --summary "<what changed>" --cr <CR-...> --decisions <D-...,...> [--paths ... | --docs-only | --all-changes]`
 
 Commit message format (recommended):
 - Subject: `T-001: <summary> (Feature: <FEATURE_ID>)`
@@ -284,6 +270,7 @@ Commit message format (recommended):
 When context is lost, regenerate a “resume prompt” from repo state and paste it into the new chat so the relevant skills re-trigger.
 
 Preferred:
+- Run: `python3 <CODEX_HOME>/skills/athena/scripts/validate_progress_log.py --repo .`
 - Run: `python3 <CODEX_HOME>/skills/athena/scripts/print_resume_prompt.py --repo .`
 - Paste the printed prompt into Codex.
 

@@ -1,157 +1,620 @@
 # Decisions (append-only)
 
 ## D-20260211-0940
-Date: 2026-02-11 09:40
-Inputs: CR-20260211-0939
-PRD: Scope boundary for public repo artifacts
 
-Decision:
+### Metadata
+- **Date:** 2026-02-11 09:40
+- **Inputs:** CR-20260211-0939
+- **PRD:** Scope boundary for public repo artifacts
+
+### Decision:
 Replace imported project-oriented docs with a clean, repo-scoped RALPH artifact set while preserving required traceability files (`requests`, `decisions`, `PRD`, `specs`, `progress`, `TRACEABILITY`).
 
-Rationale:
+### Rationale:
 The user requested a public sharing repo that demonstrates RALPH itself, not historical artifacts from another project.
 
-Alternatives considered:
+### Alternatives considered:
 - Keep imported artifacts as examples (rejected: scope leakage and noise in public share).
 - Remove docs artifacts entirely (rejected: conflicts with explicit request to include RALPH docs artifacts).
 
-Acceptance / test:
+### Acceptance / test:
 - `docs/` contains only this repo's RALPH artifacts.
 - Imported report/spec files from other projects are removed.
 - `git status` no longer includes generated local artifacts after ignore rules are added.
 
 ## D-20260211-1005
-Date: 2026-02-11 10:05
-Inputs: CR-20260211-1004
-PRD: Public share positioning and skill scope
 
-Decision:
+### Metadata
+- **Date:** 2026-02-11 10:05
+- **Inputs:** CR-20260211-1004
+- **PRD:** Public share positioning and skill scope
+
+### Decision:
 Remove Daisy companion-skill references from the public RALPH repo content (`README.md`, `AVAILABLE_SKILLS.md`) and keep this shared version scoped strictly to RALPH.
 
-Rationale:
+### Rationale:
 The user explicitly requested that this version of RALPH no longer include Daisy.
 
-Alternatives considered:
+### Alternatives considered:
 - Keep Daisy as optional companion text in docs (rejected: conflicts with explicit request).
 
-Acceptance / test:
+### Acceptance / test:
 - `README.md` and `AVAILABLE_SKILLS.md` contain no Daisy companion-skill references.
 - README/skills listing describe only RALPH for this public version.
 
 ## D-20260211-1012
-Date: 2026-02-11 10:12
-Inputs: CR-20260211-1010
-PRD: Public release hardening and repository history policy
 
-Decision:
+### Metadata
+- **Date:** 2026-02-11 10:12
+- **Inputs:** CR-20260211-1010
+- **PRD:** Public release hardening and repository history policy
+
+### Decision:
 Perform a public-release hardening pass by adding `.gitignore` security patterns, adding `SECURITY.md`, adding MIT `LICENSE`, removing local absolute path strings from tracked docs, and rewriting git history to a single clean public baseline commit.
 
-Rationale:
+### Rationale:
 The user explicitly requested a truly clean public repo and asked for these hardening artifacts.
 
-Alternatives considered:
+### Alternatives considered:
 - Keep existing multi-commit history with prior imported content (rejected: not truly clean).
 - Keep raw local path strings for strict verbatim logs (rejected: conflicts with public-sharing hygiene request).
 
-Acceptance / test:
+### Acceptance / test:
 - No local absolute path strings remain in tracked files.
 - `.gitignore` includes `.env`, `__pycache__/`, and `*.pyc`.
 - `SECURITY.md` and `LICENSE` exist.
 - Repository history is rewritten to a clean public baseline.
 
 ## D-20260211-1020
-Date: 2026-02-11 10:20
-Inputs: CR-20260211-1019
-PRD: Low-priority hardening controls for public repository governance
 
-Decision:
+### Metadata
+- **Date:** 2026-02-11 10:20
+- **Inputs:** CR-20260211-1019
+- **PRD:** Low-priority hardening controls for public repository governance
+
+### Decision:
 Complete the low-priority hardening findings by adding a single-owner `CODEOWNERS`, adding `.github/dependabot.yml`, adding `.github/workflows/security.yml`, and enabling repo-level `commit.gpgsign`.
 
-Rationale:
+### Rationale:
 The user explicitly approved finishing the low-priority hardening items and confirmed there is one code owner.
 
-Alternatives considered:
+### Alternatives considered:
 - Skip low-priority items before publish (rejected: user explicitly requested completion).
 - Use multiple owners in `CODEOWNERS` (rejected: conflicts with single-owner direction).
 
-Acceptance / test:
+### Acceptance / test:
 - Security audit no longer reports missing `CODEOWNERS`, Dependabot config, workflow, or GPG signing configuration.
 
 ## D-20260211-1326
-Date: 2026-02-11 13:26
-Inputs: CR-20260211-1325
-PRD: Resume execution handling and onboarding example backlog
 
-Decision:
+### Metadata
+- **Date:** 2026-02-11 13:26
+- **Inputs:** CR-20260211-1325
+- **PRD:** Resume execution handling and onboarding example backlog
+
+### Decision:
 Interpret the resume command as instruction to continue from the existing `docs/progress.txt` NEXT backlog item and implement an onboarding walkthrough under `docs/examples/` as a new traceable feature.
 
-Rationale:
+### Rationale:
 No local artifact matched the provided resume UUID, and the safest deterministic continuation path is the explicit pending task already recorded in repo state.
 
-Alternatives considered:
+### Alternatives considered:
 - Pause and ask for an external session export keyed to the UUID (rejected: unnecessary because a concrete pending task was already queued locally).
 - Resume by selecting an arbitrary new task (rejected: breaks ordered execution from tracked backlog).
 
-Acceptance / test:
+### Acceptance / test:
 - A new feature spec/task pair exists for the walkthrough deliverable.
 - `docs/examples/` includes one end-to-end CR -> D -> FR -> T walkthrough.
 - `docs/progress.txt` marks the walkthrough task as done with validation notes.
 
 ## D-20260211-1400
-Date: 2026-02-11 14:00
-Inputs: CR-20260211-1358
-PRD: Skill install packaging and single-skill install guardrails
 
-Decision:
+### Metadata
+- **Date:** 2026-02-11 14:00
+- **Inputs:** CR-20260211-1358
+- **PRD:** Skill install packaging and single-skill install guardrails
+
+### Decision:
 Keep this share repo's install contract focused on one installable skill target (`skills/ralph`) and remove the `skills/ralph-codex` packaged install target from the repo.
 
-Rationale:
+### Rationale:
 The user explicitly asked to keep install guidance and available skills scoped to `ralph` only and requested a checked-in update.
 
-Alternatives considered:
+### Alternatives considered:
 - Keep `skills/ralph-codex` as an optional install target (rejected: conflicts with explicit scope request).
 - Revert to root installs with `--path .` (rejected: installs entire repo and caused prior confusion).
 
-Acceptance / test:
+### Acceptance / test:
 - `AVAILABLE_SKILLS.md` lists only `ralph`.
 - `README.md` install section lists only `ralph` installation command.
 - `scripts/validate_install_targets.py` validates only `skills/ralph`.
 - `skills/ralph-codex/` does not exist.
 
 ## D-20260212-1647
-Date: 2026-02-12 16:47
-Inputs: CR-20260212-1646
-PRD: Product/skill naming and repository identity
 
-Decision:
+### Metadata
+- **Date:** 2026-02-12 16:47
+- **Inputs:** CR-20260212-1646
+- **PRD:** Product/skill naming and repository identity
+
+### Decision:
 Treat `athena` as the canonical replacement name for this repository and skill references, and treat `athen` in request item 1 as a typo.
 
-Rationale:
+### Rationale:
 The same request explicitly uses `athena` in items 2 and 3 and asks for all code/documentation references to be updated to that name.
 
-Alternatives considered:
+### Alternatives considered:
 - Preserve `athen` literally for skill name while using `athena` elsewhere (rejected: inconsistent naming and conflicts with item 3 global replacement intent).
 - Pause execution to ask for clarification (rejected: request is actionable and interpretation is low risk).
 
-Acceptance / test:
+### Acceptance / test:
 - Repository/docs/code references are updated from `ralph` to `athena` where this repo defines its own naming.
 - Project identity references use `athena-skill`.
 
 ## D-20260212-1648
-Date: 2026-02-12 16:48
-Inputs: CR-20260212-1646
-PRD: Rename execution scope and audit-log immutability
 
-Decision:
+### Metadata
+- **Date:** 2026-02-12 16:48
+- **Inputs:** CR-20260212-1646
+- **PRD:** Rename execution scope and audit-log immutability
+
+### Decision:
 Apply rename changes across mutable repository code/docs/configuration, including path renames (`skills/ralph` -> `skills/athena`, `core/ralph-framework.md` -> `core/athena-framework.md`), and preserve append-only historical logs in `docs/requests.md` and `docs/decisions.md` as factual records.
 
-Rationale:
+### Rationale:
 The request requires broad replacement to `athena`, while RALPH audit rules require historical request/decision entries to stay append-only and customer-verbatim.
 
-Alternatives considered:
+### Alternatives considered:
 - Edit historical request/decision entries to fully eliminate legacy naming (rejected: breaks append-only/verbatim audit contract).
 - Limit rename only to README and skill metadata (rejected: does not satisfy global code/documentation update intent).
 
-Acceptance / test:
+### Acceptance / test:
 - Mutable files reference `athena`/`ATHENA` and project name `athena-skill`.
 - Any remaining `ralph` references are limited to append-only historical entries or backward-compatibility notes explicitly documented.
+
+## D-20260213-0913
+
+### Metadata
+- **Date:** 2026-02-13 09:13
+- **Inputs:** CR-20260213-0912
+- **PRD:** Publishing collateral for onboarding and installation
+
+### Decision:
+Interpret "two more versions" as two new LinkedIn-ready post drafts under `publishing/`, each covering the ATHENA request-to-checkin loop and including explicit install instructions for both Codex and Claude with copy/paste blocks.
+
+### Rationale:
+The request explicitly asks for two versions and asks for logical flow plus clear install instructions in LinkedIn-compatible format.
+
+### Alternatives considered:
+- Update only one existing file (`publishing/launch-checklist.md`) (rejected: does not satisfy "two more versions").
+- Put content only in README (rejected: request is for post-ready content, not repository setup docs).
+
+### Acceptance / test:
+- Two new files exist in `publishing/` with distinct post drafts.
+- Each draft includes: ATHENA flow from invocation to check-in, Codex install instructions, Claude install instructions, and copy/paste code blocks.
+
+## D-20260213-1959
+
+### Metadata
+- **Date:** 2026-02-13 19:59
+- **Inputs:** CR-20260213-1958
+- **PRD:** Publishing tone/style requirements for additional personal-style variant
+
+### Decision:
+Create one additional LinkedIn-ready draft that preserves ATHENA invoke-to-checkin flow and installation sections while adopting the provided personal style traits: direct language, framework structure, grounded reflection, operator evidence orientation, and low-marketing tone.
+
+### Rationale:
+The request explicitly asks for one more version in the user's personal writing style and provides concrete style guardrails.
+
+### Alternatives considered:
+- Reuse an existing version with minor wording tweaks (rejected: does not meaningfully reflect the provided style profile).
+- Write a purely personal narrative with no setup blocks (rejected: inconsistent with prior request context requiring install clarity and flow).
+
+### Acceptance / test:
+- A new `publishing/` draft exists and is distinct from v1/v2.
+- Draft includes direct, structured sections (problem/constraint/decision/evidence style), ATHENA loop narrative, and Codex/Claude copy/paste setup blocks.
+
+## D-20260213-1437
+
+### Metadata
+- **Date:** 2026-02-13 14:35
+- **Inputs:** CR-20260213-1434, CR-20260213-1435
+- **PRD:** README onboarding visual placement and asset source constraint
+
+### Decision:
+Add a new tracked visual asset at `docs/images/athena-readme-fast-visual.svg` and place it at the top of `README.md`, while explicitly not using `docs/athena-napkin-loop.svg`.
+
+### Rationale:
+The user requested a top README visual from the provided image and explicitly excluded the existing untracked SVG path.
+
+### Alternatives considered:
+- Use `docs/athena-napkin-loop.svg` directly (rejected: explicitly disallowed by user).
+- Keep README text-only (rejected: conflicts with fast-visual request).
+
+### Acceptance / test:
+- `README.md` references `docs/images/athena-readme-fast-visual.svg`.
+- `README.md` does not reference `docs/athena-napkin-loop.svg`.
+
+## D-20260213-1438
+
+### Metadata
+- **Date:** 2026-02-13 14:36
+- **Inputs:** CR-20260213-1436
+- **PRD:** README voice and documentation tone
+
+### Decision:
+Rewrite `README.md` in Taylor-style voice using direct, structured sections (context, tension, decision, execution, outcome, reflection) while preserving existing install and validation facts.
+
+### Rationale:
+The user explicitly asked for Taylor-style voice in README text, and the style skill defines concrete wording and structure constraints.
+
+### Alternatives considered:
+- Keep current README wording with only the image insertion (rejected: does not satisfy explicit style request).
+- Apply heavy marketing framing to emphasize launch messaging (rejected: conflicts with provided style profile).
+
+### Acceptance / test:
+- README headings and prose are direct, concrete, and structured.
+- Install commands and repository facts remain intact and executable.
+
+## D-20260213-1448
+
+### Metadata
+- **Date:** 2026-02-13 14:48
+- **Inputs:** CR-20260213-1448
+- **PRD:** README update scope correction
+
+### Decision:
+Narrow the README change to image-only: keep the new top visual and restore normal README prose structure by removing literal style labels such as `context:`/`decision:`/`execution:`.
+
+### Rationale:
+The user explicitly corrected the prior wording and asked to leave only the new image change.
+
+### Alternatives considered:
+- Keep the Taylor-style labeled sections (rejected: conflicts with explicit user correction).
+- Remove both image and style edits (rejected: conflicts with "just add the image").
+
+### Acceptance / test:
+- `README.md` retains `docs/images/athena-readme-fast-visual.svg` at the top.
+- `README.md` does not contain literal labels like `context:` `tension:` `decision:` `execution:` `outcome:` `reflection:`.
+
+## D-20260213-1453
+
+### Metadata
+- **Date:** 2026-02-13 14:52
+- **Inputs:** CR-20260213-1452
+- **PRD:** Check-in and remote merge execution policy
+
+### Decision:
+Interpret "checkin a marge to remote" as a request to commit current intended ATHENA changes, merge with `origin/main`, and push to the remote repository. Stage only the intended README/docs/image changes and leave unrelated local modifications untouched.
+
+### Rationale:
+The request explicitly asks for check-in and remote merge, and the working tree contains unrelated modified files that should not be included without explicit user direction.
+
+### Alternatives considered:
+- Stage all modified files with `git add -A` (rejected: would include unrelated local changes).
+- Defer push and only make a local commit (rejected: conflicts with explicit remote merge request).
+
+### Acceptance / test:
+- Local commit exists containing only intended README/docs/image updates.
+- Local `main` is merged with `origin/main` and pushed successfully.
+
+## D-20260216-1318
+
+### Metadata
+- **Date:** 2026-02-16 13:18
+- **Inputs:** CR-20260216-1317
+- **PRD:** Review remediation for findings 1-5
+
+### Decision:
+Interpret `on on 1-5` as approval to implement all five findings from the prior review in one scoped remediation feature.
+
+### Rationale:
+The immediate prior message presented findings numbered 1 through 5 and asked whether to fix them; the user response references that exact set.
+
+### Alternatives considered:
+- Ask for clarification before editing (rejected: likely unnecessary delay with clear local context).
+- Implement only finding #1 first (rejected: user referenced the full 1-5 set).
+
+### Acceptance / test:
+- Findings 1-5 are remediated in code/docs and captured in PRD/spec/tasks/progress artifacts.
+
+## D-20260217-0847
+
+### Metadata
+- **Date:** 2026-02-17 08:47
+- **Inputs:** CR-20260217-0846
+- **PRD:** ATHENA skill visual asset packaging
+
+### Decision:
+Create a new SVG icon asset at `skills/athena/assets/athena-warrior-icon.svg` to represent a warrior motif for the ATHENA skill package.
+
+### Rationale:
+The request is specifically for an SVG skill icon invoking a warrior concept. Adding the asset under the installable skill path keeps it packaged with the `athena` skill.
+
+### Alternatives considered:
+- Store the icon only under `docs/images/` (rejected: not part of the installable skill path).
+- Add raster image instead of SVG (rejected: request explicitly asks for SVG).
+
+### Acceptance / test:
+- `skills/athena/assets/athena-warrior-icon.svg` exists and renders as a valid SVG icon.
+- ATHENA docs reflect the new request/decision/spec/task/progress trail for this change.
+
+## D-20260217-1419
+
+### Metadata
+- **Date:** 2026-02-17 14:19
+- **Inputs:** CR-20260217-1417
+- **PRD:** ATHENA install metadata for warrior icon asset
+
+### Decision:
+Add explicit icon metadata in `skills/athena/agents/openai.yaml` (`icon_small` and `icon_large` -> `./assets/athena-warrior-icon.svg`) and extend install-target validation to require the icon asset and those metadata bindings.
+
+### Rationale:
+The request specifically targets the `.codex` ATHENA install to include the warrior icon asset path. Declaring icon fields in installable skill metadata and enforcing them in validation provides deterministic packaging behavior.
+
+### Alternatives considered:
+- Keep only the asset file without metadata bindings (rejected: install UI/config would not explicitly reference the icon).
+- Update only local `~/.codex/skills/athena` without repo guardrails (rejected: not durable for future installs).
+
+### Acceptance / test:
+- `skills/athena/agents/openai.yaml` contains `icon_small` and `icon_large` set to `./assets/athena-warrior-icon.svg`.
+- `scripts/validate_install_targets.py` fails if required install asset/metadata bindings are missing and passes in current repo state.
+
+## D-20260217-1452
+
+### Metadata
+- **Date:** 2026-02-17 14:52
+- **Inputs:** CR-20260217-1451
+- **PRD:** Absolute-path hygiene follow-up remediation
+
+### Decision:
+Patch tracked docs that still include local absolute-path tokens and verify resolution by rerunning the repository security audit.
+
+### Rationale:
+The user requested absolute-path remediation, and the current audit reports a `HIGH` finding limited to two documentation lines.
+
+### Alternatives considered:
+- Suppress the audit rule instead of fixing docs (rejected: hides a hygiene issue instead of resolving it).
+- Leave legacy user-home absolute path examples in completed artifacts (rejected: continues to trigger `HIGH` findings).
+
+### Acceptance / test:
+- `rg -n 'user-home absolute path' docs/` returns only policy wording and no literal local home-directory path tokens.
+- `audit_repository_security.py` no longer reports a `HIGH` absolute-path finding.
+
+## D-20260217-1536
+
+### Metadata
+- **Date:** 2026-02-17 15:36
+- **Inputs:** CR-20260217-1535
+- **PRD:** ATHENA hardening documentation planning
+
+### Decision:
+Treat this request as a documentation/planning feature in the ATHENA repository: define traceable requirements/tasks for the four hardening items and generate an `aipm-agentic-workflow` JSON artifact, without implementing script/code behavior changes in this session.
+
+### Rationale:
+The user asked to create documents and explicitly clarified the target repository path for documentation placement.
+
+### Alternatives considered:
+- Implement all four hardening changes immediately (rejected: request is to create docs; implementation should run as follow-up tasks).
+
+### Acceptance / test:
+- `docs/specs/20260217-athena-hardening-plan/spec.md` and `docs/specs/20260217-athena-hardening-plan/tasks.md` exist with traceability links.
+- `artifacts/agentic_workflow/20260217-1535-athena-hardening-plan.json` exists with `task_graph`, `agents`, and `interventions`.
+
+## D-20260217-1551
+
+### Metadata
+- **Date:** 2026-02-17 15:51
+- **Inputs:** CR-20260217-1550
+- **PRD:** ATHENA hardening execution
+
+### Decision:
+Execute all remaining implementation tasks for `20260217-athena-hardening-plan` (`T-002` through `T-005`) in this session and reconcile PRD/spec/tasks/progress to a shipped state.
+
+### Rationale:
+The user explicitly requested completion of all remaining work after the planning-only phase.
+
+### Alternatives considered:
+- Implement only one task this session and defer others (rejected: conflicts with explicit "complete all of the work").
+
+### Acceptance / test:
+- Traceability linter exists and validates `Sources`, `Verifies`, `Implements` references.
+- ATHENA guidance contains one canonical merge/check-in checklist section.
+- Commit helper defaults to path-scoped staging unless explicitly overridden.
+- `docs/progress.txt` schema validation is implemented and integrated with resume prompt flow.
+
+## D-20260218-0903
+
+### Metadata
+- **Date:** 2026-02-18 09:03
+- **Inputs:** CR-20260218-0902
+- **PRD:** ATHENA release versioning
+
+### Decision:
+Implement the request as a repository version bump by updating `VERSION` from `1.0.1` to `1.1.0`, with ATHENA traceability docs for this change.
+
+### Rationale:
+The user requested only a version update; the minimal correct change is updating the canonical version file.
+
+### Alternatives considered:
+- Update additional release artifacts without request (rejected: unnecessary scope expansion).
+
+### Acceptance / test:
+- `VERSION` equals `1.1.0`.
+- ATHENA spec/tasks/progress records show the version bump task completed.
+
+## D-20260218-1100
+
+### Metadata
+- **Date:** 2026-02-18 11:00
+- **Inputs:** CR-20260218-1059
+- **PRD:** ATHENA traceable staging guardrails
+
+### Decision:
+Change `commit_with_traceability.py` default staging back to broad staging (`git add -A`) but enforce pre-stage guardrails that block `.DS_Store`, common temp/cache paths, likely secret patterns, and large artifacts before staging. Keep scoped alternatives via `--paths` and add `--docs-only` for legacy path-scoped behavior.
+
+### Rationale:
+The user wants broad staging behavior for clean working flow while preventing accidental inclusion of risky files.
+
+### Alternatives considered:
+- Keep path-scoped default and require `--all-changes` each time (rejected: does not restore desired user workflow).
+- Restore broad staging with no checks (rejected: reintroduces accidental staging risk).
+
+### Acceptance / test:
+- Helper defaults to broad staging when no `--paths`/`--docs-only` is provided.
+- Pre-stage checks fail with actionable errors when blocked patterns, secret markers, or large files are detected.
+- `--docs-only` preserves the prior scoped ATHENA docs staging option.
+
+## D-20260219-1643
+
+### Metadata
+- **Date:** 2026-02-19 16:43
+- **Inputs:** CR-20260219-1638, CR-20260219-1639, CR-20260219-1640, CR-20260219-1641, CR-20260219-1642
+- **PRD:** Docs readability formatting for root markdown and feature specs
+
+### Decision:
+Apply readability improvements only in `/Volumes/T9/code/SKILLS/athena/docs` moving forward, with ATHENA-managed traceability. Improve scanability by adding clearer heading hierarchy and bold metadata labels in root markdown docs and `docs/specs/*/spec.md`, while preserving existing requirement/task semantics.
+
+### Rationale:
+This directly satisfies the user scope correction and readability request without reverting unrelated prior edits outside this source repo.
+
+### Alternatives considered:
+- Roll back prior `.codex`-path edits first (rejected: user explicitly said to leave the wrong path as-is for now).
+- Limit changes only to one root file (rejected: user requested root docs plus spec readability improvements).
+
+### Acceptance / test:
+- Root docs in `docs/*.md` show stronger heading structure and bold metadata labels.
+- Spec files in `docs/specs/*/spec.md` use consistent bold metadata labels and readable section labels.
+- ATHENA validation scripts pass after updates.
+
+## D-20260219-1658
+
+### Metadata
+- **Date:** 2026-02-19 16:58
+- **Inputs:** CR-20260219-1658
+- **PRD:** PRD traceability readability
+
+### Decision:
+Link references in `docs/PRD.md` by ID type to concrete, navigable destinations: `CR-...` to `docs/requests.md` entries, `D-...` to `docs/decisions.md` entries, and `FR-ATHENA-...` / `NFR-ATHENA-...` to their own numbered lines in `docs/PRD.md`.
+
+### Rationale:
+The request is for easier human auditing and skimming. Mapping each numbered reference to a stable in-repo location provides direct navigation without changing requirement semantics.
+
+### Alternatives considered:
+- Link only `CR-...` and `D-...` IDs (rejected: incomplete user expectation for all numbered references).
+- Link `FR-ATHENA...` and `NFR-ATHENA...` to a separate index only (rejected: less direct than section-line navigation in PRD).
+
+### Acceptance / test:
+- Every `CR-...`, `D-...`, `FR-ATHENA-...`, and `NFR-ATHENA-...` reference in `docs/PRD.md` is wrapped as a markdown link.
+- Clicking each link opens the matching document and anchored location.
+
+## D-20260219-1700
+
+### Metadata
+- **Date:** 2026-02-19 17:00
+- **Inputs:** CR-20260219-1700
+- **PRD:** PRD linkability correctness
+
+### Decision:
+Adjust PRD link targets from path-prefixed absolute-in-repo links (`docs/...`) to file-relative links (`./...`) so links render correctly from markdown pages and local file viewers where `docs/PRD.md` is in the `docs/` directory.
+
+### Rationale:
+The request reported 404s in a local docs server (`http://localhost:8765/docs/PRD.md`) because links with `docs/...` were resolving to `/docs/docs/...`.
+
+### Alternatives considered:
+- Keep existing `docs/...` links and require users to adjust base URL handling manually (rejected: still produces broken first-run behavior).
+- Convert to root-relative links (`/docs/requests.md`) (rejected: not portable across local file preview and some markdown renderers).
+
+### Acceptance / test:
+- `docs/PRD.md` contains `./requests.md`, `./decisions.md`, and `./PRD.md` link targets only.
+- The first linked request now resolves correctly in local preview and repository rendering contexts.
+
+## D-20260219-1702
+
+### Metadata
+- **Date:** 2026-02-19 17:02
+- **Inputs:** CR-20260219-1702
+- **PRD:** PRD linkability correction (local preview compatibility)
+
+### Decision:
+Keep `docs/PRD.md` links on the local preview API route (`/api/file?path=...`) and avoid `/docs/...` document routes for clickable source-of-truth links.
+
+### Rationale:
+The user reported a 404 on `/docs/requests.md`; current local preview does not serve direct `/docs/...` file routes, while `/api/file?path=...` returns rendered markdown content.
+
+### Alternatives considered:
+- Add external server-side redirect support from `/docs/...` to `/api/file?...` (rejected: outside repository control in current scope).
+- Keep prior route style and document manual remapping in user workflow (rejected: reintroduced fragile one-off behavior).
+
+### Acceptance / test:
+- `curl` against `http://localhost:8765/api/file?path=/Volumes/T9/code/SKILLS/athena/docs/requests.md` returns HTTP 200 and rendered markdown JSON.
+- All `docs/PRD.md` cross-document references remain `/api/file?path=...` style and include anchor IDs.
+- Local check confirms no remaining `/docs/requests.md` links are emitted from PRD link targets.
+
+## D-20260220-1707
+
+### Metadata
+- **Date:** 2026-02-20 17:07
+- **Inputs:** CR-20260220-1707
+- **PRD:** PRD markdown link portability in local reader
+
+### Decision:
+Remove the absolute filesystem prefix from `docs/PRD.md` `/api/file?path=...` links and normalize to `requests.md`, `decisions.md`, and `PRD.md` targets with existing anchor fragments.
+
+### Rationale:
+User-reported failures showed absolute-file and `/docs/...` routes breaking in the local markdown reader, while file names with anchor fragments are still the only portable form accepted consistently in this repo.
+
+### Alternatives considered:
+- Keep the absolute path prefixes (rejected: host-dependent and not portable in reader links).
+- Switch to root-relative document routes like `/docs/requests.md` (rejected: previously returned 404 in this local reader).
+- Keep `/api/file?...` but trim to file names only (accepted: minimal change and reader-compatible target shape).
+
+### Acceptance / test:
+- No `/Volumes/T9/code/SKILLS/athena/docs/` prefixes remain in `docs/PRD.md` link targets.
+- All `CR-...`, `D-...`, `FR-...`, and `NFR-...` references in PRD still use valid anchors and remain clickable.
+- `curl -s -w '%{http_code}' 'http://localhost:8765/api/file?path=requests.md#cr-20260211-0939'` returns `200`.
+- `curl -s -w '%{http_code}' 'http://localhost:8765/docs/requests.md#cr-20260211-0939'` returns `404`.
+
+## D-20260219-1710
+
+### Metadata
+- **Date:** 2026-02-19 17:10
+- **Inputs:** CR-20260219-1710
+- **PRD:** PRD markdown link portability in local reader
+
+### Decision:
+Update `docs/PRD.md` links to document-relative markdown paths and ensure the markdown reader resolves those links through `/api/open-link` so navigation stays inside the preview with section anchors intact.
+
+### Rationale:
+The `/api/file?...` link pattern exposed raw JSON and direct-doc failures in the reader workflow for the reported paths. Using compact file+anchor links plus client-side open-link handling provides portable links and in-reader rendering without host-dependent endpoints.
+
+### Alternatives considered:
+- Keep `/api/file?...` links only and rely on browser navigation (rejected: raw JSON responses are rendered instead of markdown preview).
+- Use absolute filesystem paths in every link (rejected: host-dependent and non-portable).
+
+### Acceptance / test:
+- PRD numbered references use markdown file routes with anchor fragments.
+- Local reader click flow routes `.md` references through `/api/open-link`.
+- Hash fragments (for example `#cr-...`) are applied after loading the linked file.
+
+## D-20260221-1255
+
+### Metadata
+- **Date:** 2026-02-21 12:55
+- **Inputs:** CR-20260221-1252
+- **PRD:** Template delivery and SKILL.md integration (local skill package)
+
+### Decision:
+Move ATHENA workflow templates into `skills/athena/templates` and reference those local files directly from `skills/athena/SKILL.md` so packaged skill behavior stays self-contained.
+
+### Rationale:
+The request is for local template usage within the installed skill package, so template resolution should not depend on repo-root templates once the skill is executed in this package.
+
+### Alternatives considered:
+- Keep using root-level `templates/` entries only (rejected: introduces external dependency and requires users to mirror files outside the skill package).
+- Duplicate template content inline in `SKILL.md` (rejected: increases prompt bloat and makes future updates harder).
+
+### Acceptance / test:
+- `skills/athena/SKILL.md` points to `skills/athena/templates/*` for template lookups.
+- `skills/athena/templates/` contains `requests.md`, `decisions.md`, `progress.txt`, `spec.md`, `tasks.md`, and `traceability.md`.
+- Changes are recorded in `docs/specs/20260221-athena-localized-templates` and `docs/progress.txt` with traceable IDs.

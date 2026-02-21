@@ -1,0 +1,9 @@
+Run Metadata
+action: athena
+run_id: hard-exit-experiment
+started_utc: 2026-02-13T19:56:45Z
+ended_utc: 2026-02-13T19:56:48Z
+duration_seconds: 3
+start_epoch: 1771012605
+end_epoch: 1771012608
+status: DONE

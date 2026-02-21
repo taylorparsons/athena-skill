@@ -1,5 +1,7 @@
 # ATHENA Framework
 
+![How the ATHENA Skill Works](docs/images/athena-readme-fast-visual.svg)
+
 ATHENA is an agent-agnostic delivery framework for PRD-driven, traceable software execution.
 
 ## What ATHENA Does

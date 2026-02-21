@@ -1,0 +1,174 @@
+{
+  "task_graph": [
+    {
+      "step_id": "S1",
+      "objective": "Define traceability linter rules for Sources, Verifies, and Implements references.",
+      "owner_role": "Documentation Architect",
+      "dependencies": [],
+      "deliverable": "Lint rule specification with pass/fail behavior and file coverage.",
+      "success_criteria": "Rules cover PRD, feature spec, task docs, and emit deterministic failures for broken links."
+    },
+    {
+      "step_id": "S2",
+      "objective": "Consolidate overlapping merge-sync guidance into one canonical checklist design.",
+      "owner_role": "Process Architect",
+      "dependencies": [],
+      "deliverable": "Canonical merge-sync checklist draft and section mapping.",
+      "success_criteria": "Checklist retains all required reconciliation evidence while removing overlap."
+    },
+    {
+      "step_id": "S3",
+      "objective": "Define path-scoped staging as default behavior for traceable commit helper usage.",
+      "owner_role": "Git Workflow Engineer",
+      "dependencies": [],
+      "deliverable": "Commit-helper behavior and migration guidance.",
+      "success_criteria": "Default behavior prevents unrelated-file staging while preserving traceability completeness."
+    },
+    {
+      "step_id": "S4",
+      "objective": "Define schema validation constraints for docs/progress.txt with restore compatibility.",
+      "owner_role": "Validation Engineer",
+      "dependencies": [],
+      "deliverable": "Progress schema contract and validator strategy.",
+      "success_criteria": "Schema catches malformed structures and allows explicit placeholders such as - (none)."
+    },
+    {
+      "step_id": "S5",
+      "objective": "Sequence implementation rollout with dependencies, owners, and validation gates.",
+      "owner_role": "AI PM Lead",
+      "dependencies": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "deliverable": "Integrated execution plan aligned to ATHENA task backlog.",
+      "success_criteria": "Each hardening stream has an owner, a completion gate, and a rollback/recovery path."
+    }
+  ],
+  "agents": [
+    {
+      "role": "Documentation Architect",
+      "owner": "Codex",
+      "responsibilities": [
+        "Define traceability linting requirements",
+        "Map lint checks to ATHENA traceability conventions",
+        "Prepare implementation acceptance criteria"
+      ],
+      "handoff_to_roles": [
+        "Validation Engineer",
+        "AI PM Lead"
+      ]
+    },
+    {
+      "role": "Process Architect",
+      "owner": "Repo Maintainer",
+      "responsibilities": [
+        "Unify merge-sync checklist guidance",
+        "Preserve required post-merge evidence controls"
+      ],
+      "handoff_to_roles": [
+        "AI PM Lead"
+      ]
+    },
+    {
+      "role": "Git Workflow Engineer",
+      "owner": "Repo Maintainer",
+      "responsibilities": [
+        "Define safe commit-helper defaults",
+        "Document path-scoped staging behavior"
+      ],
+      "handoff_to_roles": [
+        "QA Workflow Operator",
+        "AI PM Lead"
+      ]
+    },
+    {
+      "role": "Validation Engineer",
+      "owner": "Delivery Engineer",
+      "responsibilities": [
+        "Define progress schema constraints",
+        "Align validator output to restore behavior",
+        "Reduce false positives in normal ATHENA logs"
+      ],
+      "handoff_to_roles": [
+        "QA Workflow Operator",
+        "AI PM Lead"
+      ]
+    },
+    {
+      "role": "QA Workflow Operator",
+      "owner": "Delivery Engineer",
+      "responsibilities": [
+        "Execute validation checks for docs and helper flows",
+        "Report regressions and edge-case failures",
+        "Verify closeout criteria"
+      ],
+      "handoff_to_roles": [
+        "AI PM Lead"
+      ]
+    },
+    {
+      "role": "AI PM Lead",
+      "owner": "Repository Owner",
+      "responsibilities": [
+        "Approve sequencing and tradeoffs",
+        "Track completion against FR and task IDs",
+        "Prioritize follow-up implementation"
+      ],
+      "handoff_to_roles": [
+        "Documentation Architect"
+      ]
+    }
+  ],
+  "interventions": [
+    {
+      "trigger": "Traceability linter blocks valid historical docs",
+      "risk_signal": "False positives on known compliant files",
+      "response_action": "Introduce phased strictness and baseline exceptions with expiry",
+      "escalation_owner": "AI PM Lead",
+      "recovery_steps": [
+        "Capture failing cases",
+        "Adjust lint rules",
+        "Re-run validation",
+        "Document temporary exceptions"
+      ]
+    },
+    {
+      "trigger": "Merge-sync consolidation removes required controls",
+      "risk_signal": "Checklist no longer enforces PRD/spec/progress reconciliation",
+      "response_action": "Perform section-by-section diff and restore missing mandatory steps",
+      "escalation_owner": "Process Architect",
+      "recovery_steps": [
+        "Revert checklist draft",
+        "Rebuild canonical checklist",
+        "Validate against recent completed features",
+        "Publish corrected guidance"
+      ]
+    },
+    {
+      "trigger": "Path-scoped staging causes incomplete commits",
+      "risk_signal": "Required traceability docs omitted from commits",
+      "response_action": "Add explicit helper prompts and safe fallback mode",
+      "escalation_owner": "Git Workflow Engineer",
+      "recovery_steps": [
+        "Identify omission patterns",
+        "Improve helper usage guidance",
+        "Retest common workflows",
+        "Document migration guidance"
+      ]
+    },
+    {
+      "trigger": "Progress schema validation rejects normal placeholders",
+      "risk_signal": "Validator fails on - (none) sections",
+      "response_action": "Add explicit placeholder allowances while keeping structural checks strict",
+      "escalation_owner": "Validation Engineer",
+      "recovery_steps": [
+        "Build representative fixtures",
+        "Tune validation rules",
+        "Re-run fixtures",
+        "Update schema documentation"
+      ]
+    }
+  ]
+}
