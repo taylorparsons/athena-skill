@@ -1,3 +1,26 @@
+Session: 2026-02-21 12:52
+Agent: Codex CLI
+Model: GPT-5
+Skills: athena
+Feature: 20260221-athena-localized-templates
+Input: CR-20260221-1252
+Decisions: D-20260221-1255
+Spec: docs/specs/20260221-athena-localized-templates/spec.md
+Tasks: docs/specs/20260221-athena-localized-templates/tasks.md
+Goal: Localize ATHENA workflow templates under `skills/athena/` and reference them from `skills/athena/SKILL.md`.
+
+IN PROGRESS
+- (none)
+
+DONE
+- [2026-02-21 12:52] T-001: Created `skills/athena/templates/*` template files from repository template copies. (Implements: FR-001)
+- [2026-02-21 12:52] T-002: Updated `skills/athena/SKILL.md` to load workflow templates from `skills/athena/templates/*` so packaged usage is self-contained. (Implements: FR-001)
+
+NOTES
+- SKILL.md now points requests/decisions/progress/spec/task/traceability lookups at `skills/athena/templates/*` for local packaged execution.
+- Template files were added in `skills/athena/templates/` and include `requests.md`, `decisions.md`, `progress.txt`, `spec.md`, `tasks.md`, and `traceability.md`.
+- Changes were traced to FR-ATHENA-023 in `docs/PRD.md`.
+
 Session: 2026-02-20 17:10
 Agent: Codex CLI
 Model: GPT-5

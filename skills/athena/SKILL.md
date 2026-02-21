@@ -28,6 +28,14 @@ At the start of each session, record the current customer request **verbatim**:
 If you do not have an explicit customer request for the current session:
 - Ask the user for it before changing `docs/PRD.md`.
 
+Template resources for this skill are maintained in:
+- `skills/athena/templates/requests.md`
+- `skills/athena/templates/decisions.md`
+- `skills/athena/templates/progress.txt`
+- `skills/athena/templates/spec.md`
+- `skills/athena/templates/tasks.md`
+- `skills/athena/templates/traceability.md`
+
 ## 0.25) Capture the Agent / Skill Context (for context resets)
 
 ATHENA does not automatically track which skills/agents were used. To make sessions recoverable after a context reset, explicitly record the execution context in `docs/progress.txt`.
@@ -283,152 +291,24 @@ When the user explicitly asks for a plan:
 
 ## Customer Request Log Template (`docs/requests.md`)
 
-Use this structure (append-only):
-
-```text
-# Customer Requests (append-only)
-
-## CR-YYYYMMDD-HHMM
-Date: YYYY-MM-DD HH:MM
-Source: <chat/email/ticket/etc>
-
-Request (verbatim):
-<paste request here>
-
-Notes:
-- <optional clarifications>
-```
+Use `skills/athena/templates/requests.md`.
 
 ## Traceability Entry Point Template (`docs/TRACEABILITY.md`)
 
-Use this structure:
-
-```text
-# Traceability (How to follow the audit trail)
-
-Start here:
-0) If this repo adopted ATHENA after it already had history, review `docs/audit/git-history.md` (derived from Git; not customer verbatim).
-1) Find the relevant raw request in `docs/requests.md` (CR-...).
-2) Read linked interpretations/tradeoffs in `docs/decisions.md` (D-...).
-3) Open the feature spec at `docs/specs/<FEATURE_ID>/spec.md`.
-   - Requirements use IDs (FR-...) and include `Sources: CR-...; D-...`.
-   - Acceptance scenarios include `Verifies: FR-...`.
-4) Open the feature task list at `docs/specs/<FEATURE_ID>/tasks.md`.
-   - Tasks include `Implements: FR-...`.
-5) Review execution notes in `docs/progress.txt` for commands, outcomes, and completion.
-```
+Use `skills/athena/templates/traceability.md`.
 
 ## Decision Log Template (`docs/decisions.md`)
 
-Use this structure (append-only):
-
-```text
-# Decisions (append-only)
-
-## D-YYYYMMDD-HHMM
-Date: YYYY-MM-DD HH:MM
-Inputs: CR-YYYYMMDD-HHMM[, CR-...]
-PRD: <section/heading(s) impacted>
-
-Decision:
-<what you decided>
-
-Rationale:
-<why this is the safest/most correct choice>
-
-Alternatives considered:
-- <option> (rejected because <reason>)
-
-Acceptance / test:
-- <how to verify this decision/requirement is satisfied>
-```
+Use `skills/athena/templates/decisions.md`.
 
 ## Feature Spec Template (`docs/specs/<FEATURE_ID>/spec.md`)
 
-Use this structure:
-
-```text
-# Feature Spec: <FEATURE_ID>
-
-Status: Draft | Active | Done
-Created: YYYY-MM-DD HH:MM
-Inputs: CR-YYYYMMDD-HHMM[, CR-...]
-Decisions: D-YYYYMMDD-HHMM[, D-...]
-
-## Summary
-- <one paragraph of what/why>
-
-## User Stories & Acceptance
-
-### US1: <title> (Priority: P1)
-Narrative:
-- As a <user>, I want <capability>, so that <benefit>.
-
-Acceptance scenarios:
-1. Given <state>, When <action>, Then <outcome>. (Verifies: FR-001, FR-002)
-
-## Requirements
-
-Functional requirements:
-- FR-001: <requirement text>. (Sources: CR-YYYYMMDD-HHMM; D-YYYYMMDD-HHMM)
-- FR-002: <requirement text>. (Sources: CR-YYYYMMDD-HHMM)
-
-Non-functional requirements (optional):
-- NFR-001: <requirement text>. (Sources: CR-...; D-...)
-
-## Edge cases
-- <case> (Verifies: FR-...)
-```
+Use `skills/athena/templates/spec.md`.
 
 ## Feature Task List Template (`docs/specs/<FEATURE_ID>/tasks.md`)
 
-Use this structure:
-
-```text
-# Tasks: <FEATURE_ID>
-
-Spec: docs/specs/<FEATURE_ID>/spec.md
-
-## NEXT
-- T-001: <task>. (Implements: FR-001)
-- T-002: <task>. (Implements: FR-002)
-
-## IN PROGRESS
-- <at most one task>
-
-## DONE
-- [YYYY-MM-DD HH:MM] T-000: <task>. (Implements: FR-...)
-```
+Use `skills/athena/templates/tasks.md`.
 
 ## Progress Log Template (`docs/progress.txt`)
 
-Use this structure:
-
-```text
-Session: YYYY-MM-DD HH:MM
-Agent: Codex CLI
-Model: <if known>
-Skills: athena[, ...]
-Feature: <FEATURE_ID>
-Input: CR-YYYYMMDD-HHMM
-Decisions: D-YYYYMMDD-HHMM[, D-...]
-Spec: docs/specs/<FEATURE_ID>/spec.md
-Tasks: docs/specs/<FEATURE_ID>/tasks.md
-Git history (optional): docs/audit/git-history.md
-Goal: <one sentence>
-
-DONE
-- [YYYY-MM-DD HH:MM] <task>. (Skills: athena[, ...])
-
-IN PROGRESS
-- <task>. (Skills: athena[, ...])
-
-NEXT
-- <task>
-- <task>
-
-NOTES
-- Commands run: <cmd> -> <result>
-- Decisions: <what and why>
-- Risks / open questions: <items>
-```
+Use `skills/athena/templates/progress.txt`.

@@ -596,3 +596,25 @@ The `/api/file?...` link pattern exposed raw JSON and direct-doc failures in the
 - PRD numbered references use markdown file routes with anchor fragments.
 - Local reader click flow routes `.md` references through `/api/open-link`.
 - Hash fragments (for example `#cr-...`) are applied after loading the linked file.
+
+## D-20260221-1255
+
+### Metadata
+- **Date:** 2026-02-21 12:55
+- **Inputs:** CR-20260221-1252
+- **PRD:** Template delivery and SKILL.md integration (local skill package)
+
+### Decision:
+Move ATHENA workflow templates into `skills/athena/templates` and reference those local files directly from `skills/athena/SKILL.md` so packaged skill behavior stays self-contained.
+
+### Rationale:
+The request is for local template usage within the installed skill package, so template resolution should not depend on repo-root templates once the skill is executed in this package.
+
+### Alternatives considered:
+- Keep using root-level `templates/` entries only (rejected: introduces external dependency and requires users to mirror files outside the skill package).
+- Duplicate template content inline in `SKILL.md` (rejected: increases prompt bloat and makes future updates harder).
+
+### Acceptance / test:
+- `skills/athena/SKILL.md` points to `skills/athena/templates/*` for template lookups.
+- `skills/athena/templates/` contains `requests.md`, `decisions.md`, `progress.txt`, `spec.md`, `tasks.md`, and `traceability.md`.
+- Changes are recorded in `docs/specs/20260221-athena-localized-templates` and `docs/progress.txt` with traceable IDs.

@@ -544,3 +544,15 @@ I only want reader-compatible links in PRD: plain links should open documents wi
 
 ### Notes
 - Update numbered references to avoid 404/relative/raw JSON behavior in the markdown reader at `http://localhost:8765/`.
+
+## CR-20260221-1252
+
+### Metadata
+- **Date:** 2026-02-21 12:52
+- **Source:** chat
+
+### Request (verbatim):
+document the changes in $athena and check in to prepare to push to remote
+
+### Notes
+- Track this work in ATHENA artifacts and prepare a local, traceable commit for `skills/athena` template updates.
