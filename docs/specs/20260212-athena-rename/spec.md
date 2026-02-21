@@ -1,9 +1,10 @@
 # Feature Spec: 20260212-athena-rename
 
-Status: Done
-Created: 2026-02-12 16:50
-Inputs: CR-20260212-1646
-Decisions: D-20260212-1647, D-20260212-1648
+## Metadata
+- **Status:** Done
+- **Created:** 2026-02-12 16:50
+- **Inputs:** CR-20260212-1646
+- **Decisions:** D-20260212-1647, D-20260212-1648
 
 ## Summary
 - Migrate this repository's mutable skill/project identity to `athena`, including path names, install metadata, and code/documentation references, while preserving append-only historical request/decision logs.

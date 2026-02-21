@@ -248,12 +248,13 @@ Hard rules:
 - Do not commit secrets. If secrets are discovered, remove them and note the incident in `docs/progress.txt`.
 
 Recommended workflow:
-- Stage (default): use the helper with path-scoped staging defaults for ATHENA docs (`spec/tasks/progress/PRD/TRACEABILITY/requests/decisions`).
+- Stage (default): broad stage with guardrails via helper prechecks (blocks `.DS_Store`, common temp/cache paths, likely secret patterns, and large artifacts).
 - Stage (explicit): pass `--paths <path1> <path2> ...` for custom scope.
-- Stage (broad opt-in): pass `--all-changes` to stage with `git add -A`.
+- Stage (docs-only): pass `--docs-only` to use ATHENA traceability docs path-scoped staging (`spec/tasks/progress/PRD/TRACEABILITY/requests/decisions`).
+- Stage (override): pass `--skip-staging-precheck` only when blocked files are intentionally included.
 - Review: `git diff --cached`
 - Commit using the helper script:
-  - `python3 <CODEX_HOME>/skills/athena/scripts/commit_with_traceability.py --feature <FEATURE_ID> --task <T-001> --summary "<what changed>" --cr <CR-...> --decisions <D-...,...> [--paths ... | --all-changes]`
+  - `python3 <CODEX_HOME>/skills/athena/scripts/commit_with_traceability.py --feature <FEATURE_ID> --task <T-001> --summary "<what changed>" --cr <CR-...> --decisions <D-...,...> [--paths ... | --docs-only | --all-changes]`
 
 Commit message format (recommended):
 - Subject: `T-001: <summary> (Feature: <FEATURE_ID>)`

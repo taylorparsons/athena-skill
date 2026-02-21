@@ -1,9 +1,10 @@
 # Feature Spec: 20260217-athena-warrior-icon
 
-Status: Done
-Created: 2026-02-17 08:47
-Inputs: CR-20260217-0846
-Decisions: D-20260217-0847
+## Metadata
+- **Status:** Done
+- **Created:** 2026-02-17 08:47
+- **Inputs:** CR-20260217-0846
+- **Decisions:** D-20260217-0847
 
 ## Summary
 - Add a new SVG icon asset for the `athena` skill package that visually invokes a warrior archetype.

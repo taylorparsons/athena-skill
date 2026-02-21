@@ -1,9 +1,10 @@
 # Feature Spec: 20260213-linkedin-personal-style
 
-Status: Done
-Created: 2026-02-13 20:01
-Inputs: CR-20260213-1958
-Decisions: D-20260213-1959
+## Metadata
+- **Status:** Done
+- **Created:** 2026-02-13 20:01
+- **Inputs:** CR-20260213-1958
+- **Decisions:** D-20260213-1959
 
 ## Summary
 - Add one additional LinkedIn-ready ATHENA post draft that uses the maintainer's personal writing style: direct, structured, grounded, operator-focused, and low-hype, while preserving concrete setup and loop execution clarity.

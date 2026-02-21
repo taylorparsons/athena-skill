@@ -1,9 +1,10 @@
 # Feature Spec: 20260217-athena-install-icon-metadata
 
-Status: Done
-Created: 2026-02-17 14:19
-Inputs: CR-20260217-1417
-Decisions: D-20260217-1419
+## Metadata
+- **Status:** Done
+- **Created:** 2026-02-17 14:19
+- **Inputs:** CR-20260217-1417
+- **Decisions:** D-20260217-1419
 
 ## Summary
 - Ensure ATHENA installs expose the warrior icon asset through skill metadata and keep that contract enforced by install-target validation.

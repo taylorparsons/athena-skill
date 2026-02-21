@@ -1,9 +1,10 @@
 # Feature Spec: 20260217-athena-hardening-plan
 
-Status: Done
-Created: 2026-02-17 15:36
-Inputs: CR-20260217-1535, CR-20260217-1550
-Decisions: D-20260217-1536, D-20260217-1551
+## Metadata
+- **Status:** Done
+- **Created:** 2026-02-17 15:36
+- **Inputs:** CR-20260217-1535, CR-20260217-1550
+- **Decisions:** D-20260217-1536, D-20260217-1551
 
 ## Summary
 - Implement all remaining ATHENA hardening workstreams after the planning phase: traceability linting, canonical merge/check-in checklist consolidation, path-scoped staging defaults, and progress-log schema validation integrated with resume flow.

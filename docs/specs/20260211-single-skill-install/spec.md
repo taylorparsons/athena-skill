@@ -1,9 +1,10 @@
 # Feature Spec: 20260211-single-skill-install
 
-Status: Done
-Created: 2026-02-11 14:00
-Inputs: CR-20260211-1358
-Decisions: D-20260211-1400
+## Metadata
+- **Status:** Done
+- **Created:** 2026-02-11 14:00
+- **Inputs:** CR-20260211-1358
+- **Decisions:** D-20260211-1400
 
 ## Summary
 - Keep public installation deterministic by exposing only one installable skill target (`skills/athena`) and documenting only that path.

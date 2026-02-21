@@ -1,9 +1,10 @@
 # Feature Spec: 20260211-public-release-hardening
 
-Status: Done
-Created: 2026-02-11 10:15
-Inputs: CR-20260211-1010, CR-20260211-1019
-Decisions: D-20260211-1012, D-20260211-1020
+## Metadata
+- **Status:** Done
+- **Created:** 2026-02-11 10:15
+- **Inputs:** CR-20260211-1010, CR-20260211-1019
+- **Decisions:** D-20260211-1012, D-20260211-1020
 
 ## Summary
 - Harden this public-share repository for publication by cleaning local strings, adding governance/security artifacts, and rewriting history to a clean baseline.

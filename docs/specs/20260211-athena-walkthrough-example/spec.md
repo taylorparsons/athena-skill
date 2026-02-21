@@ -1,9 +1,10 @@
 # Feature Spec: 20260211-athena-walkthrough-example
 
-Status: Done
-Created: 2026-02-11 13:26
-Inputs: CR-20260211-1325
-Decisions: D-20260211-1326
+## Metadata
+- **Status:** Done
+- **Created:** 2026-02-11 13:26
+- **Inputs:** CR-20260211-1325
+- **Decisions:** D-20260211-1326
 
 ## Summary
 - Add an onboarding walkthrough under `docs/examples/` showing how one request moves through CR -> Decision -> PRD -> Spec -> Task -> Progress.

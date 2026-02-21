@@ -1,9 +1,10 @@
 # Feature Spec: 20260213-linkedin-post-variants
 
-Status: Done
-Created: 2026-02-13 09:15
-Inputs: CR-20260213-0912
-Decisions: D-20260213-0913
+## Metadata
+- **Status:** Done
+- **Created:** 2026-02-13 09:15
+- **Inputs:** CR-20260213-0912
+- **Decisions:** D-20260213-0913
 
 ## Summary
 - Create two LinkedIn-ready post variants that explain ATHENA end-to-end flow from invocation/request through loop execution to check-in completion, with clear install instructions for both Codex and Claude using copy/paste-friendly code blocks.
