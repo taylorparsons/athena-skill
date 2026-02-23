@@ -35,7 +35,7 @@ Ask Claude to set up ATHENA in your project:
 
 ```bash
 # Ask Claude Code to help:
-# "Setup ATHENA from https://github.com/taylorparsons/athena-skill"
+ "Setup ATHENA from https://github.com/taylorparsons/athena-skill"
 # Claude will create docs structure and templates automatically
 
 # Or direct clone:
