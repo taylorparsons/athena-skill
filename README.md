@@ -34,10 +34,10 @@ This installs `skills/athena/SKILL.md` into Codex's skill registry.
 In an active Claude Code session, paste this prompt:
 
 ```
-Install the athena skill from https://github.com/taylorparsons/athena-skill — copy skills/athena/SKILL.md into ~/.claude/skills/athena/SKILL.md
+Install the athena skill from https://github.com/taylorparsons/athena-skill — copy the entire skills/athena/ directory into ~/.claude/skills/athena/
 ```
 
-Claude will fetch the file and write it to `~/.claude/skills/athena/SKILL.md`. Once installed, the skill is available in all future Claude Code sessions.
+Claude will fetch and write the full skill directory to `~/.claude/skills/athena/`, including `SKILL.md`, `templates/`, `scripts/`, and `core/`. Once installed, the skill is available in all future Claude Code sessions.
 
 **Verify:** Check that `~/.claude/skills/athena/SKILL.md` exists, or run `/skills` in Claude Code to confirm `athena` appears in the list.
 
