@@ -24,10 +24,7 @@ ATHENA creates a **complete audit trail from customer request to shipped code**:
 When running in Codex with `skill-installer` available:
 
 ```bash
-python3 "$CODEX_HOME/skills/.system/skill-installer/scripts/install-skill-from-github.py" \
-  --repo taylorparsons/athena-skill \
-  --path skills/athena \
-  --name athena
+$skill-installer https://github.com/taylorparsons/athena-skill/
 ```
 
 This installs `skills/athena/SKILL.md` into Codex's skill registry.
