@@ -19,43 +19,40 @@ ATHENA creates a **complete audit trail from customer request to shipped code**:
 
 ## Installation
 
-### Option A: Codex or Claude Code with `skill-installer` (Recommended)
+### Option A: Codex with `skill-installer`
 
-When `skill-installer` is available:
-
-```bash
-$skill-installer https://github.com/taylorparsons/athena-skill/
-```
-
-This installs the canonical `athena` skill from `skills/athena/SKILL.md`.
-
-### Option B: Claude Code CLI (Recommended for Claude CLI)
-
-Ask Claude to set up ATHENA in your project:
+When running in Codex with `skill-installer` available:
 
 ```bash
-# Ask Claude Code to help:
-# "Setup ATHENA from https://github.com/taylorparsons/athena-skill"
-# Claude will create docs structure and templates automatically
-
-# Or direct clone:
-# git clone https://github.com/taylorparsons/athena-skill.git
-
-# Verify the setup
-python3 scripts/validate_install_targets.py
+python3 "$CODEX_HOME/skills/.system/skill-installer/scripts/install-skill-from-github.py" \
+  --repo taylorparsons/athena-skill \
+  --path skills/athena \
+  --name athena
 ```
 
-### Option C: Manual Setup (If `skill-installer` Is Unavailable)
+This installs `skills/athena/SKILL.md` into Codex's skill registry.
 
-Claude can manually create the ATHENA framework structure in your project:
+### Option B: Claude Code CLI
 
-```bash
-# Ask Claude: "setup athena-skill manually"
-# Claude creates:
-# - docs/requests.md, docs/decisions.md, docs/PRD.md
-# - docs/progress.txt, docs/TRACEABILITY.md
-# - docs/specs/ directory with templates
+In an active Claude Code session, paste this prompt:
+
 ```
+Install the athena skill from https://github.com/taylorparsons/athena-skill — copy skills/athena/SKILL.md into ~/.claude/skills/athena/SKILL.md
+```
+
+Claude will fetch the file and write it to `~/.claude/skills/athena/SKILL.md`. Once installed, the skill is available in all future Claude Code sessions.
+
+**Verify:** Check that `~/.claude/skills/athena/SKILL.md` exists, or run `/skills` in Claude Code to confirm `athena` appears in the list.
+
+### Option C: Bootstrap ATHENA docs in a project
+
+To set up the ATHENA docs structure (`docs/requests.md`, `docs/decisions.md`, `docs/PRD.md`, `docs/specs/`, etc.) inside an existing project, open Claude Code in that project and paste:
+
+```
+Setup ATHENA docs in this project from https://github.com/taylorparsons/athena-skill
+```
+
+Claude will create the full docs scaffold. This is separate from skill installation — you can do both, or just one depending on your workflow.
 
 ## Install Target
 
