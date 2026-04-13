@@ -10,6 +10,9 @@
 # Update INDEX.md from current specs
 ./scripts/owl update-index
 
+# Trim progress.txt (keep only current session)
+./scripts/owl trim-progress
+
 # Search archived features
 ./scripts/owl search "linkedin"
 
@@ -37,6 +40,24 @@ Regenerate INDEX.md from all specs in docs/specs/
   "message": "✅ Updated INDEX.md: 0 active, 19 archived"
 }
 ```
+
+### trim-progress
+Archive old progress.txt sessions, keep only current
+
+**Usage**: `./scripts/owl trim-progress`
+
+**Output**:
+```json
+{
+  "success": true,
+  "old_sessions_archived": 173,
+  "current_session_lines": 126,
+  "tokens_saved": 1730,
+  "message": "✅ Archived 173 lines, kept 126 lines"
+}
+```
+
+**Token savings**: Reduces progress.txt by 30-50% (1,000-2,000 tokens)
 
 ### search <keyword>
 Search archived features by keyword
@@ -126,19 +147,27 @@ Agent: Found 2 features: linkedin-personal-style, linkedin-post-variants
 
 **Owl uses cheap model** (Haiku/GPT-4o-mini):
 - update-index: ~800 tokens
+- trim-progress: ~500 tokens
 - search: ~200 tokens
 - retrieve: ~300 tokens
 - archive: ~500 tokens
 
 **Main agent uses expensive model** (Sonnet/GPT-5):
 - Only loads INDEX.md: ~1,100 tokens
+- Only loads current progress.txt: ~2,300 tokens (vs 3,400)
 - Delegates archive ops to Owl
-- **Savings**: 99% on archive operations
+- **Savings**: 99% on archive operations, 31% on progress.txt
+
+**Combined savings per session**:
+- INDEX.md optimization: ~8,400 tokens
+- progress.txt trim: ~1,100 tokens
+- **Total**: ~9,500 tokens saved
 
 ## Testing
 
 All commands tested and working:
 - ✅ update-index: Regenerates INDEX.md from 19 specs
+- ✅ trim-progress: Archived 173 lines, saved 1,072 tokens
 - ✅ search: Finds 2 LinkedIn features
 - ✅ retrieve: Returns walkthrough feature summary
 - ✅ archive: Ready to test with new feature
