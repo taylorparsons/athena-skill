@@ -1,6 +1,6 @@
 # Owl of Athena: Archive Management Agent
 
-**Model**: Haiku (Claude) / GPT-4o-mini (Codex)  
+**Model**: claude-3-5-haiku-20241022 (Claude) / gpt-4o-mini (Codex)  
 **Purpose**: Manage INDEX.md and archived features with minimal token cost  
 **Token Budget**: Max 2K per operation
 
@@ -87,7 +87,7 @@ Main Agent: [presents results to user]
 ### For Claude (Kiro CLI)
 ```yaml
 agent: owl-of-athena
-model: claude-haiku-4-5-20251001
+model: claude-3-5-haiku-20241022
 triggers:
   - "@owl" command from main agent
   - Feature marked "Status: Done"

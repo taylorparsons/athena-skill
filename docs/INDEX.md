@@ -122,10 +122,10 @@
 - Load all 19 specs = ~9,500 tokens
 
 **With INDEX.md**:
-- Load INDEX.md only = ~500 tokens
+- Load INDEX.md only = ~1,100 tokens
 - Load 0 active specs = 0 tokens
-- **Total**: ~500 tokens
-- **Savings**: 95%
+- **Total**: ~1,100 tokens
+- **Savings**: ~8,400 tokens (88% reduction)
 
 **Usage Pattern**:
 1. Athena loads INDEX.md first
