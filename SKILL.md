@@ -105,11 +105,15 @@ Preferred implementation:
 ## 2) Read First, Then Act
 
 Always read all files at the start of the session:
+- `docs/INDEX.md` (load first - identifies active vs archived features)
 - `docs/requests.md`
 - `docs/decisions.md`
 - `docs/TRACEABILITY.md`
 - `docs/PRD.md`
 - `docs/progress.txt`
+- `docs/specs/<feature-id>/` (only for features marked "Active" in INDEX.md)
+
+**Token optimization**: INDEX.md lists all features. Only load specs marked as "Active". Skip archived features unless explicitly requested by user.
 
 Summarize the current goal in one sentence before making changes.
 
