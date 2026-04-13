@@ -1,0 +1,41 @@
+#!/bin/bash
+# Post-commit hook: Auto-update INDEX.md when features complete
+# Install: cp scripts/hooks/post-commit .git/hooks/post-commit && chmod +x .git/hooks/post-commit
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+OWL_SCRIPT="$REPO_ROOT/scripts/owl"
+
+# Check if owl script exists
+if [ ! -f "$OWL_SCRIPT" ]; then
+    exit 0
+fi
+
+# Check if commit message indicates feature completion
+COMMIT_MSG=$(git log -1 --pretty=%B)
+
+# Look for patterns indicating feature is done
+if echo "$COMMIT_MSG" | grep -qiE "(Status: Done|feature complete|mark.*done|archive.*feature)"; then
+    echo "🦉 Owl: Detected feature completion, updating INDEX.md..."
+    
+    # Extract feature ID from commit message if present
+    FEATURE_ID=$(echo "$COMMIT_MSG" | grep -oE "Feature: [a-zA-Z0-9-]+" | sed 's/Feature: //')
+    
+    if [ -n "$FEATURE_ID" ]; then
+        echo "🦉 Owl: Archiving feature $FEATURE_ID..."
+        "$OWL_SCRIPT" archive "$FEATURE_ID" 2>/dev/null || true
+    fi
+    
+    # Always regenerate INDEX.md to catch any status changes
+    echo "🦉 Owl: Regenerating INDEX.md..."
+    "$OWL_SCRIPT" update-index > /dev/null 2>&1
+    
+    # Check if INDEX.md changed
+    if ! git diff --quiet docs/INDEX.md 2>/dev/null; then
+        echo "🦉 Owl: INDEX.md updated, staging changes..."
+        git add docs/INDEX.md
+        git commit --amend --no-edit --no-verify
+        echo "✅ INDEX.md automatically updated"
+    else
+        echo "✅ INDEX.md already up to date"
+    fi
+fi

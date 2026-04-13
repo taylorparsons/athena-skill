@@ -140,6 +140,37 @@ All commands tested and working:
 1. ✅ Implement owl.py
 2. ✅ Test all commands
 3. ✅ Create wrapper script
-4. ⏳ Integrate with Athena SKILL.md
-5. ⏳ Add @owl command handler
-6. ⏳ Test in real Athena session
+4. ✅ Add Git hooks for automation
+5. ⏳ Integrate with Athena SKILL.md
+6. ⏳ Add @owl command handler
+7. ⏳ Test in real Athena session
+
+## Git Hooks (NEW!)
+
+**Install hooks**:
+```bash
+./scripts/install-hooks.sh
+```
+
+**What they do**:
+- **pre-commit**: Validates INDEX.md is in sync with specs (prevents commits if out of sync)
+- **post-commit**: Auto-updates INDEX.md when features complete (detects "Status: Done" in commits)
+
+**Example workflow**:
+```bash
+# 1. Complete a feature
+git commit -m "feat: complete feature (Status: Done)"
+
+# 2. Post-commit hook automatically:
+#    - Detects "Status: Done"
+#    - Runs: ./scripts/owl update-index
+#    - Amends commit with updated INDEX.md
+
+# 3. Pre-commit hook validates on next commit
+```
+
+**Benefits**:
+- ✅ INDEX.md always in sync
+- ✅ No manual updates needed
+- ✅ Catches sync issues before push
+- ✅ Automatic archival on completion
