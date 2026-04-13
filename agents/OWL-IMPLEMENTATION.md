@@ -75,9 +75,14 @@ Get summary of archived feature
 ```
 
 ### archive <feature-id>
-Move feature from Active to Archived in INDEX.md
+Move feature from Active to Archived in INDEX.md and archive progress.txt
 
 **Usage**: `./scripts/owl archive 20260413-my-feature`
+
+**What it does**:
+1. Moves feature from Active → Archived in INDEX.md
+2. Archives progress.txt entries for that feature to docs/specs/<feature-id>/progress-archive.txt
+3. Keeps only current session in docs/progress.txt
 
 **Output**:
 ```json
@@ -85,9 +90,12 @@ Move feature from Active to Archived in INDEX.md
   "success": true,
   "feature_id": "20260413-my-feature",
   "summary": "Feature summary",
+  "progress_archived": true,
   "message": "✅ Moved 20260413-my-feature to archived in INDEX.md"
 }
 ```
+
+**Token savings**: Archiving old progress entries can save 2-3K tokens per completed feature
 
 ## Integration with Athena
 

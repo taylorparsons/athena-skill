@@ -20,6 +20,7 @@
 ## Archived Features (Skip unless explicitly requested)
 
 ### 20260211-athena-walkthrough-example
+- **Status**: Done (2026-04-13)
 - **Status**: Done
 - **Spec**: docs/specs/20260211-athena-walkthrough-example/spec.md
 - **Summary**: Add an onboarding walkthrough under `docs/examples/` showing how one request moves through CR -> Decision -> PRD -> Spec -> Task -> Progress.

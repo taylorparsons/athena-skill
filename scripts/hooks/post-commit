@@ -33,6 +33,13 @@ if echo "$COMMIT_MSG" | grep -qiE "(Status: Done|feature complete|mark.*done|arc
     if ! git diff --quiet docs/INDEX.md 2>/dev/null; then
         echo "🦉 Owl: INDEX.md updated, staging changes..."
         git add docs/INDEX.md
+        
+        # Also check if progress.txt was trimmed
+        if ! git diff --quiet docs/progress.txt 2>/dev/null; then
+            echo "🦉 Owl: progress.txt archived, staging changes..."
+            git add docs/progress.txt
+        fi
+        
         git commit --amend --no-edit --no-verify
         echo "✅ INDEX.md automatically updated"
     else

@@ -20,7 +20,7 @@ class OwlOfAthena:
         self.specs_dir = self.docs_dir / "specs"
     
     def archive_feature(self, feature_id: str) -> Dict:
-        """Move feature from Active to Archived in INDEX.md"""
+        """Move feature from Active to Archived in INDEX.md and archive progress"""
         if not self.index_path.exists():
             return {"error": "INDEX.md not found"}
         
@@ -40,6 +40,9 @@ class OwlOfAthena:
         spec_content = spec_file.read_text()
         summary = self._extract_summary(spec_content)
         
+        # Archive progress.txt entries for this feature
+        progress_archived = self._archive_progress_entries(feature_id)
+        
         # Update INDEX.md (move from Active to Archived)
         updated_content = self._move_to_archived(content, feature_id, summary)
         self.index_path.write_text(updated_content)
@@ -48,8 +51,54 @@ class OwlOfAthena:
             "success": True,
             "feature_id": feature_id,
             "summary": summary,
+            "progress_archived": progress_archived,
             "message": f"✅ Moved {feature_id} to archived in INDEX.md"
         }
+    
+    def _archive_progress_entries(self, feature_id: str) -> bool:
+        """Archive progress.txt entries for completed feature"""
+        progress_file = self.docs_dir / "progress.txt"
+        if not progress_file.exists():
+            return False
+        
+        content = progress_file.read_text()
+        lines = content.split('\n')
+        
+        # Find entries related to this feature
+        feature_lines = []
+        current_session_lines = []
+        in_feature_session = False
+        
+        for i, line in enumerate(lines):
+            # Check if this session is for our feature
+            if f"Feature: {feature_id}" in line:
+                in_feature_session = True
+            
+            # Check for new session start
+            if line.startswith("Session:") and i > 0:
+                in_feature_session = False
+            
+            if in_feature_session:
+                feature_lines.append(line)
+            else:
+                # Keep only the last session (current work)
+                if line.startswith("Session:"):
+                    current_session_lines = [line]
+                elif current_session_lines:
+                    current_session_lines.append(line)
+        
+        # If we found feature-specific entries, archive them
+        if feature_lines:
+            archive_path = self.specs_dir / feature_id / "progress-archive.txt"
+            archive_path.write_text('\n'.join(feature_lines))
+            
+            # Update progress.txt to only keep current session
+            if current_session_lines:
+                progress_file.write_text('\n'.join(current_session_lines))
+            
+            return True
+        
+        return False
     
     def retrieve_feature(self, feature_id: str) -> Dict:
         """Retrieve archived feature summary"""
@@ -109,7 +158,56 @@ class OwlOfAthena:
             "count": len(matches)
         }
     
-    def update_index(self) -> Dict:
+    def trim_progress(self) -> Dict:
+        """Keep only current session in progress.txt, archive the rest"""
+        progress_file = self.docs_dir / "progress.txt"
+        if not progress_file.exists():
+            return {"error": "progress.txt not found"}
+        
+        content = progress_file.read_text()
+        lines = content.split('\n')
+        
+        # Find the last session
+        last_session_start = -1
+        for i in range(len(lines) - 1, -1, -1):
+            if lines[i].startswith("Session:"):
+                last_session_start = i
+                break
+        
+        if last_session_start == -1:
+            return {"error": "No session found in progress.txt"}
+        
+        # Archive old sessions
+        old_sessions = '\n'.join(lines[:last_session_start])
+        current_session = '\n'.join(lines[last_session_start:])
+        
+        if old_sessions.strip():
+            # Save to archive
+            archive_file = self.docs_dir / "progress-archive.txt"
+            if archive_file.exists():
+                archive_file.write_text(archive_file.read_text() + '\n\n' + old_sessions)
+            else:
+                archive_file.write_text(old_sessions)
+            
+            # Update progress.txt with only current session
+            progress_file.write_text(current_session)
+            
+            old_lines = len(lines[:last_session_start])
+            new_lines = len(lines[last_session_start:])
+            tokens_saved = old_lines * 10  # Rough estimate
+            
+            return {
+                "success": True,
+                "old_sessions_archived": old_lines,
+                "current_session_lines": new_lines,
+                "tokens_saved": tokens_saved,
+                "message": f"✅ Archived {old_lines} lines, kept {new_lines} lines"
+            }
+        
+        return {
+            "success": True,
+            "message": "✅ progress.txt already minimal (only current session)"
+        }
         """Regenerate INDEX.md from current specs"""
         features = []
         
@@ -276,6 +374,7 @@ def main():
         print("  retrieve <feature-id>  - Get feature summary")
         print("  search <keyword>       - Search archived features")
         print("  update-index           - Regenerate INDEX.md")
+        print("  trim-progress          - Archive old progress.txt sessions")
         sys.exit(1)
     
     repo_root = Path.cwd()
@@ -291,6 +390,8 @@ def main():
         result = owl.search_features(sys.argv[2])
     elif command == "update-index":
         result = owl.update_index()
+    elif command == "trim-progress":
+        result = owl.trim_progress()
     else:
         result = {"error": "Invalid command or missing arguments"}
     
