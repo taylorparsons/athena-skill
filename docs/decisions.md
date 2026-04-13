@@ -1,5 +1,27 @@
 # Decisions (append-only)
 
+## D-20260413-1201
+
+### Metadata
+- **Date:** 2026-04-13 12:01
+- **Inputs:** CR-20260413-1200
+- **PRD:** Token optimization architecture
+
+### Decision:
+Use INDEX.md-based approach with Git hooks and Owl agent for archive management. Keep all features in docs/specs/ (no moving files). INDEX.md marks active vs archived. Owl agent (Python script) handles maintenance. Git hooks automate INDEX.md updates. Add progress.txt archival to reduce bloat.
+
+**Rationale:**
+- INDEX.md: Cross-platform, no symlinks, preserves all Git references
+- Owl agent: Cheap model (Haiku) for archive ops, 99% cost savings
+- Git hooks: Automatic enforcement, reduces manual errors
+- progress.txt trim: Removes 1,000+ tokens of old session data
+- Combined: ~9,500 tokens saved per session (88% reduction)
+
+**Alternatives considered:**
+- Move archives outside docs/: Breaks Git references
+- Symlinks: Not cross-platform compatible
+- No automation: Too much manual maintenance
+
 ## D-20260211-0940
 
 ### Metadata

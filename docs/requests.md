@@ -1,5 +1,14 @@
 # Customer Requests (append-only)
 
+## CR-20260413-1200
+
+### Metadata
+- **Date:** 2026-04-13 12:00
+- **Source:** chat
+
+### Request (verbatim):
+Create INDEX.md for token-optimized feature loading and implement Owl of Athena agent to manage archived features. Reduce token overhead by 80-90% by only loading active features. Add Git hooks for automatic INDEX.md maintenance. Include progress.txt archival to reduce session startup cost.
+
 ## CR-20260211-0908
 
 ### Metadata
