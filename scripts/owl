@@ -1,0 +1,15 @@
+#!/bin/bash
+# Owl of Athena Agent Wrapper
+# Usage: @owl <command> [args]
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+OWL_SCRIPT="$SCRIPT_DIR/owl.py"
+
+# Check if owl.py exists
+if [ ! -f "$OWL_SCRIPT" ]; then
+    echo "Error: owl.py not found at $OWL_SCRIPT"
+    exit 1
+fi
+
+# Run owl.py with all arguments
+python3 "$OWL_SCRIPT" "$@"
