@@ -1,7 +1,7 @@
 # Athena Feature Index
 
 **Purpose**: Lightweight index to reduce token overhead by loading only active features.  
-**Last updated**: 2026-04-13
+**Last updated**: 2026-04-14
 
 ## How to Use This Index
 
@@ -13,14 +13,16 @@
 
 ## Active Features (Load these during sessions)
 
-*No active features currently. All features are archived.*
+### 20260414-athena-index-rename
+- **Status**: Active
+- **Spec**: docs/specs/20260414-athena-index-rename/spec.md
+- **Summary**: 
 
 ---
 
 ## Archived Features (Skip unless explicitly requested)
 
 ### 20260211-athena-walkthrough-example
-- **Status**: Done (2026-04-13)
 - **Status**: Done
 - **Spec**: docs/specs/20260211-athena-walkthrough-example/spec.md
 - **Summary**: Add an onboarding walkthrough under `docs/examples/` showing how one request moves through CR -> Decision -> PRD -> Spec -> Task -> Progress.
@@ -120,16 +122,16 @@
 ## Token Optimization
 
 **Without INDEX.md**:
-- Load all 19 specs = ~9,500 tokens
+- Load all 20 specs = ~9,500 tokens
 
 **With INDEX.md**:
 - Load INDEX.md only = ~1100 tokens
-- Load 0 active specs = ~0 tokens
-- **Total**: ~1100 tokens
+- Load 1 active specs = ~300 tokens
+- **Total**: ~1400 tokens
 - **Savings**: ~88% reduction
 
 **Usage Pattern**:
 1. Athena loads INDEX.md first
-2. Identifies active features (currently: 0)
+2. Identifies active features (currently: 1)
 3. Skips 19 archived features
 4. If user asks about archived feature, load on-demand

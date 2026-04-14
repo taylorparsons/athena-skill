@@ -16,7 +16,7 @@ class OwlOfAthena:
     def __init__(self, repo_root: Path):
         self.repo_root = repo_root
         self.docs_dir = repo_root / "docs"
-        self.index_path = self.docs_dir / "INDEX.md"
+        self.index_path = self.docs_dir / "athena-index.md"
         self.specs_dir = self.docs_dir / "specs"
     
     def archive_feature(self, feature_id: str) -> Dict:
@@ -208,6 +208,8 @@ class OwlOfAthena:
             "success": True,
             "message": "✅ progress.txt already minimal (only current session)"
         }
+
+    def update_index(self) -> Dict:
         """Regenerate INDEX.md from current specs"""
         features = []
         
@@ -221,7 +223,7 @@ class OwlOfAthena:
                 continue
             
             spec_content = spec_file.read_text()
-            status = self._extract_status(spec_content)
+            status = self._extract_status(feature_dir)
             summary = self._extract_summary(spec_content)
             
             features.append({
@@ -246,8 +248,32 @@ class OwlOfAthena:
             "message": f"✅ Updated INDEX.md: {active_count} active, {archived_count} archived"
         }
     
-    def _extract_status(self, spec_content: str) -> str:
-        """Extract status from spec.md"""
+    def _extract_status(self, feature_dir: Path) -> str:
+        """Determine feature status: check tasks.md first, fall back to spec.md"""
+        tasks_file = feature_dir / "tasks.md"
+        if tasks_file.exists():
+            return self._extract_status_from_tasks(tasks_file.read_text())
+        spec_file = feature_dir / "spec.md"
+        if spec_file.exists():
+            return self._extract_status_from_spec(spec_file.read_text())
+        return 'Done'
+
+    def _extract_status_from_tasks(self, tasks_content: str) -> str:
+        """Active if any real task exists under NEXT or IN PROGRESS sections"""
+        in_active_section = False
+        for line in tasks_content.split('\n'):
+            if line.startswith('## NEXT') or line.startswith('## IN PROGRESS'):
+                in_active_section = True
+            elif line.startswith('## '):
+                in_active_section = False
+            elif in_active_section and line.strip().startswith('- '):
+                task_text = line.strip()[2:].strip()
+                if task_text and task_text.lower() not in ('(none)', 'none', ''):
+                    return 'Active'
+        return 'Done'
+
+    def _extract_status_from_spec(self, spec_content: str) -> str:
+        """Fall back: read Status: field from spec.md"""
         for line in spec_content.split('\n'):
             if 'Status:' in line or '**Status:**' in line:
                 status = line.split('Status:')[-1].strip()
@@ -282,13 +308,11 @@ class OwlOfAthena:
         return None
     
     def _move_to_archived(self, content: str, feature_id: str, summary: str) -> str:
-        """Move feature from Active to Archived section"""
-        # Simple implementation: just update the status line
-        # In production, would do more sophisticated section moving
-        return content.replace(
-            f"### {feature_id}",
-            f"### {feature_id}\n- **Status**: Done ({datetime.now().strftime('%Y-%m-%d')})"
-        )
+        """Move feature from Active to Archived section by regenerating the index"""
+        # Regenerate the full index from specs — this correctly places features
+        # based on their actual Status field rather than doing brittle string surgery
+        self.update_index()
+        return self.index_path.read_text()
     
     def _generate_index(self, features: List[Dict]) -> str:
         """Generate INDEX.md content"""
@@ -364,32 +388,134 @@ class OwlOfAthena:
         
         return content
 
+    def prune_done(self) -> Dict:
+        """Remove session blocks for fully-closed features from progress.txt.
+
+        A feature is fully closed when ALL of:
+          1. tasks.md has no items under NEXT or IN PROGRESS
+          2. spec.md has Status: Done
+          3. PRD.md marks the feature as shipped
+        """
+        progress_file = self.docs_dir / "progress.txt"
+        prd_file = self.docs_dir / "PRD.md"
+        if not progress_file.exists():
+            return {"error": "progress.txt not found"}
+
+        prd_content = prd_file.read_text() if prd_file.exists() else ""
+        content = progress_file.read_text()
+
+        # Split into session blocks (each starts with "Session:")
+        blocks = []
+        current = []
+        for line in content.split('\n'):
+            if line.startswith('Session:') and current:
+                blocks.append('\n'.join(current))
+                current = [line]
+            else:
+                current.append(line)
+        if current:
+            blocks.append('\n'.join(current))
+
+        kept = []
+        pruned_features = []
+
+        for block in blocks:
+            feature_id = self._extract_feature_id(block)
+            if feature_id and self._is_fully_closed(feature_id, prd_content):
+                pruned_features.append(feature_id)
+            else:
+                kept.append(block)
+
+        progress_file.write_text('\n'.join(kept))
+        return {
+            "success": True,
+            "pruned_features": list(dict.fromkeys(pruned_features)),  # deduplicate
+            "blocks_removed": len(blocks) - len(kept),
+            "message": f"✅ Pruned {len(blocks) - len(kept)} session block(s) for {len(set(pruned_features))} closed feature(s)"
+        }
+
+    def _extract_feature_id(self, block: str) -> Optional[str]:
+        """Extract Feature: <id> from a session block"""
+        for line in block.split('\n'):
+            if line.startswith('Feature:'):
+                return line.split('Feature:')[-1].strip()
+        return None
+
+    def _is_fully_closed(self, feature_id: str, prd_content: str) -> bool:
+        """True if feature is Done in tasks.md, spec.md, AND PRD.md"""
+        feature_dir = self.specs_dir / feature_id
+        if not feature_dir.exists():
+            return False
+
+        # 1. tasks.md check (ground truth)
+        if self._extract_status(feature_dir) == 'Active':
+            return False
+
+        # 2. spec.md check
+        spec_file = feature_dir / "spec.md"
+        if spec_file.exists():
+            if self._extract_status_from_spec(spec_file.read_text()) != 'Done':
+                return False
+
+        # 3. PRD.md check — feature-id appears near a shipped/done indicator
+        if prd_content:
+            lines = prd_content.split('\n')
+            for i, line in enumerate(lines):
+                if feature_id in line:
+                    context = '\n'.join(lines[max(0, i - 2):i + 3]).lower()
+                    if any(w in context for w in ['shipped', 'done', '✅', 'complete']):
+                        return True
+            return False  # feature_id in PRD but not marked shipped
+
+        return True  # no PRD — trust tasks.md + spec.md
+
 
 def main():
     """CLI interface for Owl of Athena"""
-    if len(sys.argv) < 2:
-        print("Usage: owl.py <command> [args]")
+    import argparse as _argparse
+
+    parser = _argparse.ArgumentParser(
+        prog="owl.py",
+        description="Owl of Athena: archive management for the ATHENA traceability system",
+        add_help=False,
+    )
+    parser.add_argument(
+        "--repo",
+        default=None,
+        help="Repo root path (default: current working directory). "
+             "Supported for compatibility with older wrapper scripts.",
+    )
+    # Capture the rest as positional args so legacy callers still work
+    parser.add_argument("args", nargs="*")
+
+    parsed, _ = parser.parse_known_args()
+    repo_root = Path(parsed.repo).resolve() if parsed.repo else Path.cwd()
+    remaining = parsed.args
+
+    if not remaining:
+        print("Usage: owl.py [--repo PATH] <command> [args]")
         print("Commands:")
         print("  archive <feature-id>   - Move feature to archived")
         print("  retrieve <feature-id>  - Get feature summary")
         print("  search <keyword>       - Search archived features")
-        print("  update-index           - Regenerate INDEX.md")
-        print("  trim-progress          - Archive old progress.txt sessions")
+        print("  update-index           - Regenerate INDEX.md from specs (reads tasks.md)")
+        print("  prune-done             - Remove closed feature sessions from progress.txt")
+        print("  trim-progress          - Archive old progress.txt sessions (legacy)")
         sys.exit(1)
-    
-    repo_root = Path.cwd()
+
     owl = OwlOfAthena(repo_root)
+    command = remaining[0]
     
-    command = sys.argv[1]
-    
-    if command == "archive" and len(sys.argv) > 2:
-        result = owl.archive_feature(sys.argv[2])
-    elif command == "retrieve" and len(sys.argv) > 2:
-        result = owl.retrieve_feature(sys.argv[2])
-    elif command == "search" and len(sys.argv) > 2:
-        result = owl.search_features(sys.argv[2])
+    if command == "archive" and len(remaining) > 1:
+        result = owl.archive_feature(remaining[1])
+    elif command == "retrieve" and len(remaining) > 1:
+        result = owl.retrieve_feature(remaining[1])
+    elif command == "search" and len(remaining) > 1:
+        result = owl.search_features(remaining[1])
     elif command == "update-index":
         result = owl.update_index()
+    elif command == "prune-done":
+        result = owl.prune_done()
     elif command == "trim-progress":
         result = owl.trim_progress()
     else:
