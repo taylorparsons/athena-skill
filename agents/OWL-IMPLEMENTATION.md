@@ -63,6 +63,26 @@ Regenerate athena-index.md from all specs in docs/specs/. Reads `tasks.md` first
 }
 ```
 
+### write-memory
+Write a Claude Code auto-memory file (`project_athena_active.md`) to `~/.claude/projects/<encoded-repo>/memory/` containing the active feature, goal, and task state from `progress.txt` and active features from `athena-index.md`. Athena reads this at session start and skips re-reading those two files.
+
+**Usage**: `./scripts/owl write-memory`
+
+**Output**:
+```json
+{
+  "success": true,
+  "memory_file": "/Users/.../.claude/projects/-Volumes-T9-code-SKILLS-athena/memory/project_athena_active.md",
+  "feature_id": "20260414-owl-memory-bridge",
+  "active_features": 1,
+  "message": "✅ Wrote memory: 20260414-owl-memory-bridge, 1 active feature(s)"
+}
+```
+
+Idempotent: if the memory file is newer than `progress.txt`, returns `"no update needed"` without writing. Silently skips if the memory directory does not exist (repo has no Claude Code memory initialized).
+
+**When it runs**: Automatically via the SessionStart hook after `update-index`. Can also be run manually at end of session (Athena step 6).
+
 ### trim-progress _(legacy)_
 Archives old progress.txt sessions, keeps only current session. Superseded by `prune-done` which uses feature-level closure as the signal rather than session boundaries.
 

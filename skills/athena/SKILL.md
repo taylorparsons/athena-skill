@@ -112,16 +112,14 @@ Preferred implementation:
 
 ## 2) Read First, Then Act
 
-Always read all files at the start of the session:
-- `docs/athena-index.md` (load first - identifies active vs archived features)
-- `docs/requests.md`
-- `docs/decisions.md`
-- `docs/TRACEABILITY.md`
-- `docs/PRD.md`
-- `docs/progress.txt`
-- `docs/specs/<feature-id>/` (only for features marked "Active" in athena-index.md)
+Check auto-memory first (loaded by Claude Code before this session started). If `Athena Active Context` memory is present:
+- Active feature, goal, and task state are already known — skip reading `docs/athena-index.md` and `docs/progress.txt`
+- Load only: `docs/requests.md`, `docs/decisions.md`, `docs/PRD.md`, and `docs/specs/<active-feature-id>/`
 
-**Token optimization**: athena-index.md lists all features. Only load specs marked as "Active". Skip archived features unless explicitly requested by user.
+If memory is absent (no `Athena Active Context` entry):
+- Load the full stack: `docs/athena-index.md` → `docs/requests.md` → `docs/decisions.md` → `docs/TRACEABILITY.md` → `docs/PRD.md` → `docs/progress.txt` → active spec(s)
+
+**Token optimization**: The memory file is written by Owl at session start and contains the active feature ID, goal, IN PROGRESS/NEXT tasks, and active features list. When present, it replaces the need to parse `athena-index.md` and `progress.txt` at session open.
 
 ## Owl of Athena — Archive Management
 
@@ -241,6 +239,8 @@ At the end of the session, update `docs/progress.txt`:
 - Record decisions, tradeoffs, and open questions.
 
 Always keep `IN PROGRESS` to a single task.
+
+After updating `docs/progress.txt`, run `./scripts/owl write-memory` to refresh the memory file with current task state for the next session.
 
 ## 6.25) Canonical Merge / Check-in Reconciliation (Required)
 

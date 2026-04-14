@@ -484,6 +484,169 @@ class OwlOfAthena:
 
         return True  # no PRD — trust tasks.md + spec.md
 
+    # --- Memory bridge helpers ---
+
+    def _parse_progress(self, progress_file: Path) -> Dict:
+        """Parse the most recent session block from progress.txt.
+
+        Returns dict with keys: feature_id, goal, in_progress (list), next_tasks (list).
+        """
+        content = progress_file.read_text(encoding="utf-8")
+        lines = content.split("\n")
+
+        # Locate last session block
+        last_session_start = -1
+        for i in range(len(lines) - 1, -1, -1):
+            if lines[i].startswith("Session:"):
+                last_session_start = i
+                break
+
+        if last_session_start == -1:
+            return {}
+
+        result: Dict = {"feature_id": "", "goal": "", "in_progress": [], "next_tasks": []}
+        section = None
+
+        for line in lines[last_session_start:]:
+            stripped = line.strip()
+            if line.startswith("Feature:"):
+                result["feature_id"] = line.split("Feature:", 1)[-1].strip()
+            elif line.startswith("Goal:"):
+                result["goal"] = line.split("Goal:", 1)[-1].strip()
+            elif stripped == "IN PROGRESS":
+                section = "in_progress"
+                continue
+            elif stripped == "NEXT":
+                section = "next_tasks"
+                continue
+            elif stripped in ("DONE", "NOTES") or (line.startswith("Session:") and line != lines[last_session_start]):
+                section = None
+                continue
+            if section in ("in_progress", "next_tasks") and stripped.startswith("- "):
+                task_text = stripped[2:].strip()
+                if task_text and task_text.lower() not in ("(none)", "none"):
+                    result[section].append(task_text)
+
+        return result
+
+    def _extract_active_features(self) -> List[str]:
+        """Return list of active feature IDs from athena-index.md."""
+        if not self.index_path.exists():
+            return []
+        active: List[str] = []
+        in_active_section = False
+        for line in self.index_path.read_text(encoding="utf-8").split("\n"):
+            if line.startswith("## Active Features"):
+                in_active_section = True
+                continue
+            if line.startswith("## ") and in_active_section:
+                break
+            if in_active_section and line.startswith("### "):
+                fid = line.replace("### ", "").strip()
+                if fid:
+                    active.append(fid)
+        return active
+
+    def _upsert_memory_index(self, memory_index: Path, entry_filename: str,
+                              entry_title: str, entry_hook: str) -> None:
+        """Idempotently add or replace an entry in MEMORY.md."""
+        new_line = f"- [{entry_title}]({entry_filename}) — {entry_hook}"
+        if not memory_index.exists():
+            memory_index.write_text(f"# Memory Index\n\n{new_line}\n", encoding="utf-8")
+            return
+        existing = memory_index.read_text(encoding="utf-8")
+        lines = existing.split("\n")
+        updated = []
+        found = False
+        for line in lines:
+            if f"]({entry_filename})" in line:
+                updated.append(new_line)
+                found = True
+            else:
+                updated.append(line)
+        if found:
+            memory_index.write_text("\n".join(updated), encoding="utf-8")
+        else:
+            memory_index.write_text(existing.rstrip("\n") + "\n" + new_line + "\n", encoding="utf-8")
+
+    def write_memory(self) -> Dict:
+        """Write project_athena_active.md to Claude Code memory dir.
+
+        Memory path: ~/.claude/projects/<encoded-repo-path>/memory/
+        Encoded = repo absolute path with all '/' replaced by '-'.
+
+        Idempotent: skips write if memory file is newer than progress.txt.
+        Silently skips if memory dir does not exist (not initialized).
+        """
+        progress_file = self.docs_dir / "progress.txt"
+
+        # Compute memory directory
+        encoded = str(self.repo_root.resolve()).replace("/", "-")
+        memory_dir = Path.home() / ".claude" / "projects" / encoded / "memory"
+
+        if not memory_dir.exists():
+            return {"success": True, "skipped": True,
+                    "message": "memory not initialized — skipping"}
+
+        memory_file = memory_dir / "project_athena_active.md"
+        memory_index = memory_dir / "MEMORY.md"
+
+        # Skip if memory is already newer than progress.txt
+        if (progress_file.exists() and memory_file.exists()
+                and memory_file.stat().st_mtime > progress_file.stat().st_mtime):
+            return {"success": True, "skipped": True,
+                    "message": "memory file is newer than progress.txt — no update needed"}
+
+        context = self._parse_progress(progress_file) if progress_file.exists() else {}
+        active_features = self._extract_active_features()
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+
+        feature_id = context.get("feature_id", "")
+        goal = context.get("goal", "")
+        in_progress = context.get("in_progress", [])
+        next_tasks = context.get("next_tasks", [])
+
+        def fmt(items: List[str]) -> str:
+            return "\n".join(f"  - {t}" for t in items) if items else "  (none)"
+
+        feature_line = (f"Active feature: {feature_id}. Goal: {goal}."
+                        if feature_id else "No active feature.")
+
+        content = f"""---
+name: Athena Active Context
+description: Current active feature, goal, and task state — written by Owl at session start
+type: project
+---
+
+{feature_line}
+
+**Why:** {goal if goal else 'See progress.txt for session context.'}
+**How to apply:** Skip reading athena-index.md and progress.txt — use this context directly. Load only the active spec(s) listed below.
+
+**Active features:**
+{fmt(active_features)}
+**IN PROGRESS:**
+{fmt(in_progress)}
+**NEXT:**
+{fmt(next_tasks)}
+**Last updated:** {timestamp}
+"""
+        memory_file.write_text(content, encoding="utf-8")
+        self._upsert_memory_index(
+            memory_index,
+            entry_filename="project_athena_active.md",
+            entry_title="Athena Active Context",
+            entry_hook="active feature, goal, and task state for the current session",
+        )
+
+        return {
+            "success": True,
+            "memory_file": str(memory_file),
+            "feature_id": feature_id or "(none)",
+            "active_features": len(active_features),
+            "message": f"✅ Wrote memory: {feature_id or 'no active feature'}, {len(active_features)} active feature(s)"
+        }
+
 
 def main():
     """CLI interface for Owl of Athena"""
@@ -516,6 +679,7 @@ def main():
         print("  update-index           - Regenerate athena-index.md from specs (reads tasks.md)")
         print("  prune-done             - Remove closed feature sessions from progress.txt")
         print("  trim-progress          - Archive old progress.txt sessions (legacy)")
+        print("  write-memory           - Write Claude Code memory file with active context")
         sys.exit(1)
 
     owl = OwlOfAthena(repo_root)
@@ -533,6 +697,8 @@ def main():
         result = owl.prune_done()
     elif command == "trim-progress":
         result = owl.trim_progress()
+    elif command == "write-memory":
+        result = owl.write_memory()
     else:
         result = {"error": "Invalid command or missing arguments"}
     

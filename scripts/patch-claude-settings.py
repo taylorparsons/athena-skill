@@ -41,7 +41,8 @@ CORRECT_COMMAND = (
     '[ -f "$REPO_ROOT/scripts/owl" ] && '
     'cd "$REPO_ROOT" && '
     './scripts/owl prune-done && '
-    './scripts/owl update-index; true'
+    './scripts/owl update-index && '
+    './scripts/owl write-memory; true'
 )
 
 CORRECT_HOOK = {

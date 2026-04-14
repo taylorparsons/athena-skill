@@ -119,12 +119,17 @@
 - **Spec**: docs/specs/20260414-athena-index-rename/spec.md
 - **Summary**: 
 
+### 20260414-owl-memory-bridge
+- **Status**: Done
+- **Spec**: docs/specs/20260414-owl-memory-bridge/spec.md
+- **Summary**: 
+
 ---
 
 ## Token Optimization
 
 **Without athena-index.md**:
-- Load all 20 specs = ~10,000 tokens
+- Load all 21 specs = ~10,500 tokens
 
 **With athena-index.md**:
 - Load athena-index.md only = ~1100 tokens
@@ -135,5 +140,5 @@
 **Usage Pattern**:
 1. Athena loads athena-index.md first
 2. Identifies active features (currently: 0)
-3. Skips 20 archived features
+3. Skips 21 archived features
 4. If user asks about archived feature, load on-demand

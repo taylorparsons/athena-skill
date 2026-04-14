@@ -27,6 +27,7 @@ Handle all archive and housekeeping operations so the main Athena agent can stay
 - `./scripts/owl archive <feature-id>` — move feature to archived in athena-index.md
 - `./scripts/owl update-index` — regenerate athena-index.md from all specs (reads tasks.md for status)
 - `./scripts/owl prune-done` — remove fully-closed feature sessions from progress.txt
+- `./scripts/owl write-memory` — write Claude Code memory file with active feature context (runs automatically at SessionStart)
 
 ## When You Are Dispatched
 

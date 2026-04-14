@@ -607,3 +607,17 @@ review the change to Athena on this branch and the addition of the new agent cal
 ### Notes
 - Code review of feature/index-based-archival branch against main.
 - Review covers INDEX.md token optimization and Owl of Athena agent.
+
+## CR-20260414-1327
+
+### Metadata
+- **Date:** 2026-04-14 13:27
+- **Source:** chat
+
+### Request (verbatim):
+yes spec that out using athena in this athena project. Ideally Owl would read the docs and put in the memory before Athena got there and Athena just use the memory and keep the memory updated as she works.
+
+### Notes
+- Context: discussion of whether Athena or Owl writes to Claude Code auto-memory (~/.claude/projects/.../memory/).
+- Neither currently does. Gap identified: Athena re-reads 6-7 docs/ files every session; Owl already has the data at SessionStart.
+- Proposed: new `write-memory` command in owl.py, called at SessionStart after update-index, writes project_athena_active.md to Claude Code memory dir.
