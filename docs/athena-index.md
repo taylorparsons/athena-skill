@@ -5,7 +5,7 @@
 
 ## How to Use This Index
 
-**For Athena agents**: Load this INDEX.md first. Only load specs marked as "Active" below. Skip "Archived" features unless explicitly requested by user.
+**For Athena agents**: Load this athena-index.md first. Only load specs marked as "Active" below. Skip "Archived" features unless explicitly requested by user.
 
 **For humans**: This index shows all features. Archived features are complete and should not be modified.
 
@@ -13,10 +13,7 @@
 
 ## Active Features (Load these during sessions)
 
-### 20260414-athena-index-rename
-- **Status**: Active
-- **Spec**: docs/specs/20260414-athena-index-rename/spec.md
-- **Summary**: 
+*No active features currently. All features are archived.*
 
 ---
 
@@ -117,21 +114,26 @@
 - **Spec**: docs/specs/20260221-athena-localized-templates/spec.md
 - **Summary**: Keep ATHENA reusable templates inside the `skills/athena` package so the installed skill is self-contained and always references local template assets.
 
+### 20260414-athena-index-rename
+- **Status**: Done
+- **Spec**: docs/specs/20260414-athena-index-rename/spec.md
+- **Summary**: 
+
 ---
 
 ## Token Optimization
 
-**Without INDEX.md**:
-- Load all 20 specs = ~9,500 tokens
+**Without athena-index.md**:
+- Load all 20 specs = ~10,000 tokens
 
-**With INDEX.md**:
-- Load INDEX.md only = ~1100 tokens
-- Load 1 active specs = ~300 tokens
-- **Total**: ~1400 tokens
-- **Savings**: ~88% reduction
+**With athena-index.md**:
+- Load athena-index.md only = ~1100 tokens
+- Load 0 active specs = ~0 tokens
+- **Total**: ~1100 tokens
+- **Savings**: ~89% reduction
 
 **Usage Pattern**:
-1. Athena loads INDEX.md first
-2. Identifies active features (currently: 1)
-3. Skips 19 archived features
+1. Athena loads athena-index.md first
+2. Identifies active features (currently: 0)
+3. Skips 20 archived features
 4. If user asks about archived feature, load on-demand

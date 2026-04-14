@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Owl of Athena: Archive Management Agent
-Lightweight agent for INDEX.md maintenance and archive operations
+Lightweight agent for athena-index.md maintenance and archive operations
 """
 
 import json
@@ -20,9 +20,9 @@ class OwlOfAthena:
         self.specs_dir = self.docs_dir / "specs"
     
     def archive_feature(self, feature_id: str) -> Dict:
-        """Move feature from Active to Archived in INDEX.md and archive progress"""
+        """Move feature from Active to Archived in athena-index.md and archive progress"""
         if not self.index_path.exists():
-            return {"error": "INDEX.md not found"}
+            return {"error": "athena-index.md not found"}
         
         # Read current INDEX
         content = self.index_path.read_text()
@@ -43,7 +43,7 @@ class OwlOfAthena:
         # Archive progress.txt entries for this feature
         progress_archived = self._archive_progress_entries(feature_id)
         
-        # Update INDEX.md (move from Active to Archived)
+        # Update athena-index.md (move from Active to Archived)
         updated_content = self._move_to_archived(content, feature_id, summary)
         self.index_path.write_text(updated_content)
         
@@ -52,7 +52,7 @@ class OwlOfAthena:
             "feature_id": feature_id,
             "summary": summary,
             "progress_archived": progress_archived,
-            "message": f"✅ Moved {feature_id} to archived in INDEX.md"
+            "message": f"✅ Moved {feature_id} to archived in athena-index.md"
         }
     
     def _archive_progress_entries(self, feature_id: str) -> bool:
@@ -102,16 +102,16 @@ class OwlOfAthena:
     
     def retrieve_feature(self, feature_id: str) -> Dict:
         """Retrieve archived feature summary"""
-        # Check INDEX.md for feature
+        # Check athena-index.md for feature
         if not self.index_path.exists():
-            return {"error": "INDEX.md not found"}
+            return {"error": "athena-index.md not found"}
         
         content = self.index_path.read_text()
         
         # Find feature in INDEX
         feature_info = self._find_in_index(content, feature_id)
         if not feature_info:
-            return {"error": f"Feature {feature_id} not found in INDEX.md"}
+            return {"error": f"Feature {feature_id} not found in athena-index.md"}
         
         # Load spec if user needs more detail
         spec_file = self.specs_dir / feature_id / "spec.md"
@@ -132,12 +132,12 @@ class OwlOfAthena:
     def search_features(self, keyword: str) -> Dict:
         """Search archived features by keyword"""
         if not self.index_path.exists():
-            return {"error": "INDEX.md not found"}
+            return {"error": "athena-index.md not found"}
         
         content = self.index_path.read_text()
         matches = []
         
-        # Search in INDEX.md
+        # Search in athena-index.md
         lines = content.split('\n')
         current_feature = None
         
@@ -210,7 +210,7 @@ class OwlOfAthena:
         }
 
     def update_index(self) -> Dict:
-        """Regenerate INDEX.md from current specs"""
+        """Regenerate athena-index.md from current specs"""
         features = []
         
         # Scan all features in docs/specs/
@@ -233,7 +233,7 @@ class OwlOfAthena:
                 'spec_path': f"docs/specs/{feature_dir.name}/spec.md"
             })
         
-        # Generate new INDEX.md
+        # Generate new athena-index.md
         index_content = self._generate_index(features)
         self.index_path.write_text(index_content)
         
@@ -245,7 +245,7 @@ class OwlOfAthena:
             "total_features": len(features),
             "active": active_count,
             "archived": archived_count,
-            "message": f"✅ Updated INDEX.md: {active_count} active, {archived_count} archived"
+            "message": f"✅ Updated athena-index.md: {active_count} active, {archived_count} archived"
         }
     
     def _extract_status(self, feature_dir: Path) -> str:
@@ -293,7 +293,7 @@ class OwlOfAthena:
         return "No summary available"
     
     def _find_in_index(self, content: str, feature_id: str) -> Optional[Dict]:
-        """Find feature in INDEX.md"""
+        """Find feature in athena-index.md"""
         lines = content.split('\n')
         for i, line in enumerate(lines):
             if f"### {feature_id}" in line:
@@ -315,7 +315,7 @@ class OwlOfAthena:
         return self.index_path.read_text()
     
     def _generate_index(self, features: List[Dict]) -> str:
-        """Generate INDEX.md content"""
+        """Generate athena-index.md content"""
         active = [f for f in features if f['status'] == 'Active']
         archived = [f for f in features if f['status'] != 'Active']
         
@@ -326,7 +326,7 @@ class OwlOfAthena:
 
 ## How to Use This Index
 
-**For Athena agents**: Load this INDEX.md first. Only load specs marked as "Active" below. Skip "Archived" features unless explicitly requested by user.
+**For Athena agents**: Load this athena-index.md first. Only load specs marked as "Active" below. Skip "Archived" features unless explicitly requested by user.
 
 **For humans**: This index shows all features. Archived features are complete and should not be modified.
 
@@ -370,17 +370,17 @@ class OwlOfAthena:
 
 ## Token Optimization
 
-**Without INDEX.md**:
+**Without athena-index.md**:
 - Load all {len(features)} specs = ~{total_tokens:,} tokens
 
-**With INDEX.md**:
-- Load INDEX.md only = ~{index_tokens} tokens
+**With athena-index.md**:
+- Load athena-index.md only = ~{index_tokens} tokens
 - Load {len(active)} active specs = ~{len(active) * 300} tokens
 - **Total**: ~{index_tokens + len(active) * 300} tokens
 - **Savings**: ~{savings}% reduction
 
 **Usage Pattern**:
-1. Athena loads INDEX.md first
+1. Athena loads athena-index.md first
 2. Identifies active features (currently: {len(active)})
 3. Skips {len(archived)} archived features
 4. If user asks about archived feature, load on-demand
@@ -498,7 +498,7 @@ def main():
         print("  archive <feature-id>   - Move feature to archived")
         print("  retrieve <feature-id>  - Get feature summary")
         print("  search <keyword>       - Search archived features")
-        print("  update-index           - Regenerate INDEX.md from specs (reads tasks.md)")
+        print("  update-index           - Regenerate athena-index.md from specs (reads tasks.md)")
         print("  prune-done             - Remove closed feature sessions from progress.txt")
         print("  trim-progress          - Archive old progress.txt sessions (legacy)")
         sys.exit(1)

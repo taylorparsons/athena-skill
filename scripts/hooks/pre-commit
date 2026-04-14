@@ -1,5 +1,5 @@
 #!/bin/bash
-# Pre-commit hook: Validate INDEX.md is in sync with specs
+# Pre-commit hook: Validate athena-index.md is in sync with specs
 # Install: cp scripts/hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
@@ -11,12 +11,12 @@ if [ ! -f "$OWL_SCRIPT" ]; then
     exit 0
 fi
 
-# Check if INDEX.md exists
+# Check if athena-index.md exists
 if [ ! -f "$INDEX_FILE" ]; then
     exit 0
 fi
 
-# Count features in INDEX.md
+# Count features in athena-index.md
 INDEX_COUNT=$(grep -c "^### " "$INDEX_FILE" 2>/dev/null || echo 0)
 
 # Count actual spec directories
