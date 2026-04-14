@@ -1,5 +1,5 @@
 #!/bin/bash
-# Post-commit hook: Auto-update INDEX.md when features complete
+# Post-commit hook: Auto-update athena-index.md when features complete
 # Install: cp scripts/hooks/post-commit .git/hooks/post-commit && chmod +x .git/hooks/post-commit
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
@@ -15,7 +15,7 @@ COMMIT_MSG=$(git log -1 --pretty=%B)
 
 # Look for patterns indicating feature is done
 if echo "$COMMIT_MSG" | grep -qiE "(Status: Done|feature complete|mark.*done|archive.*feature)"; then
-    echo "🦉 Owl: Detected feature completion, updating INDEX.md..."
+    echo "🦉 Owl: Detected feature completion, updating athena-index.md..."
     
     # Extract feature ID from commit message if present
     FEATURE_ID=$(echo "$COMMIT_MSG" | grep -oE "Feature: [a-zA-Z0-9-]+" | sed 's/Feature: //')
@@ -25,14 +25,14 @@ if echo "$COMMIT_MSG" | grep -qiE "(Status: Done|feature complete|mark.*done|arc
         "$OWL_SCRIPT" archive "$FEATURE_ID" 2>/dev/null || true
     fi
     
-    # Always regenerate INDEX.md to catch any status changes
-    echo "🦉 Owl: Regenerating INDEX.md..."
+    # Always regenerate athena-index.md to catch any status changes
+    echo "🦉 Owl: Regenerating athena-index.md..."
     "$OWL_SCRIPT" update-index > /dev/null 2>&1
-    
-    # Check if INDEX.md changed
-    if ! git diff --quiet docs/INDEX.md 2>/dev/null; then
-        echo "🦉 Owl: INDEX.md updated, staging changes..."
-        git add docs/INDEX.md
+
+    # Check if athena-index.md changed
+    if ! git diff --quiet docs/athena-index.md 2>/dev/null; then
+        echo "🦉 Owl: athena-index.md updated, staging changes..."
+        git add docs/athena-index.md
         
         # Also check if progress.txt was trimmed
         if ! git diff --quiet docs/progress.txt 2>/dev/null; then
@@ -41,8 +41,8 @@ if echo "$COMMIT_MSG" | grep -qiE "(Status: Done|feature complete|mark.*done|arc
         fi
         
         git commit --amend --no-edit --no-verify
-        echo "✅ INDEX.md automatically updated"
+        echo "✅ athena-index.md automatically updated"
     else
-        echo "✅ INDEX.md already up to date"
+        echo "✅ athena-index.md already up to date"
     fi
 fi
