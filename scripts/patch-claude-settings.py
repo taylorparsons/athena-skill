@@ -61,7 +61,17 @@ def is_broken_owl_hook(hook: dict) -> bool:
 def is_correct_owl_hook(hook: dict) -> bool:
     return (
         hook.get("type") == "command"
-        and "owl" in hook.get("command", "").lower()
+        and hook.get("command", "") == CORRECT_COMMAND
+    )
+
+
+def is_outdated_owl_hook(hook: dict) -> bool:
+    """Owl hook is type:command but missing write-memory (older install)."""
+    cmd = hook.get("command", "")
+    return (
+        hook.get("type") == "command"
+        and "owl" in cmd.lower()
+        and "write-memory" not in cmd
     )
 
 
@@ -76,6 +86,9 @@ def patch_settings(settings: dict) -> tuple[dict, list[str]]:
             if is_broken_owl_hook(hook):
                 inner_hooks[i] = CORRECT_HOOK
                 changes.append("settings.json: replaced type:agent Owl hook with type:command in SessionStart")
+            elif is_outdated_owl_hook(hook):
+                inner_hooks[i] = CORRECT_HOOK
+                changes.append("settings.json: updated Owl hook to include write-memory in SessionStart")
             elif is_correct_owl_hook(hook):
                 changes.append("settings.json: SessionStart Owl hook already correct — no change needed")
 
@@ -193,7 +206,7 @@ def main() -> int:
         for msg in s_changes:
             print(f"{prefix}{msg}")
 
-        if any("Replaced" in c for c in s_changes):
+        if any(("Replaced" in c or "updated Owl hook" in c) for c in s_changes):
             any_writes = True
             if not args.dry_run:
                 backup = settings_path.with_suffix(
