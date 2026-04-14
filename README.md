@@ -125,7 +125,7 @@ flowchart TD
 
 ## Upgrading Existing ATHENA Projects
 
-If your project was already using ATHENA before this update, follow these steps once after pulling the changes.
+If your project was already using ATHENA before this update, follow these steps once after pulling the changes. These instructions apply to the `feature/index-based-archival` branch and later.
 
 ```mermaid
 flowchart LR
@@ -254,6 +254,13 @@ Open `~/.claude/settings.json` and merge in the `hooks` block below. If you alre
 ```
 
 Both hooks are conditional — they check for `scripts/owl` before running and are safe to install globally. They only activate in repos where Owl is present.
+
+**`scripts/owl` requirement:** Each ATHENA project must have a `scripts/owl` script. This script handles:
+- `prune-done` — removes closed feature sessions from `progress.txt`
+- `update-index` — regenerates `athena-index.md` from current spec status
+- `write-memory` — extracts active docs (decisions, requests, progress) into memory files for single-session read (new in Apr 2026)
+
+If the script is missing, copy it from an existing ATHENA project or use the fast-path prompt below to scaffold it.
 
 > **Already installed?** If you set up Owl before April 2026, your `SessionStart` hook may use the old `type: "agent"` format which is not supported and will cause a hook error on session start. Run the patch script to fix it:
 > ```bash
