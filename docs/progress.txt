@@ -1,52 +1,13 @@
-Session: 2026-02-18 11:00
-Agent: Codex CLI
-Model: GPT-5
-Skills: athena
-Feature: 20260218-staging-precheck-guardrails
-Input: CR-20260218-1059
-Decisions: D-20260218-1100
-Spec: docs/specs/20260218-staging-precheck-guardrails/spec.md
-Tasks: docs/specs/20260218-staging-precheck-guardrails/tasks.md
-Goal: Restore broad staging with pre-stage safety checks in the ATHENA commit helper.
-
-DONE
-- [2026-02-18 11:00] T-001: Restored broad staging defaults with pre-stage checks for `.DS_Store`, temp/cache patterns, likely secret markers, and large artifacts; added `--docs-only` scoped fallback and updated guidance docs. (Skills: athena)
-- [2026-02-18 09:04] T-001: Updated root `VERSION` from `1.0.1` to `1.1.0` and reconciled ATHENA traceability artifacts for feature completion. (Skills: athena)
-- [2026-02-17 16:04] T-005: Added progress schema validation and integrated it with resume flow in root and packaged scripts. (Skills: athena)
-- [2026-02-17 16:02] T-004: Updated traceable commit helper defaults to path-scoped staging with explicit `--all-changes` override and synced docs. (Skills: athena)
-- [2026-02-17 16:01] T-003: Consolidated merge/check-in guidance into one canonical checklist in root and packaged ATHENA skill docs. (Skills: athena)
-- [2026-02-17 15:54] T-002: Implemented traceability linter for `Sources`, `Verifies`, and `Implements` references in root and packaged scripts. (Skills: athena)
-- [2026-02-17 15:36] T-001: Created hardening planning docs and structured agentic workflow output in the ATHENA repo. (Skills: athena, aipm-agentic-workflow)
-- [2026-02-17 14:56] T-001: Removed remaining absolute-path doc residues and revalidated repository security audit path hygiene. (Skills: athena, git-workflow-automation)
-- [2026-02-17 14:20] T-001: Added ATHENA icon metadata bindings in `skills/athena/agents/openai.yaml`, enforced install guardrails in `scripts/validate_install_targets.py`, and synced `~/.codex/skills/athena/agents/openai.yaml`. (Skills: athena, skill-creator)
-- [2026-02-17 08:48] T-001: Created `skills/athena/assets/athena-warrior-icon.svg` and reconciled ATHENA traceability artifacts for the icon request. (Skills: athena)
-- [2026-02-16 13:18] T-001: Reconciled stale completion state in `20260213-checkin-merge-remote` spec/tasks artifacts. (Skills: athena)
-- [2026-02-16 13:19] T-002: Fixed helper script reliability for placeholder task parsing and repo-root output anchoring in both root and packaged copies. (Skills: athena)
-- [2026-02-16 13:20] T-003: Expanded markdown secret scan coverage and removed local absolute path residue from tracked progress notes. (Skills: athena)
-- [2026-02-13 14:49] T-003: Applied scope correction to keep only the top image change and restored normal README prose structure. (Skills: athena)
-- [2026-02-13 14:37] T-002: Validated README visual/style changes and reconciled PRD/spec/tasks/progress to done. (Skills: athena, taylor-style-voice)
-- [2026-02-13 14:36] T-001: Added `docs/images/athena-readme-fast-visual.svg` and rewrote `README.md` in Taylor-style voice with a top fast-visual block. (Skills: athena, taylor-style-voice)
-- [2026-02-13 20:05] T-003: Validated personal-style draft content and reconciled PRD/spec/tasks/progress to done. (Skills: athena)
-- [2026-02-13 20:03] T-002: Added Codex and Claude setup blocks and tightened wording for low-hype personal style in v3 draft. (Skills: athena)
-- [2026-02-13 20:03] T-001: Drafted personal-style LinkedIn ATHENA post (v3) with direct framework sections and loop narrative. (Skills: athena)
-- [2026-02-13 09:19] T-003: Reconciled PRD/spec/tasks/progress status and validated both LinkedIn drafts. (Skills: athena)
-- [2026-02-13 09:18] T-002: Drafted LinkedIn post version 2 with alternate framing and Codex/Claude install blocks. (Skills: athena)
-- [2026-02-13 09:17] T-001: Drafted LinkedIn post version 1 with ATHENA loop flow and Codex/Claude install blocks. (Skills: athena)
-- [2026-02-12 17:00] T-003: Ran rename validation checks and reconciled PRD/spec/tasks/progress to shipped state. (Skills: athena)
-- [2026-02-12 16:58] T-002: Updated mutable docs, adapters, scripts, and templates to `athena` naming and `athena-skill` identity. (Skills: athena)
-- [2026-02-12 16:52] T-001: Migrated core/skill paths to `athena` naming and updated install-target validation to `skills/athena`. (Skills: athena)
-- [2026-02-11 10:16] T-001: Removed local absolute path strings from tracked docs content. (Skills: athena)
-- [2026-02-11 10:16] T-002: Added `.gitignore` patterns for `.env`, `__pycache__/`, and `*.pyc`. (Skills: athena, git-workflow-automation)
-- [2026-02-11 10:16] T-003: Added `SECURITY.md` with vulnerability disclosure process. (Skills: athena, git-workflow-automation)
-- [2026-02-11 10:16] T-004: Added MIT `LICENSE`. (Skills: athena)
-- [2026-02-11 10:16] T-005: Rewrote history to a clean baseline for public publishing. (Skills: athena, git-workflow-automation)
-- [2026-02-11 10:21] T-006: Added single-owner `CODEOWNERS`. (Skills: athena, git-workflow-automation)
-- [2026-02-11 10:21] T-007: Added `.github/dependabot.yml` and `.github/workflows/security.yml`. (Skills: athena, git-workflow-automation)
-- [2026-02-11 10:21] T-008: Enabled repository-level `commit.gpgsign` and verified with hardening audit. (Skills: athena, git-workflow-automation)
-- [2026-02-11 13:28] T-001: Added `docs/examples/01-cr-to-task-walkthrough.md` and linked it through PRD/spec/task artifacts. (Skills: athena)
-- [2026-02-11 14:03] T-001: Removed packaged `skills/athena-codex` target and kept `skills/athena` as the only install package. (Skills: athena)
-- [2026-02-11 14:03] T-002: Updated `README.md` and `AVAILABLE_SKILLS.md` to keep install guidance scoped to `athena` only. (Skills: athena)
-- [2026-02-11 14:03] T-003: Added install-target validation script/workflow and constrained validation to `skills/athena`. (Skills: athena)
+Session: 2026-04-14 11:00
+Agent: Claude Code
+Model: claude-sonnet-4-6
+Skills: athena, superpowers:brainstorming, superpowers:writing-plans, superpowers:subagent-driven-development
+Feature: 20260414-athena-index-rename
+Input: CR-20260414-1100
+Decisions: D-20260414-1100
+Spec: docs/specs/20260414-athena-index-rename/spec.md
+Tasks: docs/specs/20260414-athena-index-rename/tasks.md
+Goal: Rename docs/INDEX.md to docs/athena-index.md to prevent filename collisions in mature repos.
 
 IN PROGRESS
 - (none)
@@ -55,71 +16,5 @@ NEXT
 - (none)
 
 NOTES
-- Commands run: `python3 -m py_compile scripts/commit_with_traceability.py skills/athena/scripts/commit_with_traceability.py` -> pass.
-- Commands run: `python3 scripts/commit_with_traceability.py --help` -> confirms `--docs-only`, `--skip-staging-precheck`, and `--max-file-size-mb` options.
-- Commands run: `shasum scripts/commit_with_traceability.py skills/athena/scripts/commit_with_traceability.py` -> matching hashes.
-- Commands run: temp repo smoke test with `.DS_Store` candidate -> helper blocked staging with `pre-stage security check failed`; safe file follow-up committed with staged mode `all`.
-- Commands run: `python3 scripts/validate_traceability_links.py --repo .` -> `[ok] Traceability links validated`.
-- Commands run: `python3 scripts/validate_progress_log.py --repo .` -> `[ok] progress schema validated`.
-- Commands run: `cat VERSION` -> `1.1.0`.
-- Commands run: `python3 scripts/validate_traceability_links.py --repo .` -> `[ok] Traceability links validated`.
-- Commands run: `python3 scripts/validate_progress_log.py --repo .` -> `[ok] progress schema validated`.
-- Commands run: `python3 scripts/validate_traceability_links.py --repo .` -> `[ok] Traceability links validated` after adding FR-005/FR-006 consistency in the hardening spec.
-- Commands run: `python3 -m py_compile scripts/commit_with_traceability.py skills/athena/scripts/commit_with_traceability.py` -> pass.
-- Commands run: `python3 scripts/commit_with_traceability.py --help` -> confirms new `--paths` and `--all-changes` options.
-- Commands run: `python3 -m py_compile scripts/progress_schema.py skills/athena/scripts/progress_schema.py scripts/validate_progress_log.py skills/athena/scripts/validate_progress_log.py scripts/print_resume_prompt.py skills/athena/scripts/print_resume_prompt.py` -> pass.
-- Commands run: `python3 scripts/validate_progress_log.py --repo .` -> `[ok] progress schema validated`.
-- Commands run: `python3 scripts/print_resume_prompt.py --repo .` -> resume prompt generated successfully with schema validation enabled.
-- Traceable commits: `d0f1334` (T-002), `b197d43` (T-004), `fafb5da` (T-005).
-- Commit note: `commit_with_traceability.py` commit step hit local GPG-key absence; used `git -c commit.gpgsign=false commit` fallback after helper staging.
-- Commands run: `python3 -m json.tool artifacts/agentic_workflow/20260217-1535-athena-hardening-plan.json >/dev/null && echo 'json:ok'` -> `json:ok`.
-- Commands run: `rg -n "Sources:|Verifies:|Implements:" docs/PRD.md docs/specs/20260217-athena-hardening-plan/spec.md docs/specs/20260217-athena-hardening-plan/tasks.md` -> planning traceability tags verified.
-- Decisions: Scoped this session to ATHENA documentation/planning artifacts only in the requested repository path (`D-20260217-1536`).
-- Traceable commit: `2633571a618f428d768adb9d3e6e5de5c5bacd01`.
-- Commands run: `python3 "$CODEX_HOME/skills/git-workflow-automation/scripts/audit_repository_security.py" --quick --path .` -> previously `HIGH` absolute-path finding reproduced; rerun after fixes passed with no `HIGH`.
-- Commands run: `python3 "$CODEX_HOME/skills/git-workflow-automation/scripts/audit_repository_security.py" --path .` -> no `HIGH` findings; only branch-protection recommendation remains (`MEDIUM`).
-- Commands run: `python3 "$CODEX_HOME/skills/git-workflow-automation/scripts/scan_for_secrets.py" --all --path .` -> `No secrets detected`.
-- Decisions: Resolved absolute-path audit findings by editing tracked doc text rather than suppressing audit checks (`D-20260217-1452`).
-- Commands run: `python3 scripts/validate_install_targets.py` -> pass (`skills/athena` target and icon bindings validated).
-- Commands run: `python3 "$CODEX_HOME/skills/.system/skill-creator/scripts/quick_validate.py" skills/athena` -> `Skill is valid!`.
-- Commands run: `cp skills/athena/agents/openai.yaml "$CODEX_HOME/skills/athena/agents/openai.yaml"` -> `synced` (executed with elevated permission due sandbox limits).
-- Validation: install-target validation now enforces required icon asset and `agents/openai.yaml` `icon_small`/`icon_large` bindings.
-- Decisions: Interpreted ".codex install include asset" as both metadata binding/validation in repo and sync of installed local skill metadata (`D-20260217-1419`).
-- Commands run: `date '+%Y-%m-%d %H:%M'` -> `2026-02-17 08:46`.
-- Validation: Not run in this session (icon asset + traceability docs update only; no runtime behavior change requested).
-- Decisions: Interpreted `warrier` as `warrior` for icon naming and visual motif (D-20260217-0847).
-- Commands run: `python3 scripts/validate_install_targets.py` -> pass (`skills/athena` target validated); `python3 -m py_compile scripts/print_resume_prompt.py scripts/bootstrap_git_audit.py skills/athena/scripts/print_resume_prompt.py skills/athena/scripts/bootstrap_git_audit.py` -> pass.
-- Commands run: `shasum scripts/print_resume_prompt.py skills/athena/scripts/print_resume_prompt.py scripts/bootstrap_git_audit.py skills/athena/scripts/bootstrap_git_audit.py` -> matching hashes per script pair.
-- Commands run: `rg -n 'absolute user-home path' docs/progress.txt docs/specs/20260216-review-findings-remediation/spec.md` -> expected hygiene wording present and no literal local user-home absolute path tokens.
-- Validation: remediation updates compile and install-target CI guardrail check passes locally.
-- Decisions: Interpreted `on on 1-5` as approval to implement all five findings from the immediately prior review (D-20260216-1318).
-- Commands run: `rg -n 'docs/images/athena-readme-fast-visual\\.svg|^context:|^tension:|^decision:|^execution:|^outcome:|^reflection:' README.md`; `python3 scripts/validate_install_targets.py`.
-- Validation: README retains the new top image and no literal style-label lines; install-target validation passed.
-- Reconciliation: updated PRD/spec/tasks/progress to reflect scope correction from style rewrite to image-only README change.
-- Commands run: `python3 "$CODEX_HOME/skills/taylor-style-voice/scripts/validate_style.py" --file README.md --json`; `python3 scripts/validate_install_targets.py`; `rg -n 'athena-napkin-loop\\.svg|docs/images/athena-readme-fast-visual\\.svg' README.md`.
-- Validation: style validator passed with zero warnings/errors; install-target validation passed; README references the new tracked visual and does not reference the excluded untracked SVG.
-- Reconciliation: set `docs/specs/20260213-readme-fast-visual/spec.md` to `Status: Done`; moved T-001/T-002 to DONE and cleared NEXT/IN PROGRESS in the feature task list.
-- Commands run: security audit before/after low-priority hardening plus git config update for signing.
-- Validation: audit findings for `CODEOWNERS`, Dependabot, workflow, and `commit.gpgsign` resolved.
-- Note: commit hashes from pre-rewrite history were intentionally discarded as part of clean-history publication requirement.
-- Commands run: targeted `rg` checks for traceability IDs and path hygiene plus file-presence checks for walkthrough artifacts.
-- Validation: walkthrough references resolved; no local absolute paths detected in new docs; required `docs/examples` and spec/task files exist.
-- Resume handling: provided UUID was not found in repo files, so execution resumed from tracked NEXT backlog item per `D-20260211-1326`.
-- Commit: `b83fa08` (task implementation for `T-001`).
-- Commit note: `scripts/commit_with_traceability.py` failed in this environment due missing local GPG secret key; fallback used `git -c commit.gpgsign=false commit` to preserve traceable local history.
-- Commands run: repo status scans, install-path content checks, and traceability file reconciliation for single-skill install cleanup.
-- Validation: `python3 scripts/validate_install_targets.py` -> pass (`skills/athena` only), `skills/athena-codex/` absent, docs install commands reference only `skills/athena`.
-- Validation note: `quick_validate.py` could not run in this environment because `PyYAML` is not installed (`ModuleNotFoundError: yaml`).
-- Commands run: `python3 scripts/validate_install_targets.py` -> pass; `rg -n "\\bralph\\b|RALPH|Ralph|ralph-traceability-loop" -S . --glob '!docs/requests.md' --glob '!docs/decisions.md'` -> no matches; `rg -n "athena-skill|skills/athena|core/athena-framework\\.md"` -> expected references present.
-- Reconciliation: Set `docs/specs/20260212-athena-rename/spec.md` to `Status: Done`, moved `T-003` to DONE, and cleared PRD backlog with implementation evidence paths.
-- Commands run: `git remote set-url origin https://github.com/taylorparsons/athena-skill.git` -> success; `git remote -v` confirms fetch/push URL now points to `athena-skill`.
-- Commit: `13ad76c` (`T-003: Complete ATHENA rename and repo identity migration (Feature: 20260212-athena-rename)`).
-- Merge evidence: `7491d8d` (`Merge origin/main after ATHENA rename sync`) integrated remote `release: v1.0.1` before push.
-- Commands run: content review of `publishing/linkedin-post-athena-flow-v1.md` and `publishing/linkedin-post-athena-flow-v2.md` plus file-presence checks in `publishing/`.
-- Validation: both drafts include ATHENA flow narrative (invoke -> request -> loop -> check-in) and include Codex + Claude copy/paste install blocks.
-- Reconciliation: set `docs/specs/20260213-linkedin-post-variants/spec.md` to `Status: Done`, moved `T-003` to DONE, and cleared PRD backlog item with implemented file evidence.
-- Commit: `1e5d22d` (`T-003: Add two LinkedIn ATHENA post variants with install blocks (Feature: 20260213-linkedin-post-variants)`).
-- Commands run: `rg -n '## Problem|## Constraint|## Decision|## Evidence Path|\$athena|check-?in|Install for Codex|Setup for Claude' publishing/linkedin-post-athena-flow-v3-personal-style.md` -> required sections present.
-- Validation: `python3 scripts/validate_install_targets.py` -> pass; `ls -la publishing | rg 'linkedin-post-athena-flow-v[123]'` -> v1/v2/v3 drafts present.
-- Reconciliation: set `docs/specs/20260213-linkedin-personal-style/spec.md` to `Status: Done`, moved T-003 to DONE, and cleared PRD backlog with v3 evidence path.
-- Commit: `07240b7` (`T-003: Add personal-style LinkedIn ATHENA post variant (Feature: 20260213-linkedin-personal-style)`).
+- Feature complete. All 13 tasks in DONE.
+- Session archived to docs/progress-archive.txt.
