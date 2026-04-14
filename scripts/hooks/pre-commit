@@ -4,7 +4,7 @@
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 OWL_SCRIPT="$REPO_ROOT/scripts/owl"
-INDEX_FILE="$REPO_ROOT/docs/INDEX.md"
+INDEX_FILE="$REPO_ROOT/docs/athena-index.md"
 
 # Check if owl script exists
 if [ ! -f "$OWL_SCRIPT" ]; then
@@ -24,16 +24,16 @@ SPEC_COUNT=$(find "$REPO_ROOT/docs/specs" -mindepth 1 -maxdepth 1 -type d 2>/dev
 
 # Check if counts match
 if [ "$INDEX_COUNT" -ne "$SPEC_COUNT" ]; then
-    echo "⚠️  Owl: INDEX.md out of sync!"
-    echo "   INDEX.md lists: $INDEX_COUNT features"
+    echo "⚠️  Owl: athena-index.md out of sync!"
+    echo "   athena-index.md lists: $INDEX_COUNT features"
     echo "   docs/specs/ has: $SPEC_COUNT features"
     echo ""
     echo "   Run: ./scripts/owl update-index"
-    echo "   Then: git add docs/INDEX.md"
+    echo "   Then: git add docs/athena-index.md"
     echo ""
     echo "   Or bypass: git commit --no-verify"
     exit 1
 fi
 
-echo "✅ Owl: INDEX.md in sync ($INDEX_COUNT features)"
+echo "✅ Owl: athena-index.md in sync ($INDEX_COUNT features)"
 exit 0
