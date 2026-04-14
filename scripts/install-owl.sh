@@ -123,8 +123,44 @@ WRAPPER
 chmod +x "$TARGET"
 echo "✅ Installed $TARGET (delegates to owl.py)"
 
+# Write project .claude/settings.json with correct hook commands
+SETTINGS_DIR="$REPO_ROOT/.claude"
+SETTINGS_FILE="$SETTINGS_DIR/settings.json"
+mkdir -p "$SETTINGS_DIR"
+
+cat > "$SETTINGS_FILE" << 'SETTINGS'
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$(git rev-parse --show-toplevel)\" && ./scripts/owl prune-done | jq -r '.message // .' && ./scripts/owl update-index | jq -r '.message // .' && ./scripts/owl write-memory | jq -r '.message // .'; true"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$(git rev-parse --show-toplevel)\" && ./scripts/owl prune-done | jq -r '.message // .' && ./scripts/owl update-index | jq -r '.message // .'; true"
+          }
+        ]
+      }
+    ]
+  }
+}
+SETTINGS
+
+echo "✅ Wrote $SETTINGS_FILE (SessionStart + Stop hooks)"
+
 # Quick smoke test
-if python3 "$SKILL_DIR/scripts/owl.py" --repo "$REPO_ROOT" write-memory 2>/dev/null; then
+if python3 "$SKILL_DIR/scripts/owl.py" --repo "$REPO_ROOT" write-memory 2>/dev/null | jq -r '.message // .' 2>/dev/null; then
     echo "✅ owl.py smoke test passed"
 else
     echo "⚠️  owl.py returned non-zero — check that docs/ exists in $REPO_ROOT"

@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"$(git rev-parse --show-toplevel)\" && ./scripts/owl prune-done && ./scripts/owl update-index && ./scripts/owl write-memory; true"
+            "command": "cd \"$(git rev-parse --show-toplevel)\" && ./scripts/owl prune-done | jq -r '.message // .' && ./scripts/owl update-index | jq -r '.message // .' && ./scripts/owl write-memory | jq -r '.message // .'; true"
           }
         ]
       }
