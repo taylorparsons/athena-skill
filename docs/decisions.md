@@ -1,5 +1,31 @@
 # Decisions (append-only)
 
+## D-20260414-1100
+
+### Metadata
+- **Date:** 2026-04-14 11:00
+- **Inputs:** CR-20260414-1100
+- **PRD:** Rename INDEX.md to athena-index.md
+
+### Decision:
+Rename `docs/INDEX.md` to `docs/athena-index.md` (kebab-case) across all functional code, hooks, and documentation. Leave append-only logs (`requests.md`, `decisions.md`, `progress-archive.txt`) untouched. Leave `settings.json` hook commands unchanged (they call `./scripts/owl` by command name, not filename). Update `docs/progress.txt` (mutable active state) but not `docs/progress-archive.txt` (historical record). Add single-prompt fast path to README above the 5-step manual bootstrap.
+
+### Rationale:
+`INDEX.md` is a generic name that collides with existing documentation indexes in mature repos (confirmed collision in `agentic-browser`). `athena-index.md` is unambiguous, safe to install globally, and follows kebab-case conventions. No migration script needed — feature was never released publicly; only two projects had `docs/INDEX.md` (this repo and `my_LLC`, being reverted).
+
+### Alternatives considered:
+- `ATHENA_INDEX.md` (rejected: uppercase snake_case inconsistent with other filenames)
+- `athena_index.md` (rejected: snake_case inconsistent with markdown file conventions)
+- Auto-migrate old `INDEX.md` on first run (rejected: not needed, no public installs exist)
+
+### Acceptance / test:
+- `./scripts/owl update-index` creates `docs/athena-index.md`, not `docs/INDEX.md`
+- `pre-commit` validates `docs/athena-index.md` sync
+- `post-commit` stages `docs/athena-index.md` on feature completion
+- No functional references to `docs/INDEX.md` remain in code or hooks
+
+---
+
 ## D-20260413-1201
 
 ### Metadata

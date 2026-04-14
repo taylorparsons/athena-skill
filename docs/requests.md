@@ -565,3 +565,45 @@ document the changes in $athena and check in to prepare to push to remote
 
 ### Notes
 - Track this work in ATHENA artifacts and prepare a local, traceable commit for `skills/athena` template updates.
+
+## CR-20260414-1100
+
+### Metadata
+- **Date:** 2026-04-14 11:00
+- **Source:** chat
+
+### Request (verbatim):
+interesting - /Volumes/T9/code/agentic-browser/docs/index.md already existed and it is just an index for the docs/ given this I think we need to make an update so that Athena is using athena_index.md and owl will use athena_index.md in place index.md as this is likely to be common in more mature repos. Use Superpowers to plan and implement this change in this repo and on this computer when it is done
+
+### Notes
+- Filename chosen: `athena-index.md` (kebab-case)
+- No migration needed — feature never released, only impacts athena repo and my_LLC (being reverted)
+- Append-only logs untouched; progress-archive.txt left as historical record
+- README existing-project bootstrap: single Claude prompt first, then 5 manual steps
+
+## CR-20260414-1000
+
+### Metadata
+- **Date:** 2026-04-14 10:00
+- **Source:** chat
+
+### Request (verbatim):
+now add this to this repo that will be used by other to install the update for claude
+
+### Notes
+- Context: we debugged and fixed a SessionStart hook error caused by `type: "agent"` being unsupported in Claude Code settings.json hooks.
+- Fix: replace the agent hook with `type: "command"` mirroring the working Stop hook pattern.
+- Scope: update README.md hook snippet + add a patch script for existing installs.
+
+## CR-20260413-1400
+
+### Metadata
+- **Date:** 2026-04-13 14:00
+- **Source:** chat
+
+### Request (verbatim):
+review the change to Athena on this branch and the addition of the new agent called Owl of Athena. Compare to main for full view
+
+### Notes
+- Code review of feature/index-based-archival branch against main.
+- Review covers INDEX.md token optimization and Owl of Athena agent.
