@@ -159,7 +159,7 @@ After step 6, Owl runs automatically at session start (`SessionStart` hook) and 
 
 **What does not change:** `docs/requests.md`, `docs/decisions.md`, `docs/PRD.md`, and all existing spec files are untouched. The traceability audit trail is preserved exactly as-is.
 
-> **Why `install-owl.sh`?** Earlier versions of ATHENA shipped `scripts/owl` with stub implementations (`prune-done` and `update-index` were no-ops). The script now delegates all commands to `owl.py` in the global skill. Running `install-owl.sh` once upgrades the wrapper without touching any other project files.
+
 
 ---
 
