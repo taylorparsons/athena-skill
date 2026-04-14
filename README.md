@@ -173,7 +173,7 @@ flowchart TD
     F -- No --> E
     F -- Yes --> G[Dispatch Owl:\narchive feature]
     G --> H[athena-index.md updated\nfeature marked archived]
-    H --> I[Next session opens\nSessionStart: Haiku runs prune-done + update-index]
+    H --> I[Next session opens\nSessionStart: Owl runs prune-done + update-index + write-memory]
     I --> J([progress.txt stays lean\nthroughout project life])
 ```
 
@@ -233,7 +233,7 @@ Open `~/.claude/settings.json` and merge in the `hooks` block below. If you alre
         "hooks": [
           {
             "type": "command",
-            "command": "REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null) && [ -f \"$REPO_ROOT/scripts/owl\" ] && cd \"$REPO_ROOT\" && ./scripts/owl prune-done && ./scripts/owl update-index; true"
+            "command": "REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null) && [ -f \"$REPO_ROOT/scripts/owl\" ] && cd \"$REPO_ROOT\" && ./scripts/owl prune-done && ./scripts/owl update-index && ./scripts/owl write-memory; true"
           }
         ]
       }
@@ -264,7 +264,7 @@ Both hooks are conditional — they check for `scripts/owl` before running and a
 
 | Hook | When | What |
 |---|---|---|
-| `SessionStart` | Project opens | Shell command runs `prune-done` + `update-index` before Athena loads |
+| `SessionStart` | Project opens | Shell command runs `prune-done` + `update-index` + `write-memory` before Athena loads |
 | `Stop` | Session ends | Same cleanup as a belt-and-suspenders pass |
 
 #### 2d. Add Owl to `~/.claude/CLAUDE.md`
@@ -274,7 +274,7 @@ If you have a `~/.claude/CLAUDE.md` with an Available Skills section, add the fo
 ```markdown
 ### owl-of-athena
 **Path:** `.claude/agents/owl-of-athena.md` (sub-agent, dispatched via Agent tool)
-**Trigger:** Dispatch mid-session when: a feature is fully done (archive it), the user asks about archived features, or athena-index.md appears stale. Never load archived specs directly — use Owl. Note: `prune-done` and `update-index` run automatically via the `SessionStart` shell hook before Athena loads — do not dispatch Owl for these at session start.
+**Trigger:** Dispatch mid-session when: a feature is fully done (archive it), the user asks about archived features, or athena-index.md appears stale. Never load archived specs directly — use Owl. Note: `prune-done`, `update-index`, and `write-memory` run automatically via the `SessionStart` shell hook before Athena loads — do not dispatch Owl for these at session start.
 ```
 
 > **Already installed?** The patch script handles both `settings.json` and `CLAUDE.md` in one pass:
