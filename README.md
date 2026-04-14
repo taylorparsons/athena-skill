@@ -139,7 +139,13 @@ flowchart LR
     H --> I([Running normally\nOwl fires on session end])
 ```
 
-**Step by step:**
+**Fast path — paste this prompt into Claude Code:**
+
+```
+Upgrade Owl of Athena in this project. Run ./scripts/owl update-index to generate docs/athena-index.md, run ./scripts/install-hooks.sh to install git hooks, run ./scripts/owl prune-done to clean progress.txt, then commit the results.
+```
+
+**Manual path:**
 
 1. Pull this branch or merge to your main branch.
 2. Run `./scripts/owl update-index` once. This reads your existing `docs/specs/` and generates `docs/athena-index.md`. It checks `tasks.md` first for status — if a feature has no items under NEXT or IN PROGRESS, it marks it Done.
