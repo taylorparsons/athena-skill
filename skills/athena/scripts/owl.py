@@ -475,14 +475,17 @@ class OwlOfAthena:
         # 3. PRD.md check — feature-id appears near a shipped/done indicator
         if prd_content:
             lines = prd_content.split('\n')
+            found_in_prd = False
             for i, line in enumerate(lines):
                 if feature_id in line:
+                    found_in_prd = True
                     context = '\n'.join(lines[max(0, i - 2):i + 3]).lower()
                     if any(w in context for w in ['shipped', 'done', '✅', 'complete']):
                         return True
-            return False  # feature_id in PRD but not marked shipped
+            if found_in_prd:
+                return False  # found in PRD but not yet marked shipped
 
-        return True  # no PRD — trust tasks.md + spec.md
+        return True  # not in PRD (or no PRD) — trust tasks.md + spec.md
 
     # --- Memory bridge helpers ---
 

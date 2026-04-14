@@ -263,3 +263,31 @@ NOTES
 - Design rationale: athena-index.md prevents collision with projects that have their own index.md (e.g. agentic-browser/docs/index.md)
 
 ---
+
+
+Feature: test-archive-fix
+Goal: Synthetic test for archive path bug fix.
+
+IN PROGRESS
+- (none)
+
+NEXT
+- (none)
+
+NOTES
+- This block is used for testing _archive_progress_entries and prune_done.
+
+
+Session: 2026-04-14 14:01
+Agent: Claude Code
+Feature: test-archive-fix
+Goal: Second session block to test prune-done archiving.
+
+IN PROGRESS
+- (none)
+
+NEXT
+- (none)
+
+NOTES
+- Testing prune-done archives to docs/progress-archive.txt before removing.
