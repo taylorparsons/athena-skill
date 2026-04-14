@@ -105,15 +105,35 @@ Preferred implementation:
 ## 2) Read First, Then Act
 
 Always read all files at the start of the session:
-- `docs/INDEX.md` (load first - identifies active vs archived features)
+- `docs/athena-index.md` (load first - identifies active vs archived features)
 - `docs/requests.md`
 - `docs/decisions.md`
 - `docs/TRACEABILITY.md`
 - `docs/PRD.md`
 - `docs/progress.txt`
-- `docs/specs/<feature-id>/` (only for features marked "Active" in INDEX.md)
+- `docs/specs/<feature-id>/` (only for features marked "Active" in athena-index.md)
 
-**Token optimization**: INDEX.md lists all features. Only load specs marked as "Active". Skip archived features unless explicitly requested by user.
+**Token optimization**: athena-index.md lists all features. Only load specs marked as "Active". Skip archived features unless explicitly requested by user.
+
+## Owl of Athena — Archive Management
+
+Owl is a Claude Code sub-agent (`.claude/agents/owl-of-athena.md`) that handles all archive and housekeeping operations. Use the Agent tool to dispatch to it — do not load archived specs directly.
+
+**Dispatch to Owl in these situations:**
+
+| Situation | Dispatch prompt |
+|---|---|
+| User asks about an archived feature | `"Retrieve summary for <feature-id>"` |
+| User searches history | `"Search archived features for '<keyword>'"` |
+| Feature fully done (tasks.md + spec.md + PRD) | `"Archive feature <feature-id>"` |
+| athena-index.md appears stale | `"Run update-index"` |
+
+**A feature is fully done when ALL three are true:**
+1. `tasks.md` — no items under NEXT or IN PROGRESS
+2. `spec.md` — `Status: Done`
+3. `PRD.md` — feature appears as shipped/complete
+
+When all three pass, dispatch `"Archive feature <feature-id>"` to Owl. The SessionStart hook runs `prune-done` at session open to remove closed feature history from `progress.txt`.
 
 Summarize the current goal in one sentence before making changes.
 
