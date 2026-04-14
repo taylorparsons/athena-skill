@@ -19,7 +19,7 @@ fi
 if [ -f "$SCRIPT_DIR/hooks/post-commit" ]; then
     cp "$SCRIPT_DIR/hooks/post-commit" "$HOOKS_DIR/post-commit"
     chmod +x "$HOOKS_DIR/post-commit"
-    echo "✅ Installed: post-commit (auto-update INDEX.md)"
+    echo "✅ Installed: post-commit (auto-update athena-index.md)"
 else
     echo "⚠️  Skipped: post-commit hook not found"
 fi
@@ -28,7 +28,7 @@ fi
 if [ -f "$SCRIPT_DIR/hooks/pre-commit" ]; then
     cp "$SCRIPT_DIR/hooks/pre-commit" "$HOOKS_DIR/pre-commit"
     chmod +x "$HOOKS_DIR/pre-commit"
-    echo "✅ Installed: pre-commit (validate INDEX.md sync)"
+    echo "✅ Installed: pre-commit (validate athena-index.md sync)"
 else
     echo "⚠️  Skipped: pre-commit hook not found"
 fi
@@ -37,8 +37,8 @@ echo ""
 echo "🎉 Owl hooks installed!"
 echo ""
 echo "What they do:"
-echo "  • pre-commit: Validates INDEX.md is in sync with specs"
-echo "  • post-commit: Auto-updates INDEX.md when features complete"
+echo "  • pre-commit: Validates athena-index.md is in sync with specs"
+echo "  • post-commit: Auto-updates athena-index.md when features complete"
 echo ""
 echo "To uninstall:"
 echo "  rm .git/hooks/post-commit .git/hooks/pre-commit"
