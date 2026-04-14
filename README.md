@@ -130,7 +130,8 @@ If your project was already using ATHENA before this update, follow these steps 
 ```mermaid
 flowchart LR
     A([Existing project\nno athena-index.md]) --> B[Pull branch /\nupdate SKILL.md]
-    B --> C["Run:\n./scripts/owl update-index"]
+    B --> B2["Run install-owl.sh\nto install delegation wrapper"]
+    B2 --> C["Run:\n./scripts/owl update-index"]
     C --> D[athena-index.md created\nfrom existing specs]
     D --> E["Run:\n./scripts/install-hooks.sh"]
     E --> F[Git hooks installed\npre-commit + post-commit]
@@ -139,23 +140,26 @@ flowchart LR
     H --> I([Running normally\nOwl fires on session end])
 ```
 
-**Fast path — paste this prompt into Claude Code:**
+**Fast path — paste this into Claude Code:**
 
 ```
-Upgrade Owl of Athena in this project. Run ./scripts/owl update-index to generate docs/athena-index.md, run ./scripts/install-hooks.sh to install git hooks, run ./scripts/owl prune-done to clean progress.txt, then commit the results.
+Migrate this project to the current Athena version: run bash ~/.claude/skills/athena/scripts/install-owl.sh, then ./scripts/owl update-index, ./scripts/owl prune-done, and commit the results.
 ```
 
 **Manual path:**
 
 1. Pull this branch or merge to your main branch.
-2. Run `./scripts/owl update-index` once. This reads your existing `docs/specs/` and generates `docs/athena-index.md`. It checks `tasks.md` first for status — if a feature has no items under NEXT or IN PROGRESS, it marks it Done.
-3. Run `./scripts/install-hooks.sh` to install the pre-commit and post-commit hooks.
-4. Optionally run `./scripts/owl prune-done` to immediately clean closed feature sessions from `progress.txt`. Skip this if you want to review `progress.txt` manually first.
-5. Commit `docs/athena-index.md` and the updated `progress.txt` to your repo.
+2. Run `bash ~/.claude/skills/athena/scripts/install-owl.sh` from the project root. This installs `scripts/owl` as a delegation wrapper that routes all commands (`prune-done`, `update-index`, `write-memory`, etc.) to the authoritative `owl.py` in the Athena skill. If you already have a `scripts/owl` that was a no-op stub, this replaces it with the real implementation.
+3. Run `./scripts/owl update-index` once. This reads your existing `docs/specs/` and generates `docs/athena-index.md`. It checks `tasks.md` first for status — if a feature has no items under NEXT or IN PROGRESS, it marks it Done.
+4. Run `./scripts/install-hooks.sh` to install the pre-commit and post-commit hooks.
+5. Optionally run `./scripts/owl prune-done` to immediately clean closed feature sessions from `progress.txt`. Skip this if you want to review `progress.txt` manually first.
+6. Commit `scripts/owl`, `docs/athena-index.md`, and the updated `progress.txt` to your repo.
 
-After step 5, Owl runs automatically at session start (Haiku agent via `SessionStart` hook) and at session end (shell via `Stop` hook). You do not need to call it manually. If you have not yet done the global hook setup, follow **Step 2** in the Installation section.
+After step 6, Owl runs automatically at session start (`SessionStart` hook) and at session end (`Stop` hook). You do not need to call it manually. If you have not yet done the global hook setup, follow **Step 2** in the Installation section.
 
 **What does not change:** `docs/requests.md`, `docs/decisions.md`, `docs/PRD.md`, and all existing spec files are untouched. The traceability audit trail is preserved exactly as-is.
+
+> **Why `install-owl.sh`?** Earlier versions of ATHENA shipped `scripts/owl` with stub implementations (`prune-done` and `update-index` were no-ops). The script now delegates all commands to `owl.py` in the global skill. Running `install-owl.sh` once upgrades the wrapper without touching any other project files.
 
 ---
 
