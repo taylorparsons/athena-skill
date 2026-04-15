@@ -17,6 +17,172 @@ ATHENA creates a **complete audit trail from customer request to shipped code**:
 - **Creates traceable Git commits** referencing CR/D/FEATURE_ID/T-... IDs
 - **Enables auditing** via `docs/TRACEABILITY.md` to follow any request through to code
 
+---
+
+## Installation
+
+There are two things to install: the **ATHENA skill** (the loop instructions Claude follows) and **Owl of Athena** (the Claude Code agent and hooks that manage your archive). Install both for the full experience.
+
+### Step 1 — Install the ATHENA Skill
+
+**Codex:**
+
+```bash
+$skill-installer https://github.com/taylorparsons/athena-skill/
+```
+
+**Claude Code:**
+
+In an active Claude Code session, paste this prompt:
+
+```
+Install the athena skill from https://github.com/taylorparsons/athena-skill — copy the entire skills/athena/ directory into ~/.claude/skills/athena/
+```
+
+Claude will write `~/.claude/skills/athena/` including `SKILL.md`, `templates/`, `scripts/`, and `core/`.
+
+**Verify:** `~/.claude/skills/athena/SKILL.md` exists, or run `/skills` to confirm `athena` is listed.
+
+---
+
+### Step 2 — Install Owl of Athena (Claude Code only)
+
+Owl requires three things: the agent file, the global hooks, and the git hooks on each project.
+
+#### 2a. Copy the agent file
+
+```bash
+mkdir -p ~/.claude/agents
+cp .claude/agents/owl-of-athena.md ~/.claude/agents/owl-of-athena.md
+```
+
+This makes Owl available as a sub-agent in every Claude Code session.
+
+#### 2b. Add hooks to `~/.claude/settings.json`
+
+Open `~/.claude/settings.json` and merge in the `hooks` block below. If you already have a `hooks` key, add `SessionStart` and `Stop` into the existing object — do not replace the whole file.
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$(git rev-parse --show-toplevel)\" && ./scripts/owl prune-done | jq -r '.message // .' && ./scripts/owl update-index | jq -r '.message // .' && ./scripts/owl write-memory | jq -r '.message // .'; true"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$(git rev-parse --show-toplevel)\" && ./scripts/owl prune-done | jq -r '.message // .' && ./scripts/owl update-index | jq -r '.message // .'; true"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Both hooks are conditional — they check for `scripts/owl` before running and are safe to install globally. They only activate in repos where Owl is present.
+
+**`scripts/owl` requirement:** Each ATHENA project must have a `scripts/owl` script. This script handles:
+- `prune-done` — removes closed feature sessions from `progress.txt`
+- `update-index` — regenerates `athena-index.md` from current spec status
+- `write-memory` — extracts active docs (decisions, requests, progress) into memory files for single-session read
+
+The wrapper is **runtime-agnostic** — it detects owl.py in this priority order:
+1. `scripts/owl.py` in the project (Codex pattern — bundled locally)
+2. `~/.claude/skills/athena/scripts/owl.py` (Claude Code installed skill)
+3. `$CODEX_HOME/skills/athena/scripts/owl.py` (Codex installed skill)
+4. Bash fallback (`write-memory` only)
+
+Install it in any project from the Athena skill root:
+```bash
+bash ~/.claude/skills/athena/scripts/install-owl.sh
+```
+
+> **Already installed?** If you set up Owl before April 2026, your `SessionStart` hook may use the old `type: "agent"` format which is not supported and will cause a hook error on session start. Run the patch script to fix it:
+> ```bash
+> python3 scripts/patch-claude-settings.py
+> ```
+
+**What each hook does:**
+
+| Hook | When | What |
+|---|---|---|
+| `SessionStart` | Project opens | Shell command runs `prune-done` + `update-index` + `write-memory` before Athena loads |
+| `Stop` | Session ends | Same cleanup as a belt-and-suspenders pass |
+
+#### 2d. Add Owl to `~/.claude/CLAUDE.md`
+
+If you have a `~/.claude/CLAUDE.md` with an Available Skills section, add the following entry after the `athena` entry. This scopes Owl to mid-session dispatches — the `SessionStart` hook handles the pre-session run automatically.
+
+```markdown
+### owl-of-athena
+**Path:** `.claude/agents/owl-of-athena.md` (sub-agent, dispatched via Agent tool)
+**Trigger:** Dispatch mid-session when: a feature is fully done (archive it), the user asks about archived features, or athena-index.md appears stale. Never load archived specs directly — use Owl. Note: `prune-done`, `update-index`, and `write-memory` run automatically via the `SessionStart` shell hook before Athena loads — do not dispatch Owl for these at session start.
+```
+
+> **Already installed?** The patch script handles both `settings.json` and `CLAUDE.md` in one pass:
+> ```bash
+> python3 scripts/patch-claude-settings.py
+> ```
+
+#### 2c. Install git hooks on each ATHENA project
+
+Run this once per project, from the project root:
+
+```bash
+./scripts/install-hooks.sh
+```
+
+This installs:
+- `pre-commit` — blocks commits if `athena-index.md` is out of sync with `docs/specs/`
+- `post-commit` — regenerates `athena-index.md` when a commit signals feature completion
+
+---
+
+### Step 3 — Bootstrap an existing project (first time only)
+
+If your project already has ATHENA docs but no `athena-index.md`, you have two options:
+
+**Fast path — paste this prompt into Claude Code:**
+
+```
+Bootstrap Owl of Athena in this project. Run ./scripts/owl update-index to generate docs/athena-index.md, run ./scripts/install-hooks.sh to install git hooks, run ./scripts/owl prune-done to clean progress.txt, then commit the results.
+```
+
+**Manual path:**
+
+```bash
+python3 scripts/owl.py update-index
+git add docs/athena-index.md && git commit -m "feat: add athena-index.md for Owl of Athena"
+```
+
+New projects get `athena-index.md` automatically when Claude scaffolds the docs structure.
+
+---
+
+### Option C: Bootstrap ATHENA docs in a new project
+
+To set up the full ATHENA docs structure in an existing project (`docs/requests.md`, `docs/decisions.md`, `docs/PRD.md`, `docs/specs/`, `docs/athena-index.md`, etc.), open Claude Code in that project and paste:
+
+```
+Setup ATHENA docs in this project from https://github.com/taylorparsons/athena-skill
+```
+
+Claude will create the full scaffold including `athena-index.md`. Then run `./scripts/install-hooks.sh` to activate the git hooks.
+
+---
+
 ## Owl of Athena (Claude Code)
 
 Owl is a Claude Code sub-agent that runs alongside ATHENA sessions. It handles archive operations and keeps `progress.txt` lean — so the main agent spends tokens on active work, not history.
@@ -182,172 +348,6 @@ flowchart TD
 ```
 
 **Key difference from existing projects:** You start with an empty `athena-index.md`. As you complete features, Owl archives them incrementally. `progress.txt` never accumulates the years of history that existing projects have — it stays bounded from day one.
-
----
-
-## Installation
-
-There are two things to install: the **ATHENA skill** (the loop instructions Claude follows) and **Owl of Athena** (the Claude Code agent and hooks that manage your archive). Install both for the full experience.
-
-### Step 1 — Install the ATHENA Skill
-
-**Claude Code:**
-
-In an active Claude Code session, paste this prompt:
-
-```
-Install the athena skill from https://github.com/taylorparsons/athena-skill — copy the entire skills/athena/ directory into ~/.claude/skills/athena/
-```
-
-Claude will write `~/.claude/skills/athena/` including `SKILL.md`, `templates/`, `scripts/`, and `core/`.
-
-**Verify:** `~/.claude/skills/athena/SKILL.md` exists, or run `/skills` to confirm `athena` is listed.
-
-**Codex:**
-
-```bash
-$skill-installer https://github.com/taylorparsons/athena-skill/
-```
-
----
-
-### Step 2 — Install Owl of Athena (Claude Code only)
-
-Owl requires three things: the agent file, the global hooks, and the git hooks on each project.
-
-#### 2a. Copy the agent file
-
-```bash
-mkdir -p ~/.claude/agents
-cp .claude/agents/owl-of-athena.md ~/.claude/agents/owl-of-athena.md
-```
-
-This makes Owl available as a sub-agent in every Claude Code session.
-
-#### 2b. Add hooks to `~/.claude/settings.json`
-
-Open `~/.claude/settings.json` and merge in the `hooks` block below. If you already have a `hooks` key, add `SessionStart` and `Stop` into the existing object — do not replace the whole file.
-
-```json
-{
-  "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "cd \"$(git rev-parse --show-toplevel)\" && ./scripts/owl prune-done | jq -r '.message // .' && ./scripts/owl update-index | jq -r '.message // .' && ./scripts/owl write-memory | jq -r '.message // .'; true"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "cd \"$(git rev-parse --show-toplevel)\" && ./scripts/owl prune-done | jq -r '.message // .' && ./scripts/owl update-index | jq -r '.message // .'; true"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-Both hooks are conditional — they check for `scripts/owl` before running and are safe to install globally. They only activate in repos where Owl is present.
-
-**`scripts/owl` requirement:** Each ATHENA project must have a `scripts/owl` script. This script handles:
-- `prune-done` — removes closed feature sessions from `progress.txt`
-- `update-index` — regenerates `athena-index.md` from current spec status
-- `write-memory` — extracts active docs (decisions, requests, progress) into memory files for single-session read
-
-The wrapper is **runtime-agnostic** — it detects owl.py in this priority order:
-1. `scripts/owl.py` in the project (Codex pattern — bundled locally)
-2. `~/.claude/skills/athena/scripts/owl.py` (Claude Code installed skill)
-3. `$CODEX_HOME/skills/athena/scripts/owl.py` (Codex installed skill)
-4. Bash fallback (`write-memory` only)
-
-Install it in any project from the Athena skill root:
-```bash
-bash ~/.claude/skills/athena/scripts/install-owl.sh
-```
-
-> **Already installed?** If you set up Owl before April 2026, your `SessionStart` hook may use the old `type: "agent"` format which is not supported and will cause a hook error on session start. Run the patch script to fix it:
-> ```bash
-> python3 scripts/patch-claude-settings.py
-> ```
-
-**What each hook does:**
-
-| Hook | When | What |
-|---|---|---|
-| `SessionStart` | Project opens | Shell command runs `prune-done` + `update-index` + `write-memory` before Athena loads |
-| `Stop` | Session ends | Same cleanup as a belt-and-suspenders pass |
-
-#### 2d. Add Owl to `~/.claude/CLAUDE.md`
-
-If you have a `~/.claude/CLAUDE.md` with an Available Skills section, add the following entry after the `athena` entry. This scopes Owl to mid-session dispatches — the `SessionStart` hook handles the pre-session run automatically.
-
-```markdown
-### owl-of-athena
-**Path:** `.claude/agents/owl-of-athena.md` (sub-agent, dispatched via Agent tool)
-**Trigger:** Dispatch mid-session when: a feature is fully done (archive it), the user asks about archived features, or athena-index.md appears stale. Never load archived specs directly — use Owl. Note: `prune-done`, `update-index`, and `write-memory` run automatically via the `SessionStart` shell hook before Athena loads — do not dispatch Owl for these at session start.
-```
-
-> **Already installed?** The patch script handles both `settings.json` and `CLAUDE.md` in one pass:
-> ```bash
-> python3 scripts/patch-claude-settings.py
-> ```
-
-#### 2c. Install git hooks on each ATHENA project
-
-Run this once per project, from the project root:
-
-```bash
-./scripts/install-hooks.sh
-```
-
-This installs:
-- `pre-commit` — blocks commits if `athena-index.md` is out of sync with `docs/specs/`
-- `post-commit` — regenerates `athena-index.md` when a commit signals feature completion
-
----
-
-### Step 3 — Bootstrap an existing project (first time only)
-
-If your project already has ATHENA docs but no `athena-index.md`, you have two options:
-
-**Fast path — paste this prompt into Claude Code:**
-
-```
-Bootstrap Owl of Athena in this project. Run ./scripts/owl update-index to generate docs/athena-index.md, run ./scripts/install-hooks.sh to install git hooks, run ./scripts/owl prune-done to clean progress.txt, then commit the results.
-```
-
-**Manual path:**
-
-```bash
-python3 scripts/owl.py update-index
-git add docs/athena-index.md && git commit -m "feat: add athena-index.md for Owl of Athena"
-```
-
-New projects get `athena-index.md` automatically when Claude scaffolds the docs structure.
-
----
-
-### Option C: Bootstrap ATHENA docs in a new project
-
-To set up the full ATHENA docs structure in an existing project (`docs/requests.md`, `docs/decisions.md`, `docs/PRD.md`, `docs/specs/`, `docs/athena-index.md`, etc.), open Claude Code in that project and paste:
-
-```
-Setup ATHENA docs in this project from https://github.com/taylorparsons/athena-skill
-```
-
-Claude will create the full scaffold including `athena-index.md`. Then run `./scripts/install-hooks.sh` to activate the git hooks.
-
----
 
 ## Fleet Management
 

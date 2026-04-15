@@ -1,5 +1,30 @@
 # Customer Requests (append-only)
 
+## CR-20260415-1115
+
+### Metadata
+- **Date:** 2026-04-15 11:15
+- **Source:** chat
+
+### Request (verbatim):
+Move the Install instructions higher in the README.md, start with Codex then Claude
+
+---
+
+## CR-20260415-1100
+
+### Metadata
+- **Date:** 2026-04-15 11:00
+- **Source:** chat
+
+### Request (verbatim):
+I have a README.md for /Volumes/T9/code/SKILLS/athena that does not display the image that is an SVG can this be updated so that svg will render here is the source code # ATHENA Framework
+
+![How the ATHENA Skill Works](docs/images/athena-readme-fast-visual.svg)
+ and I have verified the path is valid
+
+---
+
 ## CR-20260415-0910
 
 ### Metadata
