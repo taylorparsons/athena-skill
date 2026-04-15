@@ -1,5 +1,16 @@
 # Customer Requests (append-only)
 
+## CR-20260414-1945
+
+### Metadata
+- **Date:** 2026-04-14 19:45
+- **Source:** chat
+
+### Request (verbatim):
+curl -fsSL https://claude.ai/install.sh | bash
+
+Make sure this work in tracked by Athena
+
 ## CR-20260414-1700
 
 ### Metadata

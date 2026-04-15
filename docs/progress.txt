@@ -5,6 +5,11 @@ Skills: athena
 
 ## DONE
 
+- T-002: Update Claude Code CLI to v2.1.92 (Skills: athena)
+  - Ran: curl -fsSL https://claude.ai/install.sh | bash
+  - Installed at: ~/.local/bin/claude
+  - Completed: 2026-04-14 19:45
+
 - T-001: Create scripts/sweep-projects.py weekly sweeper (Skills: athena)
   - 8 check functions: missing index, stale index, large progress, large archive,
     unarchived done specs, large files, binary files, log files without archive sections
