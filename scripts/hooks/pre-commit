@@ -1,0 +1,39 @@
+#!/bin/bash
+# Pre-commit hook: Validate athena-index.md is in sync with specs
+# Install: cp scripts/hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+OWL_SCRIPT="$REPO_ROOT/scripts/owl"
+INDEX_FILE="$REPO_ROOT/docs/athena-index.md"
+
+# Check if owl script exists
+if [ ! -f "$OWL_SCRIPT" ]; then
+    exit 0
+fi
+
+# Check if athena-index.md exists
+if [ ! -f "$INDEX_FILE" ]; then
+    exit 0
+fi
+
+# Count features in athena-index.md
+INDEX_COUNT=$(grep -c "^### " "$INDEX_FILE" 2>/dev/null || echo 0)
+
+# Count actual spec directories
+SPEC_COUNT=$(find "$REPO_ROOT/docs/specs" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l | tr -d ' ')
+
+# Check if counts match
+if [ "$INDEX_COUNT" -ne "$SPEC_COUNT" ]; then
+    echo "⚠️  Owl: athena-index.md out of sync!"
+    echo "   athena-index.md lists: $INDEX_COUNT features"
+    echo "   docs/specs/ has: $SPEC_COUNT features"
+    echo ""
+    echo "   Run: ./scripts/owl update-index"
+    echo "   Then: git add docs/athena-index.md"
+    echo ""
+    echo "   Or bypass: git commit --no-verify"
+    exit 1
+fi
+
+echo "✅ Owl: athena-index.md in sync ($INDEX_COUNT features)"
+exit 0

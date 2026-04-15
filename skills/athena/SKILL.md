@@ -112,12 +112,34 @@ Preferred implementation:
 
 ## 2) Read First, Then Act
 
-Always read all files at the start of the session:
-- `docs/requests.md`
-- `docs/decisions.md`
-- `docs/TRACEABILITY.md`
-- `docs/PRD.md`
-- `docs/progress.txt`
+Check auto-memory first (loaded by Claude Code before this session started). If `Athena Active Context` memory is present:
+- Active feature, goal, and task state are already known — skip reading `docs/athena-index.md` and `docs/progress.txt`
+- Load only: `docs/requests.md`, `docs/decisions.md`, `docs/PRD.md`, and `docs/specs/<active-feature-id>/`
+
+If memory is absent (no `Athena Active Context` entry):
+- Load the full stack: `docs/athena-index.md` → `docs/requests.md` → `docs/decisions.md` → `docs/TRACEABILITY.md` → `docs/PRD.md` → `docs/progress.txt` → active spec(s)
+
+**Token optimization**: The memory file is written by Owl at session start and contains the active feature ID, goal, IN PROGRESS/NEXT tasks, and active features list. When present, it replaces the need to parse `athena-index.md` and `progress.txt` at session open.
+
+## Owl of Athena — Archive Management
+
+Owl is a Claude Code sub-agent (`.claude/agents/owl-of-athena.md`) that handles all archive and housekeeping operations. Use the Agent tool to dispatch to it — do not load archived specs directly.
+
+**Dispatch to Owl in these situations:**
+
+| Situation | Dispatch prompt |
+|---|---|
+| User asks about a closed feature | `"Retrieve summary for <feature-id>"` |
+| User searches history | `"Search archived features for '<keyword>'"` |
+| Feature fully done (tasks.md + spec.md + PRD) | `"Archive feature <feature-id>"` |
+| athena-index.md appears stale | `"Run update-index"` |
+
+**A feature is fully done when ALL three are true:**
+1. `tasks.md` — no items under NEXT or IN PROGRESS
+2. `spec.md` — `Status: Done`
+3. `PRD.md` — feature appears as shipped/complete
+
+When all three pass, dispatch `"Archive feature <feature-id>"` to Owl. The SessionStart hook runs `prune-done` at session open to remove closed feature history from `progress.txt`.
 
 Summarize the current goal in one sentence before making changes.
 
@@ -217,6 +239,8 @@ At the end of the session, update `docs/progress.txt`:
 - Record decisions, tradeoffs, and open questions.
 
 Always keep `IN PROGRESS` to a single task.
+
+After updating `docs/progress.txt`, run `./scripts/owl write-memory` to refresh the memory file with current task state for the next session.
 
 ## 6.25) Canonical Merge / Check-in Reconciliation (Required)
 

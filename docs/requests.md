@@ -1,5 +1,43 @@
 # Customer Requests (append-only)
 
+## CR-20260414-1945
+
+### Metadata
+- **Date:** 2026-04-14 19:45
+- **Source:** chat
+
+### Request (verbatim):
+curl -fsSL https://claude.ai/install.sh | bash
+
+Make sure this work in tracked by Athena
+
+## CR-20260414-1700
+
+### Metadata
+- **Date:** 2026-04-14 17:00
+- **Source:** chat
+
+### Request (verbatim):
+create a plan for a sweeper agent to make or another functionality that looks for claude projects that are using too many tokens due to large static files in the docs/ folder or other cases that could be optimzed. Have this run once a week before 4 AM Pacific time
+
+## CR-20260414-1600
+
+### Metadata
+- **Date:** 2026-04-14 16:00
+- **Source:** chat
+
+### Request (verbatim):
+can you create a script to find all claude project and migrate them to the latest version of athena with owl agent ?
+
+## CR-20260413-1200
+
+### Metadata
+- **Date:** 2026-04-13 12:00
+- **Source:** chat
+
+### Request (verbatim):
+Create INDEX.md for token-optimized feature loading and implement Owl of Athena agent to manage archived features. Reduce token overhead by 80-90% by only loading active features. Add Git hooks for automatic INDEX.md maintenance. Include progress.txt archival to reduce session startup cost.
+
 ## CR-20260211-0908
 
 ### Metadata
@@ -556,3 +594,59 @@ document the changes in $athena and check in to prepare to push to remote
 
 ### Notes
 - Track this work in ATHENA artifacts and prepare a local, traceable commit for `skills/athena` template updates.
+
+## CR-20260414-1100
+
+### Metadata
+- **Date:** 2026-04-14 11:00
+- **Source:** chat
+
+### Request (verbatim):
+interesting - /Volumes/T9/code/agentic-browser/docs/index.md already existed and it is just an index for the docs/ given this I think we need to make an update so that Athena is using athena_index.md and owl will use athena_index.md in place index.md as this is likely to be common in more mature repos. Use Superpowers to plan and implement this change in this repo and on this computer when it is done
+
+### Notes
+- Filename chosen: `athena-index.md` (kebab-case)
+- No migration needed — feature never released, only impacts athena repo and my_LLC (being reverted)
+- Append-only logs untouched; progress-archive.txt left as historical record
+- README existing-project bootstrap: single Claude prompt first, then 5 manual steps
+
+## CR-20260414-1000
+
+### Metadata
+- **Date:** 2026-04-14 10:00
+- **Source:** chat
+
+### Request (verbatim):
+now add this to this repo that will be used by other to install the update for claude
+
+### Notes
+- Context: we debugged and fixed a SessionStart hook error caused by `type: "agent"` being unsupported in Claude Code settings.json hooks.
+- Fix: replace the agent hook with `type: "command"` mirroring the working Stop hook pattern.
+- Scope: update README.md hook snippet + add a patch script for existing installs.
+
+## CR-20260413-1400
+
+### Metadata
+- **Date:** 2026-04-13 14:00
+- **Source:** chat
+
+### Request (verbatim):
+review the change to Athena on this branch and the addition of the new agent called Owl of Athena. Compare to main for full view
+
+### Notes
+- Code review of feature/index-based-archival branch against main.
+- Review covers INDEX.md token optimization and Owl of Athena agent.
+
+## CR-20260414-1327
+
+### Metadata
+- **Date:** 2026-04-14 13:27
+- **Source:** chat
+
+### Request (verbatim):
+yes spec that out using athena in this athena project. Ideally Owl would read the docs and put in the memory before Athena got there and Athena just use the memory and keep the memory updated as she works.
+
+### Notes
+- Context: discussion of whether Athena or Owl writes to Claude Code auto-memory (~/.claude/projects/.../memory/).
+- Neither currently does. Gap identified: Athena re-reads 6-7 docs/ files every session; Owl already has the data at SessionStart.
+- Proposed: new `write-memory` command in owl.py, called at SessionStart after update-index, writes project_athena_active.md to Claude Code memory dir.

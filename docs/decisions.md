@@ -1,5 +1,53 @@
 # Decisions (append-only)
 
+## D-20260414-1100
+
+### Metadata
+- **Date:** 2026-04-14 11:00
+- **Inputs:** CR-20260414-1100
+- **PRD:** Rename INDEX.md to athena-index.md
+
+### Decision:
+Rename `docs/INDEX.md` to `docs/athena-index.md` (kebab-case) across all functional code, hooks, and documentation. Leave append-only logs (`requests.md`, `decisions.md`, `progress-archive.txt`) untouched. Leave `settings.json` hook commands unchanged (they call `./scripts/owl` by command name, not filename). Update `docs/progress.txt` (mutable active state) but not `docs/progress-archive.txt` (historical record). Add single-prompt fast path to README above the 5-step manual bootstrap.
+
+### Rationale:
+`INDEX.md` is a generic name that collides with existing documentation indexes in mature repos (confirmed collision in `agentic-browser`). `athena-index.md` is unambiguous, safe to install globally, and follows kebab-case conventions. No migration script needed — feature was never released publicly; only two projects had `docs/INDEX.md` (this repo and `my_LLC`, being reverted).
+
+### Alternatives considered:
+- `ATHENA_INDEX.md` (rejected: uppercase snake_case inconsistent with other filenames)
+- `athena_index.md` (rejected: snake_case inconsistent with markdown file conventions)
+- Auto-migrate old `INDEX.md` on first run (rejected: not needed, no public installs exist)
+
+### Acceptance / test:
+- `./scripts/owl update-index` creates `docs/athena-index.md`, not `docs/INDEX.md`
+- `pre-commit` validates `docs/athena-index.md` sync
+- `post-commit` stages `docs/athena-index.md` on feature completion
+- No functional references to `docs/INDEX.md` remain in code or hooks
+
+---
+
+## D-20260413-1201
+
+### Metadata
+- **Date:** 2026-04-13 12:01
+- **Inputs:** CR-20260413-1200
+- **PRD:** Token optimization architecture
+
+### Decision:
+Use INDEX.md-based approach with Git hooks and Owl agent for archive management. Keep all features in docs/specs/ (no moving files). INDEX.md marks active vs archived. Owl agent (Python script) handles maintenance. Git hooks automate INDEX.md updates. Add progress.txt archival to reduce bloat.
+
+**Rationale:**
+- INDEX.md: Cross-platform, no symlinks, preserves all Git references
+- Owl agent: Cheap model (Haiku) for archive ops, 99% cost savings
+- Git hooks: Automatic enforcement, reduces manual errors
+- progress.txt trim: Removes 1,000+ tokens of old session data
+- Combined: ~9,500 tokens saved per session (88% reduction)
+
+**Alternatives considered:**
+- Move archives outside docs/: Breaks Git references
+- Symlinks: Not cross-platform compatible
+- No automation: Too much manual maintenance
+
 ## D-20260211-0940
 
 ### Metadata
@@ -618,3 +666,26 @@ The request is for local template usage within the installed skill package, so t
 - `skills/athena/SKILL.md` points to `skills/athena/templates/*` for template lookups.
 - `skills/athena/templates/` contains `requests.md`, `decisions.md`, `progress.txt`, `spec.md`, `tasks.md`, and `traceability.md`.
 - Changes are recorded in `docs/specs/20260221-athena-localized-templates` and `docs/progress.txt` with traceable IDs.
+
+## D-20260414-1327
+
+### Metadata
+- **Date:** 2026-04-14 13:27
+- **Inputs:** CR-20260414-1327
+- **PRD:** Owl of Athena — session start token optimization
+
+### Decision:
+Add `write-memory` command to owl.py. Run it at SessionStart after update-index. It writes `project_athena_active.md` to `~/.claude/projects/<encoded-repo>/memory/` with active feature, goal, and task state. Athena checks memory at step 2 and skips reading athena-index.md and progress.txt when memory is present. Athena calls `write-memory` at end of session (step 6) to keep memory current.
+
+### Rationale:
+Owl already has all needed data at SessionStart (progress.txt, athena-index.md) when prune-done and update-index run. Writing it to Claude Code memory requires zero extra file reads. Athena saves 2 file reads per session (athena-index.md + progress.txt) and gets active context immediately without parsing.
+
+### Alternatives considered:
+- Athena writes memory herself during step 2 (rejected: requires Athena to read files first anyway, no savings).
+- Add a Stop hook for write-memory (rejected: Stop hook adds complexity; end-of-session call from Athena step 6 is sufficient and more explicit).
+- Cache all docs/ files in memory (rejected: docs/ content changes frequently and memory would go stale; only the active-context summary is stable enough to cache).
+
+### Acceptance / test:
+- `./scripts/owl write-memory` creates `~/.claude/projects/-Volumes-T9-code-SKILLS-athena/memory/project_athena_active.md` with correct frontmatter.
+- Running twice with no intervening progress.txt change → second run returns "no update needed".
+- MEMORY.md index updated with entry (no duplicates on re-run).

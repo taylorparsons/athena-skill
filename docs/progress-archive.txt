@@ -1,0 +1,293 @@
+Session: 2026-02-21 12:52
+Agent: Codex CLI
+Model: GPT-5
+Skills: athena
+Feature: 20260221-athena-localized-templates
+Input: CR-20260221-1252
+Decisions: D-20260221-1255
+Spec: docs/specs/20260221-athena-localized-templates/spec.md
+Tasks: docs/specs/20260221-athena-localized-templates/tasks.md
+Goal: Localize ATHENA workflow templates under `skills/athena/` and reference them from `skills/athena/SKILL.md`.
+
+IN PROGRESS
+- (none)
+
+DONE
+- [2026-02-21 12:52] T-001: Created `skills/athena/templates/*` template files from repository template copies. (Implements: FR-001)
+- [2026-02-21 12:52] T-002: Updated `skills/athena/SKILL.md` to load workflow templates from `skills/athena/templates/*` so packaged usage is self-contained. (Implements: FR-001)
+
+NOTES
+- SKILL.md now points requests/decisions/progress/spec/task/traceability lookups at `skills/athena/templates/*` for local packaged execution.
+- Template files were added in `skills/athena/templates/` and include `requests.md`, `decisions.md`, `progress.txt`, `spec.md`, `tasks.md`, and `traceability.md`.
+- Changes were traced to FR-ATHENA-023 in `docs/PRD.md`.
+
+Session: 2026-02-20 17:10
+Agent: Codex CLI
+Model: GPT-5
+Skills: athena
+Feature: 20260220-docs-readability-format
+Input: CR-20260219-1710
+Decisions: D-20260219-1710
+Spec: docs/specs/20260220-docs-readability-format/spec.md
+Tasks: docs/specs/20260220-docs-readability-format/tasks.md
+Goal: Resolve local reader link rendering for PRD numbered references and keep in-reader section navigation.
+
+IN PROGRESS
+- (none)
+
+DONE
+- [2026-02-20 17:10] T-004: Update PRD numbered references to document-relative markdown links and add preview click handling via `/api/open-link` for in-reader navigation and section anchors. (Implements: FR-001)
+
+NOTES
+- Command run: `rg -n '/api/file\?path=' docs/PRD.md` (no API query-string targets remain)
+- Command run: `rg -n '\((requests|decisions|PRD)\.md#' docs/PRD.md | wc -l` (59)
+- Command run: `node --check /Volumes/T9/code/md/app/static/js/app.js`
+- Command run: `curl -s -w '%{http_code}' 'http://localhost:8765/api/file?path=requests.md#cr-20260211-0939'` (200)
+- Command run: `curl -s -w '%{http_code}' 'http://localhost:8765/api/open-link' -X POST -H 'Content-Type: application/json' -d '{"href":"requests.md#cr-20260211-0939"}'` (200)
+- Command run: `curl -s -w '%{http_code}' 'http://localhost:8765/api/open-link' -X POST -H 'Content-Type: application/json' -d '{"href":"/api/file?path=requests.md#cr-20260211-0939"}'` (400; raw path requires client-side normalization)
+- Note: Updated reader behavior requires app-side normalization to convert `/api/file?path=...` links before calling `/api/open-link`.
+
+Session: 2026-02-20 17:07
+Agent: Codex CLI
+Model: GPT-5
+Skills: athena
+Feature: 20260220-docs-readability-format
+Input: CR-20260220-1707
+Decisions: D-20260220-1707
+Spec: docs/specs/20260220-docs-readability-format/spec.md
+Tasks: docs/specs/20260220-docs-readability-format/tasks.md
+Goal: Use reader-compatible traceability targets in PRD links without host-dependent absolute paths.
+
+IN PROGRESS
+- (none)
+
+DONE
+- [2026-02-20 17:07] T-003: Normalized `docs/PRD.md` `/api/file?path=...` targets from absolute filesystem paths to portable file names and preserved all anchors. (Implements: FR-001)
+
+NOTES
+- Command run: `rg -n '/Volumes/T9/code/SKILLS/athena/docs/PRD.md\\?path=|/Volumes/T9/code/SKILLS/athena/docs/' docs/PRD.md` (no absolute path prefixes remain in link targets)
+- Command run: `curl -s -w '%{http_code}' 'http://localhost:8765/api/file?path=requests.md#cr-20260211-0939'` (200)
+- Command run: `curl -s -w '%{http_code}' 'http://localhost:8765/api/file?path=/Volumes/T9/code/SKILLS/athena/docs/requests.md#cr-20260211-0939'` (200)
+- Command run: `curl -s -w '%{http_code}' 'http://localhost:8765/docs/requests.md#cr-20260211-0939'` (404)
+
+Session: 2026-02-19 17:02
+Agent: Codex CLI
+Model: GPT-5
+Skills: athena
+Feature: 20260220-docs-readability-format
+Input: CR-20260219-1702
+Decisions: D-20260219-1702
+Spec: docs/specs/20260220-docs-readability-format/spec.md
+Tasks: docs/specs/20260220-docs-readability-format/tasks.md
+Goal: Ensure PRD link targets use the local preview API route and avoid `/docs/...` 404s.
+
+IN PROGRESS
+- (none)
+
+DONE
+- [2026-02-19 17:02] T-002: Revalidated PRD link target behavior in local preview and confirmed `/api/file?...` links remain route-compatible; `/docs/...` references are not emitted by PRD link targets. (Implements: FR-001)
+
+NOTES
+- Command run: `rg -n '/api/file\\?path=' /Volumes/T9/code/SKILLS/athena/docs/PRD.md` (verified API route prefix on all linked references)
+- Command run: `curl -s -o /tmp/athena-docs-preview.json -w '%{http_code}' 'http://localhost:8765/api/file?path=/Volumes/T9/code/SKILLS/athena/docs/requests.md'` (200)
+- Command run: `curl -s -o /tmp/athena-docs-404.txt -w '%{http_code}' 'http://localhost:8765/docs/requests.md'` (404)
+- Command run: `python3 - <<'PY'
+from pathlib import Path
+text = Path('/Volumes/T9/code/SKILLS/athena/docs/PRD.md').read_text()
+print('/docs/requests.md' not in text and '/docs/decisions.md' not in text and '/docs/PRD.md' not in text)
+PY` (verification: True)
+
+Session: 2026-02-19 17:00
+Agent: Codex CLI
+Model: GPT-5
+Skills: athena
+Feature: 20260220-docs-readability-format
+Input: CR-20260219-1700
+Decisions: D-20260219-1700
+Spec: docs/specs/20260220-docs-readability-format/spec.md
+Tasks: docs/specs/20260220-docs-readability-format/tasks.md
+Goal: Fix PRD link base-path behavior for local markdown viewers.
+
+IN PROGRESS
+- (none)
+
+DONE
+- [2026-02-19 17:00] T-003: Updated `docs/PRD.md` link targets from `docs/...` to `./...` for local relative resolution and avoided duplicate `/docs/` path segments.
+
+NOTES
+- Command run: `perl -pi -e 's#\\(docs/requests\\.md#(./requests.md#g; s#\\(docs/decisions\\.md#(./decisions.md#g; s#\\(docs/PRD\\.md#(./PRD.md#g' docs/PRD.md`
+- Command run: `rg -n 'docs/requests\\.md#|docs/decisions\\.md#|\\(docs/PRD\\.md#' docs/PRD.md` (confirmed all replaced with relative `./...` targets).
+
+Session: 2026-02-19 16:58
+Agent: Codex CLI
+Model: GPT-5
+Skills: athena
+Feature: 20260220-docs-readability-format
+Input: CR-20260219-1658
+Decisions: D-20260219-1658
+Spec: docs/specs/20260220-docs-readability-format/spec.md
+Tasks: docs/specs/20260220-docs-readability-format/tasks.md
+Goal: Make PRD numbered references directly navigable.
+
+IN PROGRESS
+- (none)
+
+DONE
+- [2026-02-19 16:58] T-002: Converted all CR-/D-/FR-/NFR- numbered references in `docs/PRD.md` into document/location links. (Skills: athena)
+
+NOTES
+- Command run: `perl -0pi -e 's\\{\\bCR-(\\d{8}-\\d{4})\\b\\}{[CR-$1](docs/requests.md#cr-$1)}g; ...' docs/PRD.md`
+- Linkified all `CR-`, `D-`, `FR-ATHENA-`, and `NFR-ATHENA-` references to direct in-repo anchors.
+- Updated `docs/requests.md` and `docs/decisions.md` with request/decision artifacts for this change.
+
+Session: 2026-02-20 17:00
+Agent: Codex CLI
+Model: GPT-5
+Skills: athena
+Feature: 20260220-docs-readability-format
+Input: CR-20260219-1638, CR-20260219-1639, CR-20260219-1640, CR-20260219-1641, CR-20260219-1642
+Decisions: D-20260219-1643
+Spec: docs/specs/20260220-docs-readability-format/spec.md
+Tasks: docs/specs/20260220-docs-readability-format/tasks.md
+Goal: Improve markdown readability and scanability in ATHENA documentation artifacts.
+
+IN PROGRESS
+- (none)
+
+DONE
+- [2026-02-20 17:00] T-001: Reformat root docs and spec markdown files with clearer heading hierarchy and bold metadata labels. (Skills: athena)
+
+IN PROGRESS
+- (none)
+
+NEXT
+- (none)
+
+NOTES
+- Commands run:
+  - `rg --files /Volumes/T9/code/SKILLS/athena/docs/specs -g '*.md'` (verified all spec targets exist).
+  - `python3 -c "import pathlib; p=pathlib.Path('/Volumes/T9/code/SKILLS/athena/docs/specs'); print(sum(1 for _ in p.glob('*/spec.md')))"` (counted spec files).
+  - `git -C /Volumes/T9/code/SKILLS/athena status --short` (tracked only docs-related updates from this request).
+  - `sed -n '1,80p' /Volumes/T9/code/SKILLS/athena/docs/specs/20260220-docs-readability-format/spec.md` (verified updated narrative and acceptance wording).
+- Validation: No executable behavior changes; readability-only edits were scoped to markdown formatting for human scanning.
+
+
+Session: 2026-04-13 12:00
+Agent: Kiro CLI
+Model: claude-sonnet-4-6
+Skills: athena
+Feature: 20260413-index-owl-optimization
+Input: CR-20260413-1200
+Decisions: D-20260413-1201
+Spec: docs/INDEX.md, agents/owl-of-athena.md, agents/OWL-IMPLEMENTATION.md
+Goal: Implement INDEX.md and Owl agent for 88% token reduction
+
+IN PROGRESS
+- None (feature complete)
+
+DONE
+- [2026-04-13 15:40] Created docs/INDEX.md (134 lines, tracks 19 features)
+- [2026-04-13 15:41] Created docs/INDEX-TEST-RESULTS.md (validation, 88% savings confirmed)
+- [2026-04-13 16:03] Created agents/owl-of-athena.md (design spec)
+- [2026-04-13 16:09] Fixed code review blockers (SKILL.md updated, token claims corrected)
+- [2026-04-13 16:14] Implemented scripts/owl.py (301 lines, 5 commands)
+- [2026-04-13 16:32] Added Git hooks (pre-commit validation, post-commit auto-update)
+- [2026-04-13 16:36] Updated SKILL.md in repo (not global config)
+- [2026-04-13 16:45] Added progress.txt archival (trim-progress command, 1,072 tokens saved)
+- [2026-04-13 16:47] Updated documentation with trim-progress
+
+NEXT
+- Test in real Athena session
+- Merge to main
+- Add @owl command handler (follow-up)
+
+NOTES
+- Branch: feature/index-based-archival (9 commits)
+- Token savings: INDEX.md (8,400) + progress.txt (1,100) = 9,500 tokens per session
+- Confidence rating: 0.75/1.0 (high confidence)
+- Git hooks working (tested in commits)
+- All changes repo-local (no global config modifications)
+- Superpowers code review completed (2 blockers fixed)
+- Commands tested: update-index, trim-progress, search, retrieve, archive
+
+Files created:
+- docs/INDEX.md
+- docs/INDEX-TEST-RESULTS.md
+- docs/progress-archive.txt
+- agents/owl-of-athena.md
+- agents/OWL-IMPLEMENTATION.md
+- scripts/owl.py
+- scripts/owl
+- scripts/install-hooks.sh
+- scripts/hooks/pre-commit
+- scripts/hooks/post-commit
+
+---
+
+Session: 2026-04-14 11:00
+Agent: Claude Code
+Model: claude-sonnet-4-6
+Skills: athena, superpowers:brainstorming, superpowers:writing-plans, superpowers:subagent-driven-development
+Feature: 20260414-athena-index-rename
+Input: CR-20260414-1100
+Decisions: D-20260414-1100
+Spec: docs/specs/20260414-athena-index-rename/spec.md
+Tasks: docs/specs/20260414-athena-index-rename/tasks.md
+Goal: Rename docs/INDEX.md to docs/athena-index.md across all functional code, hooks, and documentation to prevent filename collisions in mature repos.
+
+IN PROGRESS
+- (none)
+
+DONE
+- [2026-04-14 11:30] T-001: Renamed docs/INDEX.md to docs/athena-index.md. (Implements: FR-001)
+- [2026-04-14 11:30] T-002: Updated scripts/owl.py line 19 constant to athena-index.md. (Implements: FR-001)
+- [2026-04-14 11:35] T-003: Updated scripts/hooks/pre-commit INDEX_FILE, paths, messages. (Implements: FR-002)
+- [2026-04-14 11:40] T-004: Updated scripts/hooks/post-commit git diff/add paths and messages. (Implements: FR-002)
+- [2026-04-14 11:45] T-005: Updated scripts/install-hooks.sh output messages. (Implements: FR-003)
+- [2026-04-14 11:45] T-006: Updated scripts/patch-claude-settings.py CLAUDE.md trigger strings. (Implements: FR-003)
+- [2026-04-14 12:00] T-007: Updated SKILL.md and skills/athena/SKILL.md load instruction references. (Implements: FR-003)
+- [2026-04-14 12:00] T-008: Updated agents/owl-of-athena.md and .claude/agents/owl-of-athena.md references. (Implements: FR-003)
+- [2026-04-14 12:00] T-009: Updated agents/OWL-IMPLEMENTATION.md references. (Implements: FR-003)
+- [2026-04-14 12:00] T-010: Updated docs/INDEX-TEST-RESULTS.md references. (Implements: FR-003)
+- [2026-04-14 12:00] T-011: Updated README.md references and added single-prompt fast path to bootstrap section. (Implements: FR-003, FR-006)
+- [2026-04-14 12:00] T-012: Updated docs/progress.txt active session references. (Implements: FR-005)
+- [2026-04-14 12:00] T-013: Committed all changes with traceability pointers. (Implements: FR-001, FR-002, FR-003)
+
+NEXT
+- (none)
+
+NOTES
+- Branch: feature/index-based-archival
+- Pre-commit hook confirmed: ✅ Owl: athena-index.md in sync (20 features)
+- Synced ~/.claude/agents/owl-of-athena.md and ~/.claude/skills/athena/SKILL.md to match repo
+- Design rationale: athena-index.md prevents collision with projects that have their own index.md (e.g. agentic-browser/docs/index.md)
+
+---
+
+
+Feature: test-archive-fix
+Goal: Synthetic test for archive path bug fix.
+
+IN PROGRESS
+- (none)
+
+NEXT
+- (none)
+
+NOTES
+- This block is used for testing _archive_progress_entries and prune_done.
+
+
+Session: 2026-04-14 14:01
+Agent: Claude Code
+Feature: test-archive-fix
+Goal: Second session block to test prune-done archiving.
+
+IN PROGRESS
+- (none)
+
+NEXT
+- (none)
+
+NOTES
+- Testing prune-done archives to docs/progress-archive.txt before removing.
