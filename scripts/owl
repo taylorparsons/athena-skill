@@ -1,21 +1,33 @@
 #!/bin/bash
 # owl - Athena archive management helper
-# Delegates to ~/.claude/skills/athena/scripts/owl.py when available.
-# Falls back to a minimal bash write-memory for environments without the skill.
+# Runtime-agnostic: works with Codex (local owl.py), Claude Code (global skill),
+# or any environment where CODEX_HOME points to an installed Athena skill.
+# Falls back to a minimal bash write-memory when owl.py is unavailable.
 #
 # Commands: prune-done, update-index, write-memory, archive, retrieve, search, trim-progress
 
 set -e
 
 REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
-SKILL_OWL="$HOME/.claude/skills/athena/scripts/owl.py"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Primary path: delegate everything to the global owl.py
-if [ -f "$SKILL_OWL" ]; then
-    exec python3 "$SKILL_OWL" --repo "$REPO_ROOT" "$@"
+# ── owl.py detection (priority order) ────────────────────────────────────────
+# 1. Local bundle: scripts/owl.py in this project (Codex pattern)
+# 2. Claude Code installed skill: ~/.claude/skills/athena/scripts/owl.py
+# 3. Codex installed skill: $CODEX_HOME/skills/athena/scripts/owl.py
+LOCAL_OWL="$SCRIPT_DIR/owl.py"
+CLAUDE_OWL="$HOME/.claude/skills/athena/scripts/owl.py"
+CODEX_OWL="${CODEX_HOME:-__none__}/skills/athena/scripts/owl.py"
+
+if [ -f "$LOCAL_OWL" ]; then
+    exec python3 "$LOCAL_OWL" --repo "$REPO_ROOT" "$@"
+elif [ -f "$CLAUDE_OWL" ]; then
+    exec python3 "$CLAUDE_OWL" --repo "$REPO_ROOT" "$@"
+elif [ -n "$CODEX_HOME" ] && [ -f "$CODEX_OWL" ]; then
+    exec python3 "$CODEX_OWL" --repo "$REPO_ROOT" "$@"
 fi
 
-# ── Fallback (skill not installed) ───────────────────────────────────────────
+# ── Fallback (owl.py not found in any location) ───────────────────────────────
 # Only write-memory is implemented here. prune-done and update-index require
 # owl.py and will warn instead of silently doing nothing.
 
@@ -85,12 +97,12 @@ case "${1:-write-memory}" in
     write_memory
     ;;
   prune-done|update-index)
-    echo "⚠️  owl.py not found at $SKILL_OWL — install the Athena skill to enable $1" >&2
+    echo "⚠️  owl.py not found — install the Athena skill (scripts/owl.py, ~/.claude/skills/athena, or \$CODEX_HOME/skills/athena) to enable $1" >&2
     exit 0
     ;;
   *)
     echo "Usage: owl {write-memory|prune-done|update-index|archive|retrieve|search}" >&2
-    echo "Note: install ~/.claude/skills/athena to enable all commands" >&2
+    echo "Note: install the Athena skill to enable all commands" >&2
     exit 1
     ;;
 esac
