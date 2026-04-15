@@ -1,3 +1,33 @@
-Session: 2026-04-14 14:00
+Session: 2026-04-14 19:00
 Agent: Claude Code
 Model: claude-sonnet-4-6
+Skills: athena
+
+## DONE
+
+- T-001: Create scripts/sweep-projects.py weekly sweeper (Skills: athena)
+  - 8 check functions: missing index, stale index, large progress, large archive,
+    unarchived done specs, large files, binary files, log files without archive sections
+  - --dry-run, --fix (safe auto-fixes: prune-done, update-index, write-memory), --verbose, --sync
+  - Tee stdout to ~/.claude/logs/athena-sweep.log
+  - Scheduled via CronCreate: 1:57 AM Monday (job 382f1074, 7-day expiry)
+  - Synced to ~/.claude/skills/athena/scripts/sweep-projects.py
+  - Completed: 2026-04-14 19:41
+
+- T-001: Create scripts/migrate-all-projects.py (Skills: athena)
+  - Scans base dirs for docs/requests.md to find Athena projects
+  - Checks: scripts/owl, .claude/settings.json hooks, .claude/agents/owl-of-athena.md
+  - --dry-run mode, --verbose mode
+  - Non-destructive settings.json merge (preserves existing keys)
+  - Excludes Athena skill repo and all its subdirectories
+  - Smoke-tests owl write-memory after migration
+  - Completed: 2026-04-14 16:05
+
+## NOTES
+
+- CR-20260414-1700: user requested weekly token sweeper
+- CR-20260414-1600: user requested migration script
+- 31 real Athena projects found in /Volumes/T9/code in dry-run test
+- sweep-projects.py at: scripts/sweep-projects.py
+- migrate-all-projects.py at: scripts/migrate-all-projects.py
+- OS crontab for persistent scheduling: 57 1 * * 1 python3 ~/.claude/skills/athena/scripts/sweep-projects.py --fix >> ~/.claude/logs/athena-sweep.log 2>&1

@@ -1,5 +1,23 @@
 # Customer Requests (append-only)
 
+## CR-20260414-1700
+
+### Metadata
+- **Date:** 2026-04-14 17:00
+- **Source:** chat
+
+### Request (verbatim):
+create a plan for a sweeper agent to make or another functionality that looks for claude projects that are using too many tokens due to large static files in the docs/ folder or other cases that could be optimzed. Have this run once a week before 4 AM Pacific time
+
+## CR-20260414-1600
+
+### Metadata
+- **Date:** 2026-04-14 16:00
+- **Source:** chat
+
+### Request (verbatim):
+can you create a script to find all claude project and migrate them to the latest version of athena with owl agent ?
+
 ## CR-20260413-1200
 
 ### Metadata
