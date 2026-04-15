@@ -1,3 +1,20 @@
+Session: 2026-04-15 09:00
+Agent: Claude Code
+Model: claude-sonnet-4-6
+Skills: athena
+
+## DONE
+
+- T-001: Update VERSION to 2.0.0 (Skills: athena) — Completed: 2026-04-15 09:00
+- T-002: Add v2.0.0 section to CHANGELOG.md (Skills: athena) — Completed: 2026-04-15 09:00
+
+## NOTES
+
+- CR-20260415-0900: version bump 1.2.1 → 2.0.0
+- Covers: Owl agent, athena-index.md, memory bridge, sweeper, fleet migration
+
+---
+
 Session: 2026-04-14 19:00
 Agent: Claude Code
 Model: claude-sonnet-4-6

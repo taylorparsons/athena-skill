@@ -1,5 +1,14 @@
 # Customer Requests (append-only)
 
+## CR-20260415-0900
+
+### Metadata
+- **Date:** 2026-04-15 09:00
+- **Source:** chat
+
+### Request (verbatim):
+update the version to 2.0.0
+
 ## CR-20260414-1945
 
 ### Metadata

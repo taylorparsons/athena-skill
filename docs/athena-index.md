@@ -1,7 +1,7 @@
 # Athena Feature Index
 
 **Purpose**: Lightweight index to reduce token overhead by loading only active features.  
-**Last updated**: 2026-04-14
+**Last updated**: 2026-04-15
 
 ## How to Use This Index
 
@@ -124,21 +124,26 @@
 - **Spec**: docs/specs/20260414-owl-memory-bridge/spec.md
 - **Summary**: 
 
+### 20260415-version-bump-2-0-0
+- **Status**: Done
+- **Spec**: docs/specs/20260415-version-bump-2-0-0/spec.md
+- **Summary**: 
+
 ---
 
 ## Token Optimization
 
 **Without athena-index.md**:
-- Load all 21 specs = ~10,500 tokens
+- Load all 22 specs = ~11,000 tokens
 
 **With athena-index.md**:
 - Load athena-index.md only = ~1100 tokens
 - Load 0 active specs = ~0 tokens
 - **Total**: ~1100 tokens
-- **Savings**: ~89% reduction
+- **Savings**: ~90% reduction
 
 **Usage Pattern**:
 1. Athena loads athena-index.md first
 2. Identifies active features (currently: 0)
-3. Skips 21 archived features
+3. Skips 22 archived features
 4. If user asks about archived feature, load on-demand
