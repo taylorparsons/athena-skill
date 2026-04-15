@@ -21,15 +21,20 @@ ATHENA creates a **complete audit trail from customer request to shipped code**:
 
 ## Installation
 
-There are two things to install: the **ATHENA skill** (the loop instructions Claude follows) and **Owl of Athena** (the Claude Code agent and hooks that manage your archive). Install both for the full experience.
+There are two things to install: the **ATHENA skill** (the loop instructions your coding agent follows) and **Owl of Athena** (the Claude Code agent and hooks that manage your archive). Install both for the full experience.
 
 ### Step 1 — Install the ATHENA Skill
 
 **Codex:**
 
 ```bash
-$skill-installer https://github.com/taylorparsons/athena-skill/
+python3 "$CODEX_HOME/skills/.system/skill-installer/scripts/install-skill-from-github.py" \
+  --repo taylorparsons/athena-skill \
+  --path skills/athena \
+  --name athena
 ```
+
+This installs only the packaged `skills/athena` target and avoids copying the whole repository. Restart Codex after installing so it can discover the new skill.
 
 **Claude Code:**
 
@@ -41,7 +46,9 @@ Install the athena skill from https://github.com/taylorparsons/athena-skill — 
 
 Claude will write `~/.claude/skills/athena/` including `SKILL.md`, `templates/`, `scripts/`, and `core/`.
 
-**Verify:** `~/.claude/skills/athena/SKILL.md` exists, or run `/skills` to confirm `athena` is listed.
+**Verify Codex:** `$CODEX_HOME/skills/athena/SKILL.md` exists after install.
+
+**Verify Claude Code:** `~/.claude/skills/athena/SKILL.md` exists, or run `/skills` to confirm `athena` is listed.
 
 ---
 
