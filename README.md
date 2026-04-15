@@ -237,7 +237,7 @@ Open `~/.claude/settings.json` and merge in the `hooks` block below. If you alre
         "hooks": [
           {
             "type": "command",
-            "command": "REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null) && [ -f \"$REPO_ROOT/scripts/owl\" ] && cd \"$REPO_ROOT\" && ./scripts/owl prune-done && ./scripts/owl update-index && ./scripts/owl write-memory; true"
+            "command": "cd \"$(git rev-parse --show-toplevel)\" && ./scripts/owl prune-done | jq -r '.message // .' && ./scripts/owl update-index | jq -r '.message // .' && ./scripts/owl write-memory | jq -r '.message // .'; true"
           }
         ]
       }
@@ -248,7 +248,7 @@ Open `~/.claude/settings.json` and merge in the `hooks` block below. If you alre
         "hooks": [
           {
             "type": "command",
-            "command": "REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null) && [ -f \"$REPO_ROOT/scripts/owl\" ] && cd \"$REPO_ROOT\" && ./scripts/owl prune-done && ./scripts/owl update-index; true"
+            "command": "cd \"$(git rev-parse --show-toplevel)\" && ./scripts/owl prune-done | jq -r '.message // .' && ./scripts/owl update-index | jq -r '.message // .'; true"
           }
         ]
       }
@@ -262,9 +262,18 @@ Both hooks are conditional — they check for `scripts/owl` before running and a
 **`scripts/owl` requirement:** Each ATHENA project must have a `scripts/owl` script. This script handles:
 - `prune-done` — removes closed feature sessions from `progress.txt`
 - `update-index` — regenerates `athena-index.md` from current spec status
-- `write-memory` — extracts active docs (decisions, requests, progress) into memory files for single-session read (new in Apr 2026)
+- `write-memory` — extracts active docs (decisions, requests, progress) into memory files for single-session read
 
-If the script is missing, copy it from an existing ATHENA project or use the fast-path prompt below to scaffold it.
+The wrapper is **runtime-agnostic** — it detects owl.py in this priority order:
+1. `scripts/owl.py` in the project (Codex pattern — bundled locally)
+2. `~/.claude/skills/athena/scripts/owl.py` (Claude Code installed skill)
+3. `$CODEX_HOME/skills/athena/scripts/owl.py` (Codex installed skill)
+4. Bash fallback (`write-memory` only)
+
+Install it in any project from the Athena skill root:
+```bash
+bash ~/.claude/skills/athena/scripts/install-owl.sh
+```
 
 > **Already installed?** If you set up Owl before April 2026, your `SessionStart` hook may use the old `type: "agent"` format which is not supported and will cause a hook error on session start. Run the patch script to fix it:
 > ```bash
@@ -338,6 +347,51 @@ Setup ATHENA docs in this project from https://github.com/taylorparsons/athena-s
 
 Claude will create the full scaffold including `athena-index.md`. Then run `./scripts/install-hooks.sh` to activate the git hooks.
 
+---
+
+## Fleet Management
+
+Two scripts manage Athena across all projects on a machine.
+
+### `migrate-all-projects.py` — Migrate all projects at once
+
+Scans for every Athena project (any directory with `docs/requests.md`) and ensures each has the current Owl setup: `scripts/owl` wrapper, `.claude/settings.json` hooks, and `.claude/agents/owl-of-athena.md`.
+
+```bash
+# Dry-run: see what would change
+python3 ~/.claude/skills/athena/scripts/migrate-all-projects.py --dry-run
+
+# Apply migrations
+python3 ~/.claude/skills/athena/scripts/migrate-all-projects.py
+```
+
+### `sweep-projects.py` — Weekly token-optimization sweep
+
+Scans all projects for token-waste patterns and optionally auto-fixes safe issues.
+
+```bash
+# Report only
+python3 ~/.claude/skills/athena/scripts/sweep-projects.py --dry-run
+
+# Auto-fix safe issues (prune-done, update-index)
+python3 ~/.claude/skills/athena/scripts/sweep-projects.py --fix
+```
+
+**What it checks:**
+- `athena-index.md` missing or stale (> 7 days)
+- `progress.txt` > 200 lines (recommend `prune-done`)
+- Done specs not yet archived in `athena-index.md`
+- Files in `docs/` > 100 KB or binary assets
+- `requests.md`/`decisions.md` > 150 lines without an `## Archive` section
+
+Output is logged to `~/.claude/logs/athena-sweep.log`. Schedule weekly via crontab:
+
+```
+57 1 * * 1 python3 ~/.claude/skills/athena/scripts/sweep-projects.py --fix >> ~/.claude/logs/athena-sweep.log 2>&1
+```
+
+---
+
 ## Install Target
 
 - `skills/athena/`: canonical full `athena` skill for Codex/Claude Code
@@ -358,7 +412,7 @@ Claude will create the full scaffold including `athena-index.md`. Then run `./sc
 - `core/athena-framework.md`: canonical, agent-neutral ATHENA loop
 - `adapters/`: framework adapter source materials
 - `templates/`: traceability templates
-- `scripts/`: helper automation (`commit_with_traceability.py`, `bootstrap_git_audit.py`, `print_resume_prompt.py`)
+- `scripts/`: helper automation (`owl.py`, `install-owl.sh`, `install-hooks.sh`, `migrate-all-projects.py`, `sweep-projects.py`, `commit_with_traceability.py`, `bootstrap_git_audit.py`, `print_resume_prompt.py`)
 - `VERSION`: source-of-truth framework version (SemVer)
 - `docs/`: this repo's own ATHENA artifacts and examples (walkthrough examples in `docs/examples/`)
 
@@ -377,8 +431,11 @@ Claude will create the full scaffold including `athena-index.md`. Then run `./sc
 | `docs/athena-index.md` | Lightweight feature index (~1,100 tokens) — agents load this instead of all specs |
 | `.claude/agents/owl-of-athena.md` | Owl sub-agent definition (Claude Code) — copy to `~/.claude/agents/` |
 | `.claude/settings.json` | SessionStart + Stop hooks — Haiku agent runs before Athena loads, shell cleanup on exit |
-| `scripts/owl.py` | Owl operations: archive, retrieve, search, update-index, prune-done |
+| `scripts/owl.py` | Owl operations: archive, retrieve, search, update-index, prune-done, write-memory |
+| `scripts/install-owl.sh` | Installs `scripts/owl` delegation wrapper into any Athena project |
 | `scripts/install-hooks.sh` | Installs pre-commit and post-commit git hooks |
+| `scripts/migrate-all-projects.py` | Scans all Athena projects on this machine and migrates them to the current Owl setup |
+| `scripts/sweep-projects.py` | Weekly token-optimization sweeper — flags large files, stale index, unarchived specs across all projects |
 | `templates/` | Ready-to-use templates for specs, tasks, requests, decisions, progress |
 | `scripts/` | Helper utilities (`commit_with_traceability.py`, `bootstrap_git_audit.py`, etc.) |
 | `adapters/claude/` | Claude-specific guidance (`COMMANDS.md`, `CLAUDE_PROMPT.md`) |
