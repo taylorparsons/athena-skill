@@ -689,3 +689,25 @@ Owl already has all needed data at SessionStart (progress.txt, athena-index.md) 
 - `./scripts/owl write-memory` creates `~/.claude/projects/-Volumes-T9-code-SKILLS-athena/memory/project_athena_active.md` with correct frontmatter.
 - Running twice with no intervening progress.txt change → second run returns "no update needed".
 - MEMORY.md index updated with entry (no duplicates on re-run).
+
+## D-20260415-1221
+
+### Metadata
+- **Date:** 2026-04-15 12:21
+- **Inputs:** CR-20260415-1221
+- **PRD:** README-only Owl installer correction
+
+### Decision:
+Supersede the earlier Option A packaging direction for Phase 1. Treat `install-owl.sh` as root repo setup tooling, not packaged skill runtime, and update README guidance to use `/path/to/athena-skill/scripts/install-owl.sh` from the target ATHENA project root.
+
+### Rationale:
+The installer is a one-time operational setup helper that writes project-local `scripts/owl` and `.claude/settings.json`; it is not required for the `skills/athena` agent runtime. README should not imply that a skill-only install includes operational setup tooling.
+
+### Alternatives considered:
+- Package `install-owl.sh` inside `skills/athena/scripts/` (rejected for Phase 1: broader operational tooling packaging policy should be handled separately).
+- Clean up untracked rejected Option A artifacts now (rejected: Phase 1 is README-only and explicitly avoids deletion).
+
+### Acceptance / test:
+- README no longer points `install-owl.sh` setup to `~/.claude/skills/athena/scripts/install-owl.sh`.
+- README says setup requires access to a full `athena-skill` checkout and runs that checkout's script from the target project root.
+- `CHANGELOG.md`, migration scripts, sweeper scripts, packaged skill scripts, hook installers, and validation rules are not changed by this Phase 1 correction.

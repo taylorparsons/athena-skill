@@ -693,3 +693,17 @@ yes spec that out using athena in this athena project. Ideally Owl would read th
 - Context: discussion of whether Athena or Owl writes to Claude Code auto-memory (~/.claude/projects/.../memory/).
 - Neither currently does. Gap identified: Athena re-reads 6-7 docs/ files every session; Owl already has the data at SessionStart.
 - Proposed: new `write-memory` command in owl.py, called at SessionStart after update-index, writes project_athena_active.md to Claude Code memory dir.
+
+## CR-20260415-1221
+
+### Metadata
+- **Date:** 2026-04-15 12:21
+- **Source:** chat
+
+### Request (verbatim):
+Implement the plan.
+
+### Notes
+- Implement the finalized Phase 1 README-only `install-owl.sh` correction.
+- Do not update `CHANGELOG.md`, migration scripts, sweeper scripts, packaged skill scripts, hook installers, or validation rules in this phase.
+- Do not delete `skills/athena/scripts/install-owl.sh`; report it as a rejected Option A artifact for separate cleanup.

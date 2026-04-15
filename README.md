@@ -111,9 +111,11 @@ The wrapper is **runtime-agnostic** — it detects owl.py in this priority order
 3. `$CODEX_HOME/skills/athena/scripts/owl.py` (Codex installed skill)
 4. Bash fallback (`write-memory` only)
 
-Install it in any project from the Athena skill root:
+The installer is root repo setup tooling, not packaged skill runtime. It requires access to a full `athena-skill` checkout where root `scripts/install-owl.sh` exists. When setting up another project, run that checkout's script from the target ATHENA project root.
+
+Install it in a target ATHENA project from that project's root:
 ```bash
-bash ~/.claude/skills/athena/scripts/install-owl.sh
+bash /path/to/athena-skill/scripts/install-owl.sh
 ```
 
 > **Already installed?** If you set up Owl before April 2026, your `SessionStart` hook may use the old `type: "agent"` format which is not supported and will cause a hook error on session start. Run the patch script to fix it:
@@ -316,13 +318,13 @@ flowchart LR
 **Fast path — paste this into Claude Code:**
 
 ```
-Migrate this project to the current Athena version: run bash ~/.claude/skills/athena/scripts/install-owl.sh, then ./scripts/owl update-index, ./scripts/owl prune-done, and commit the results.
+Migrate this project to the current Athena version: from this project's root, run bash /path/to/athena-skill/scripts/install-owl.sh, then ./scripts/owl update-index, ./scripts/owl prune-done, and commit the results.
 ```
 
 **Manual path:**
 
 1. Pull this branch or merge to your main branch.
-2. Run `bash ~/.claude/skills/athena/scripts/install-owl.sh` from the project root. This installs `scripts/owl` as a delegation wrapper that routes all commands (`prune-done`, `update-index`, `write-memory`, etc.) to the authoritative `owl.py` in the Athena skill. If you already have a `scripts/owl` that was a no-op stub, this replaces it with the real implementation.
+2. From the project root, run `bash /path/to/athena-skill/scripts/install-owl.sh` using a full `athena-skill` checkout. This installs `scripts/owl` as a delegation wrapper that routes all commands (`prune-done`, `update-index`, `write-memory`, etc.) to the authoritative `owl.py` in the Athena skill. If you already have a `scripts/owl` that was a no-op stub, this replaces it with the real implementation.
 3. Run `./scripts/owl update-index` once. This reads your existing `docs/specs/` and generates `docs/athena-index.md`. It checks `tasks.md` first for status — if a feature has no items under NEXT or IN PROGRESS, it marks it Done.
 4. Run `./scripts/install-hooks.sh` to install the pre-commit and post-commit hooks.
 5. Optionally run `./scripts/owl prune-done` to immediately clean closed feature sessions from `progress.txt`. Skip this if you want to review `progress.txt` manually first.

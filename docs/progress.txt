@@ -1,3 +1,25 @@
+Session: 2026-04-15 12:21
+Agent: Codex CLI
+Model: GPT-5
+Skills: athena, executing-plans
+
+## DONE
+
+- T-001: Implement Phase 1 README-only `install-owl.sh` correction (Skills: athena, executing-plans) — Completed: 2026-04-15 12:21
+
+## NOTES
+
+- CR-20260415-1221: implement finalized Phase 1 plan.
+- D-20260415-1221 supersedes earlier Option A packaging direction for Phase 1.
+- Changed README setup guidance to use `/path/to/athena-skill/scripts/install-owl.sh` from the target project root.
+- Reverted the install-target validator's prior Option A requirement so validation rules are unchanged by this phase.
+- Did not change `CHANGELOG.md`, migration scripts, sweeper scripts, packaged skill scripts, or hook installers.
+- Did not delete `skills/athena/scripts/install-owl.sh`; it remains an untracked rejected Option A artifact for separate cleanup.
+- Added correct Phase 1 spec/tasks under `docs/specs/20260415-install-owl-root-readme/`.
+- Left `docs/specs/20260415-owl-installer-packaging/` untracked as a rejected Option A artifact for separate cleanup.
+
+---
+
 Session: 2026-04-15 09:00
 Agent: Claude Code
 Model: claude-sonnet-4-6
