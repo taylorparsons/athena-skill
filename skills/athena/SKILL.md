@@ -123,7 +123,7 @@ If memory is absent (no `Athena Active Context` entry):
 
 ## Owl of Athena — Archive Management
 
-Owl is a Claude Code sub-agent (`.claude/agents/owl-of-athena.md`) that handles all archive and housekeeping operations. Use the Agent tool to dispatch to it — do not load archived specs directly.
+Owl is packaged at `skills/athena/agents/owl-of-athena.md` and may also be installed as `.claude/agents/owl-of-athena.md` in Claude Code projects. Use the agent or sub-agent tool to dispatch to it — do not load archived specs directly.
 
 **Dispatch to Owl in these situations:**
 
@@ -139,7 +139,7 @@ Owl is a Claude Code sub-agent (`.claude/agents/owl-of-athena.md`) that handles 
 2. `spec.md` — `Status: Done`
 3. `PRD.md` — feature appears as shipped/complete
 
-When all three pass, dispatch `"Archive feature <feature-id>"` to Owl. The SessionStart hook runs `prune-done` at session open to remove closed feature history from `progress.txt`.
+When all three pass, dispatch `"Archive feature <feature-id>"` to Owl. In Claude Code, the SessionStart hook runs `prune-done` at session open to remove closed feature history from `progress.txt`. In Codex, dispatch Owl with a single bounded instruction such as `"Run prune-done and update-index"` and consume its summary result.
 
 Summarize the current goal in one sentence before making changes.
 

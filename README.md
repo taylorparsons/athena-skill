@@ -21,11 +21,18 @@ ATHENA creates a **complete audit trail from customer request to shipped code**:
 
 ## Installation
 
-There are two things to install: the **ATHENA skill** (the loop instructions your coding agent follows) and **Owl of Athena** (the Claude Code agent and hooks that manage your archive). Install both for the full experience.
+Choose the path that matches your environment:
+
+| Environment | What to install | Stop after |
+|---|---|---|
+| Codex | Install the packaged `athena` skill | Step 1 |
+| Claude Code | Install the packaged `athena` skill, then install Owl of Athena for archive management | Step 2 |
+
+The **ATHENA skill** is the core loop. **Owl of Athena** is optional for Codex and only has a full documented setup flow for Claude Code in this README.
 
 ### Step 1 — Install the ATHENA Skill
 
-**Codex:**
+#### Codex quick start
 
 ```bash
 python3 "$CODEX_HOME/skills/.system/skill-installer/scripts/install-skill-from-github.py" \
@@ -34,9 +41,14 @@ python3 "$CODEX_HOME/skills/.system/skill-installer/scripts/install-skill-from-g
   --name athena
 ```
 
-This installs only the packaged `skills/athena` target and avoids copying the whole repository. Restart Codex after installing so it can discover the new skill.
+This installs only the packaged `skills/athena` target and avoids copying the whole repository.
 
-**Claude Code:**
+After install:
+- Restart Codex so it can discover the new skill.
+- Verify `$CODEX_HOME/skills/athena/SKILL.md` exists.
+- Codex users can stop here unless they are intentionally setting up additional Owl tooling in a project by hand.
+
+#### Claude Code quick start
 
 In an active Claude Code session, paste this prompt:
 
@@ -46,17 +58,21 @@ Install the athena skill from https://github.com/taylorparsons/athena-skill — 
 
 Claude will write `~/.claude/skills/athena/` including `SKILL.md`, `templates/`, `scripts/`, and `core/`.
 
-**Verify Codex:** `$CODEX_HOME/skills/athena/SKILL.md` exists after install.
-
-**Verify Claude Code:** `~/.claude/skills/athena/SKILL.md` exists, or run `/skills` to confirm `athena` is listed.
+After install:
+- Verify `~/.claude/skills/athena/SKILL.md` exists.
+- Or run `/skills` in Claude Code and confirm `athena` is listed.
 
 ---
 
 ### Step 2 — Install Owl of Athena (Claude Code only)
 
+Skip this entire step if you use Codex and only want the ATHENA skill.
+
 Owl requires three things: the agent file, the global hooks, and the git hooks on each project.
 
 #### 2a. Copy the agent file
+
+From a full `athena-skill` repository checkout, run:
 
 ```bash
 mkdir -p ~/.claude/agents

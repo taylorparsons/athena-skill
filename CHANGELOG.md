@@ -2,6 +2,32 @@
 
 All notable changes to this project are documented in this file.
 
+## v2.0.0.1 - 2026-04-16
+
+## Summary
+
+Patch release on top of **published `v2.0.0`**. This release focuses on install-path clarity, Codex vs. Claude onboarding improvements, and packaged ATHENA wording updates that make Codex Owl dispatch clearer without changing Claude runtime behavior.
+
+## What's Changed
+### Installation and README Clarity
+- Moved installation guidance higher in `README.md` and kept Codex-first ordering easier to scan.
+- Added a clearer environment split in the Installation section:
+  - dedicated **Codex quick start**
+  - dedicated **Claude Code quick start**
+  - explicit note that Owl setup is **Claude Code only**
+- Clarified the Codex packaged-skill install command and verification path.
+- Corrected Owl setup guidance to point at the root-repo installer workflow from a full `athena-skill` checkout.
+
+### Packaged Skill Compatibility
+- Updated the packaged `skills/athena/SKILL.md` Owl section with Codex-safe dispatch wording while preserving the existing Claude memory-first and `write-memory` guidance.
+- Updated the packaged `skills/athena/agents/owl-of-athena.md` wording to be cross-agent friendly without changing the model metadata used by Claude migration flows.
+
+## Verification
+
+- GitHub release page baseline: published release `v2.0.0: Owl of Athena, Fleet Management & Token Optimization`.
+- `VERSION` now reads `2.0.0.1`.
+- Local git tag target for this release: `v2.0.0.1`.
+
 ## v2.0.0 - 2026-04-15
 
 ### Added

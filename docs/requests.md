@@ -1,5 +1,42 @@
 # Customer Requests (append-only)
 
+## CR-20260416-1656
+
+### Metadata
+- **Date:** 2026-04-16 16:56
+- **Source:** chat
+
+### Request (verbatim):
+update the version number to v2.0.0.1 and tag it
+create the summary and what's changed that is published here https://github.com/taylorparsons/athena-skill/releases
+
+---
+
+## CR-20260416-1446
+
+### Metadata
+- **Date:** 2026-04-16 14:46
+- **Source:** chat
+
+### Request (verbatim):
+update the readme.md file for clear install instructions for codex and claude
+
+---
+
+## CR-20260416-1424
+
+### Metadata
+- **Date:** 2026-04-16 14:24
+- **Source:** chat
+
+### Request (verbatim):
+ok based on this working can you safely update the Athena project and not break the claude files ?
+
+### Notes
+- Follow-up approval in the same session: `approve option 1`
+
+---
+
 ## CR-20260415-1115
 
 ### Metadata

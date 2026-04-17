@@ -1,5 +1,100 @@
 # Decisions (append-only)
 
+## D-20260416-1659
+
+### Metadata
+- **Date:** 2026-04-16 16:59
+- **Inputs:** CR-20260416-1656
+- **PRD:** Versioning and release publication summary
+
+### Decision:
+Supersede the earlier release-baseline assumption and treat the published GitHub release baseline as `v2.0.0`, not `v1.2.0`. Keep the requested `v2.0.0.1` version bump, but rewrite the release notes as a patch-level follow-up to the already-published `v2.0.0` release.
+
+### Rationale:
+The user provided the current GitHub release page content showing `v2.0.0: Owl of Athena, Fleet Management & Token Optimization` as the existing published release. That means `v2.0.0.1` should summarize only the follow-up changes after that release rather than repeating the entire `v2.0.0` feature set.
+
+### Alternatives considered:
+- Keep the cumulative `v1.2.0`-based notes (rejected: incorrect published baseline).
+- Revert to `v2.0.0` and overwrite the existing release notes (rejected: conflicts with the explicit request to bump to `v2.0.0.1`).
+
+### Acceptance / test:
+- `CHANGELOG.md` `v2.0.0.1` entry is written as a patch release on top of published `v2.0.0`.
+- ATHENA release spec and progress notes reference `v2.0.0` as the published baseline.
+
+---
+
+## D-20260416-1657
+
+### Metadata
+- **Date:** 2026-04-16 16:57
+- **Inputs:** CR-20260416-1656
+- **PRD:** Versioning and release publication summary
+
+### Decision:
+Treat `v2.0.0.1` as the next release tag for the current repository state without rewriting the existing local `v2.0.0` tag. Write the new `CHANGELOG.md` top entry as cumulative release notes intended for GitHub publication because the latest published release page still shows `v1.2.0` on 2026-04-16.
+
+### Rationale:
+The repository already has a local `v2.0.0` tag, but the GitHub releases page referenced by the user still presents `v1.2.0` as the latest published release. A patch-level `v2.0.0.1` tag preserves local history while providing one clean published summary that covers the post-`v1.2.0` changes now ready to ship.
+
+### Alternatives considered:
+- Reuse or move the existing `v2.0.0` tag (rejected: rewrites tag history and risks ambiguity).
+- Write notes only for the delta from local `v2.0.0` (rejected: does not match the currently published release baseline on GitHub).
+
+### Acceptance / test:
+- `VERSION` reads `2.0.0.1`.
+- `CHANGELOG.md` has a `v2.0.0.1` entry with `Summary` and `What's Changed` suitable for GitHub release publication.
+- Local git tag `v2.0.0.1` exists after the release commit.
+
+---
+
+## D-20260416-1447
+
+### Metadata
+- **Date:** 2026-04-16 14:47
+- **Inputs:** CR-20260416-1446
+- **PRD:** README installation guidance clarity
+
+### Decision:
+Clarify the root `README.md` installation section by splitting the install flow into environment-first quick starts for Codex and Claude Code. Keep the current install mechanisms unchanged, explicitly say Codex only needs the ATHENA skill install, and label Owl setup as Claude Code only.
+
+### Rationale:
+The current README technically contains both installs, but the flow interleaves shared narrative with Claude-only Owl setup. That makes the correct path harder to scan, especially for Codex users who should stop after the packaged skill install.
+
+### Alternatives considered:
+- Rewrite broader Owl and bootstrap sections throughout the README (rejected: unnecessary scope for the request).
+- Change install scripts or Claude hook behavior alongside the docs update (rejected: the request is for clearer instructions, not runtime changes).
+
+### Acceptance / test:
+- README Installation section contains a clear Codex quick start and a clear Claude Code quick start.
+- README explicitly states that Owl setup is Claude Code only and can be skipped for Codex.
+- No install scripts or Claude files change as part of this feature.
+
+---
+
+## D-20260416-1425
+
+### Metadata
+- **Date:** 2026-04-16 14:25
+- **Inputs:** CR-20260416-1424
+- **PRD:** Packaged skill cross-agent compatibility
+
+### Decision:
+Update only the packaged ATHENA surface under `skills/athena/` to carry Codex-compatible Owl dispatch guidance, while leaving `.claude/*`, root README/agent docs, and Claude install or migration scripts unchanged. Merge the working local packaged changes into the source package without regressing the existing Claude memory-bridge guidance or the packaged Owl agent metadata copied into `.claude/agents/`.
+
+### Rationale:
+The local packaged install proved the Codex-facing wording gap, but the source repository's packaged skill is also consumed by Claude installs and migration tooling. A direct overwrite from the local copy would remove Claude memory-first instructions from `skills/athena/SKILL.md` and would change the packaged Owl agent model metadata that migration scripts copy into `.claude/agents/`.
+
+### Alternatives considered:
+- Copy the local packaged files wholesale (rejected: would regress Claude-oriented memory/write-memory guidance in the source package).
+- Expand the change into `.claude/*`, README, install scripts, and migration scripts (rejected: unnecessary risk for this request).
+
+### Acceptance / test:
+- `skills/athena/SKILL.md` includes Codex Owl dispatch guidance without removing the existing Claude memory-bridge flow.
+- `skills/athena/agents/owl-of-athena.md` uses cross-agent wording without changing the packaged model metadata.
+- No `.claude/*`, root README, root agent docs, or install/migration scripts are modified in this pass.
+
+---
+
 ## D-20260414-1100
 
 ### Metadata
