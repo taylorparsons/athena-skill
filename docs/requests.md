@@ -1,5 +1,57 @@
 # Customer Requests (append-only)
 
+## CR-20260603-1258
+
+### Metadata
+- **Date:** 2026-06-03 12:58
+- **Source:** chat
+
+### Request (verbatim):
+create a site for athena
+
+do it
+
+### Notes
+- User approved use of the visual companion during brainstorming.
+- User chose site shape: both, with a landing page plus deeper docs sections.
+- User chose tone: assertive and visionary, like a framework launch page.
+- User chose implementation direction: a real frontend app with navigation and richer interactions.
+- User chose first-screen emphasis: a hybrid hero with why it matters on top and the loop immediately visible below.
+
+---
+
+## CR-20260602-2025
+
+### Metadata
+- **Date:** 2026-06-02 20:25
+- **Source:** chat
+
+### Request (verbatim):
+Create a site that explains what Athens is
+
+Show me the site
+
+Publish the site so I can see it
+
+### Notes
+- Clarification: user confirmed the site should explain `ATHENA` the framework in this repo.
+- Audience choice: new users deciding whether to adopt ATHENA.
+- Homepage job choice: do both explanation and install, but lead with explanation and then move into install.
+- Visual direction choice: bold and distinctive, more like a product launch page.
+
+---
+
+## CR-20260602-1456
+
+### Metadata
+- **Date:** 2026-06-02 14:56
+- **Source:** chat
+
+### Request (verbatim):
+do this  If you want, I can pull the 2 remote commits next.
+
+---
+
 ## CR-20260416-1656
 
 ### Metadata

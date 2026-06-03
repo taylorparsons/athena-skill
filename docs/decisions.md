@@ -1,5 +1,79 @@
 # Decisions (append-only)
 
+## D-20260603-1300
+
+### Metadata
+- **Date:** 2026-06-03 13:00
+- **Inputs:** CR-20260603-1258
+- **PRD:** ATHENA site follow-on redesign
+
+### Decision:
+Treat the existing static `site/` prototype as a completed baseline and define a follow-on design for a richer app-style ATHENA site: a launch-page hero plus deeper docs-oriented sections in a real frontend app structure, with hybrid first-screen framing and strong framework-launch tone.
+
+### Rationale:
+The repository already contains an untracked static prototype and a completed June 2 feature spec for a simple explanatory site. The current request is broader and should be framed as a redesign/expansion rather than overwriting the original intent.
+
+### Alternatives considered:
+- Reuse the static single-page site as-is (rejected: does not match the newly requested app-style structure and deeper docs scope).
+- Skip design and implement immediately (rejected: conflicts with the active brainstorming workflow and increases rework risk).
+
+### Acceptance / test:
+- A new design doc exists under `docs/superpowers/specs/` for the richer ATHENA site.
+- The follow-on ATHENA feature spec/tasks capture the redesign scope.
+- The next step is explicit user review of the written design before implementation planning.
+
+---
+
+## D-20260602-2026
+
+### Metadata
+- **Date:** 2026-06-02 20:26
+- **Inputs:** CR-20260602-2025
+- **PRD:** ATHENA explanatory site
+
+### Decision:
+Create a static site under `site/` with no package-manager dependency, serve it locally with Python's built-in HTTP server, and use a bold product-launch visual direction that explains ATHENA's request-to-shipped-code loop before presenting install paths.
+
+### Rationale:
+The user wants to see the site immediately. A static site keeps the implementation lightweight for this repository, avoids adding a frontend toolchain, and can be published locally from the workspace with one command.
+
+### Alternatives considered:
+- Add a Vite/React app (rejected: unnecessary dependency and setup for a single explanatory page).
+- Only update `README.md` (rejected: user asked to see a site).
+- Make the page primarily install-focused (rejected: user chose explanation first, then install).
+
+### Acceptance / test:
+- `site/index.html`, `site/styles.css`, and `site/app.js` exist.
+- The page explains ATHENA in plain language and shows the CR -> D -> PRD -> Spec -> Task -> Validation loop.
+- The page includes Codex and Claude installation paths.
+- A local HTTP server can serve the site and the browser can render it.
+
+---
+
+## D-20260602-1457
+
+### Metadata
+- **Date:** 2026-06-02 14:57
+- **Inputs:** CR-20260602-1456
+- **PRD:** Local repository sync with origin/main
+
+### Decision:
+Use `git pull --ff-only origin main` for this sync task after recording ATHENA traceability, so the local `main` branch advances only if the remote commits can be applied without creating a merge commit.
+
+### Rationale:
+The user asked to pull the two fetched remote commits into the current checkout. A fast-forward-only pull preserves the linear branch history already present in this repository and avoids introducing a local merge commit for a simple remote sync.
+
+### Alternatives considered:
+- `git pull origin main` with default merge behavior (rejected: could create an unnecessary merge commit).
+- `git merge origin/main` after fetch (rejected: equivalent outcome with less explicit fast-forward protection).
+
+### Acceptance / test:
+- `git pull --ff-only origin main` succeeds.
+- `git status --short --branch` no longer reports `behind`.
+- `git log --oneline --decorate -n 3` includes the fetched remote tip on local `main`.
+
+---
+
 ## D-20260416-1659
 
 ### Metadata

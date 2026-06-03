@@ -1,7 +1,7 @@
 # Athena Feature Index
 
 **Purpose**: Lightweight index to reduce token overhead by loading only active features.  
-**Last updated**: 2026-04-15
+**Last updated**: 2026-06-03
 
 ## How to Use This Index
 
@@ -13,7 +13,10 @@
 
 ## Active Features (Load these during sessions)
 
-*No active features currently. All features are archived.*
+### 20260603-athena-site-app
+- **Status**: Active
+- **Spec**: docs/specs/20260603-athena-site-app/spec.md
+- **Summary**: No summary available
 
 ---
 
@@ -124,26 +127,56 @@
 - **Spec**: docs/specs/20260414-owl-memory-bridge/spec.md
 - **Summary**: 
 
+### 20260415-install-owl-root-readme
+- **Status**: Done
+- **Spec**: docs/specs/20260415-install-owl-root-readme/spec.md
+- **Summary**: No summary available
+
 ### 20260415-version-bump-2-0-0
 - **Status**: Done
 - **Spec**: docs/specs/20260415-version-bump-2-0-0/spec.md
 - **Summary**: 
+
+### 20260416-packaged-codex-surface-sync
+- **Status**: Done
+- **Spec**: docs/specs/20260416-packaged-codex-surface-sync/spec.md
+- **Summary**: No summary available
+
+### 20260416-readme-install-clarity
+- **Status**: Done
+- **Spec**: docs/specs/20260416-readme-install-clarity/spec.md
+- **Summary**: No summary available
+
+### 20260416-release-v2-0-0-1
+- **Status**: Done
+- **Spec**: docs/specs/20260416-release-v2-0-0-1/spec.md
+- **Summary**: No summary available
+
+### 20260602-athena-site
+- **Status**: Done
+- **Spec**: docs/specs/20260602-athena-site/spec.md
+- **Summary**: No summary available
+
+### 20260602-sync-origin-main
+- **Status**: Done
+- **Spec**: docs/specs/20260602-sync-origin-main/spec.md
+- **Summary**: No summary available
 
 ---
 
 ## Token Optimization
 
 **Without athena-index.md**:
-- Load all 22 specs = ~11,000 tokens
+- Load all 29 specs = ~14,000 tokens
 
 **With athena-index.md**:
 - Load athena-index.md only = ~1100 tokens
-- Load 0 active specs = ~0 tokens
-- **Total**: ~1100 tokens
-- **Savings**: ~90% reduction
+- Load 1 active specs = ~300 tokens
+- **Total**: ~1400 tokens
+- **Savings**: ~92% reduction
 
 **Usage Pattern**:
 1. Athena loads athena-index.md first
-2. Identifies active features (currently: 0)
-3. Skips 22 archived features
+2. Identifies active features (currently: 1)
+3. Skips 28 archived features
 4. If user asks about archived feature, load on-demand
