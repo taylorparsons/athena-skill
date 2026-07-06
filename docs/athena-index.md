@@ -162,6 +162,11 @@
 - **Spec**: docs/specs/20260602-sync-origin-main/spec.md
 - **Summary**: No summary available
 
+### 20260705-release-note-v2-1-0
+- **Status**: Done
+- **Spec**: docs/specs/20260705-release-note-v2-1-0/spec.md
+- **Summary**: Publish a release note for ATHENA v2.1.0 that states the token-usage improvement per surface with measured before/after numbers and % reductions, in Taylor style, at docs/releases/v2.1.0.md.
+
 ### 20260705-token-diet
 - **Status**: Done
 - **Spec**: docs/specs/20260705-token-diet/spec.md
@@ -172,7 +177,7 @@
 ## Token Optimization
 
 **Without athena-index.md**:
-- Load all 30 specs = ~14,500 tokens
+- Load all 31 specs = ~15,000 tokens
 
 **With athena-index.md**:
 - Load athena-index.md only = ~1100 tokens
@@ -183,5 +188,5 @@
 **Usage Pattern**:
 1. Athena loads athena-index.md first
 2. Identifies active features (currently: 1)
-3. Skips 29 archived features
+3. Skips 30 archived features
 4. If user asks about archived feature, load on-demand

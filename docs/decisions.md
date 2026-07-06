@@ -949,3 +949,21 @@ Alternatives considered:
 
 Acceptance / test:
 - node --test site/ passes; validate_traceability_links.py passes; SKILL.md <= ~130 lines.
+
+## D-20260705-2123
+Date: 2026-07-05 21:23
+Inputs: CR-20260705-2123
+PRD: Next / backlog
+
+Decision:
+Publish the v2.1.0 token-improvement release note as docs/releases/v2.1.0.md (new docs/releases/ directory), written in Taylor style, with a measured before/after token table and % reductions sourced from the 20260705-token-diet session measurements (chars/4 token approximation, athena-skill repo as the reference project).
+
+Rationale:
+CHANGELOG.md already carries the technical change list; the release note is the shareable announcement. docs/releases/ keeps release communications versioned next to the audit trail; publishing/ is reserved for social posts.
+
+Alternatives considered:
+- GitHub release page only (rejected: requires push, which the user has not requested)
+- Extend CHANGELOG.md (rejected: different audience and format)
+
+Acceptance / test:
+- docs/releases/v2.1.0.md exists, passes scripts/validate_style.py, and states per-surface token numbers with % reductions.

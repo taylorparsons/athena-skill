@@ -812,3 +812,12 @@ I need you do evaluate athena is see if there is a way to cut it's token usage w
 ### Notes
 - Two asks: (1) sync check across repo / GitHub origin / ~/.claude/skills/athena install; (2) token-usage evaluation for Claude Code and Codex flows.
 - Session deliverable is an assessment; no PRD/code changes made pending user direction.
+
+## CR-20260705-2123
+
+### Metadata
+- **Date:** 2026-07-05 21:23
+- **Source:** chat
+
+### Request (verbatim):
+Create a release  note about the improvement using tokens and % reduction

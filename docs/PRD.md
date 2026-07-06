@@ -73,6 +73,7 @@ Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude)
 - FR-ATHENA-031: Add a static, locally served explanatory site under `site/` for new users evaluating ATHENA, with a bold product-launch visual direction, plain-language explanation of the ATHENA loop, and install paths for Codex and Claude Code. (Sources: [CR-20260602-2025](requests.md#cr-20260602-2025); [D-20260602-2026](decisions.md#d-20260602-2026))
 - FR-ATHENA-032: Redesign the ATHENA site as a richer frontend app with a hybrid hero, deeper docs sections for install, loop, architecture, examples, and Owl, plus stronger navigation and interaction patterns than the existing static prototype. (Sources: [CR-20260603-1258](requests.md#cr-20260603-1258); [D-20260603-1300](decisions.md#d-20260603-1300))
 - FR-ATHENA-033: Cut ATHENA per-session token cost by script-gating all KB access through `./scripts/owl` (new commands: context, add-request, add-decision, add-note, show, why, migrate), retiring `docs/progress.txt` in favor of per-feature `tasks.md` + `notes.md`, rewriting SKILL.md to a ≤130-line core with `references/`, and reducing Codex `AGENTS.md` to trigger + stop-gates, with full Claude/Codex parity via scripts. (Sources: CR-20260705-2015; D-20260705-2025, D-20260705-2026, D-20260705-2027, D-20260705-2028)
+- FR-ATHENA-034: Publish a v2.1.0 release note at `docs/releases/v2.1.0.md` stating per-surface token costs before and after the token diet with % reductions and the measurement basis, in Taylor style. (Sources: CR-20260705-2123; D-20260705-2123)
 
 ## Non-functional requirements
 - [NFR-ATHENA-001](PRD.md#L60): Exclude local/generated artifacts from commits via `.gitignore`. (Sources: [CR-20260211-0939](requests.md#cr-20260211-0939), [CR-20260211-1010](requests.md#cr-20260211-1010); [D-20260211-0940](decisions.md#d-20260211-0940), [D-20260211-1012](decisions.md#d-20260211-1012))
@@ -92,6 +93,7 @@ Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude)
 - Shipping imported historical docs from unrelated product repos as canonical artifacts in this share repo. (Sources: [CR-20260211-0939](requests.md#cr-20260211-0939); [D-20260211-0940](decisions.md#d-20260211-0940))
 
 ## Next / backlog
+- Shipped (v2.1.0, CR-20260705-2123): `docs/specs/20260705-release-note-v2-1-0/spec.md`, `docs/specs/20260705-release-note-v2-1-0/tasks.md`, and `docs/releases/v2.1.0.md`.
 - Shipped (v2.1.0, CR-20260705-2015): `docs/specs/20260705-token-diet/spec.md`, `docs/specs/20260705-token-diet/tasks.md`, `scripts/owl.py`, `skills/athena/SKILL.md`, `skills/athena/references/`, and `CHANGELOG.md`.
 - Implemented in: `docs/specs/20260416-release-v2-0-0-1/spec.md`, `docs/specs/20260416-release-v2-0-0-1/tasks.md`, `VERSION`, and `CHANGELOG.md`.
 - Implemented in: `docs/specs/20260602-athena-site/spec.md`, `docs/specs/20260602-athena-site/tasks.md`, `site/`, and local static server verification.
