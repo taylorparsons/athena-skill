@@ -9,3 +9,9 @@ Goal: README accuracy + GitHub releases + push
 - Commands run: README stale-scan clean (progress.txt refs only in migration/legacy contexts); markdown structure preserved
 - Decisions: D-20260706-0652
 - Release bodies: docs/releases/v2.1.0.md (+ A/B table) and docs/releases/v2.2.0.md
+
+## S-20260706-0657
+Skills: athena
+
+- Commit: b6e1491 pushed to origin/main with tags v2.1.0, v2.2.0
+- Releases: https://github.com/taylorparsons/athena-skill/releases/tag/v2.1.0 and /v2.2.0 (Latest)

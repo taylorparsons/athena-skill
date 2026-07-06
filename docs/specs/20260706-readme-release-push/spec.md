@@ -1,6 +1,6 @@
 # Feature Spec: 20260706-readme-release-push
 
-Status: Active
+Status: Done
 Created: 2026-07-06 06:52
 Inputs: CR-20260706-0651
 Decisions: D-20260706-0652
