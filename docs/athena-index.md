@@ -18,6 +18,11 @@
 - **Spec**: docs/specs/20260603-athena-site-app/spec.md
 - **Summary**: No summary available
 
+### 20260706-readme-release-push
+- **Status**: Active
+- **Spec**: docs/specs/20260706-readme-release-push/spec.md
+- **Summary**: Bring README.md up to v2.2.0 reality (script-gated KB, tasks.md/notes.md instead of progress.txt, owl context/migrate, current package contents, retired scripts removed), publish GitHub releases v2.1.
+
 ---
 
 ## Archived Features (Skip unless explicitly requested)
@@ -182,16 +187,16 @@
 ## Token Optimization
 
 **Without athena-index.md**:
-- Load all 32 specs = ~15,500 tokens
+- Load all 33 specs = ~15,500 tokens
 
 **With athena-index.md**:
 - Load athena-index.md only = ~1100 tokens
-- Load 1 active specs = ~300 tokens
-- **Total**: ~1400 tokens
+- Load 2 active specs = ~600 tokens
+- **Total**: ~1700 tokens
 - **Savings**: ~92% reduction
 
 **Usage Pattern**:
 1. Athena loads athena-index.md first
-2. Identifies active features (currently: 1)
+2. Identifies active features (currently: 2)
 3. Skips 31 archived features
 4. If user asks about archived feature, load on-demand

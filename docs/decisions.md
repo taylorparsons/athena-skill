@@ -985,3 +985,20 @@ Alternatives considered:
 
 Acceptance / test:
 - prune-prd unit-tested, idempotent, PRD shrinks with pointers intact; SKILL.md rule present; loose files moved with inventory reported; profile present in config.toml and codex accepts --profile athena.
+
+## D-20260706-0652
+Date: 2026-07-06 06:52
+Inputs: CR-20260706-0651
+PRD: Next / backlog
+
+Decision:
+Release v2.1.0 and v2.2.0 as two separate GitHub releases (tag v2.1.0 at commit 104bd2c, tag v2.2.0 at the README-accuracy commit), with release bodies stating measured per-harness value: Claude -63% end-to-end / -94% fixed overhead, Codex -13.5% end-to-end (delta ~= removed doc-stack). README is updated in place (same structure, corrected content) rather than rewritten; the retired migrate-all-projects.py fleet section is removed; sweep-projects.py stays documented.
+
+Rationale:
+Two releases match the two CHANGELOG entries and published-tag history (v2.0.0.1 is the current latest). Measured numbers come from the recorded A/B experiments (docs/specs/20260705-token-diet/notes.md S-20260705-2153).
+
+Alternatives considered:
+- Single combined v2.2.0 release (rejected: hides the v2.1.0 milestone that carries the architecture change)
+
+Acceptance / test:
+- gh release list shows v2.1.0 and v2.2.0; README greps clean for stale terms; git status clean; origin/main == main.

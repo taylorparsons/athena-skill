@@ -848,3 +848,12 @@ Can you spin up codex and try it
 
 ### Request (verbatim):
 1,2,3 options are approved
+
+## CR-20260706-0651
+
+### Metadata
+- **Date:** 2026-07-06 06:51
+- **Source:** chat
+
+### Request (verbatim):
+Push these changes to remotes make sure the readme.md is accurate and the install / setup is accurate.  The github release notes need to update the value of the changes for both Claude and codex

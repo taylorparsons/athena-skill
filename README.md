@@ -13,9 +13,11 @@ ATHENA creates a **complete audit trail from customer request to shipped code**:
 - **Maintains a living PRD** in `docs/PRD.md` with full traceability
 - **Specs features** in `docs/specs/<FEATURE_ID>/spec.md` with functional requirements (FR-...)
 - **Lists tasks** in `docs/specs/<FEATURE_ID>/tasks.md` linked to requirements (Implements: FR-...)
-- **Tracks execution** in `docs/progress.txt` with validation evidence
+- **Records execution evidence** in `docs/specs/<FEATURE_ID>/notes.md` (commands, outcomes, commit hashes)
 - **Creates traceable Git commits** referencing CR/D/FEATURE_ID/T-... IDs
 - **Enables auditing** via `docs/TRACEABILITY.md` to follow any request through to code
+
+Since v2.1.0 the audit trail is **script-gated**: agents never read the logs. All access goes through the deterministic `./scripts/owl` CLI — `owl context` opens a session in ~220 tokens instead of reading five files, `owl add-request`/`add-decision`/`add-note` append without reading, and `owl show`/`owl why` retrieve exactly one entry or one traceability chain. Measured on this repository, identical feature requests run end-to-end by cold agents cost **63% fewer tokens on Claude Code** and **13.5% fewer on Codex** than the pre-v2.1 layout, with the same audit trail produced.
 
 ---
 
@@ -46,7 +48,8 @@ This installs only the packaged `skills/athena` target and avoids copying the wh
 After install:
 - Restart Codex so it can discover the new skill.
 - Verify `$CODEX_HOME/skills/athena/SKILL.md` exists.
-- Codex users can stop here unless they are intentionally setting up additional Owl tooling in a project by hand.
+- Keep `~/.codex/AGENTS.md` minimal — trigger + stop-gates only (the loop lives in SKILL.md). Recommended block: see `adapters/codex/SKILL.md`.
+- Codex users can stop here. Owl-the-agent is Claude-specific; on Codex the same operations are plain `./scripts/owl` commands.
 
 #### Claude Code quick start
 
@@ -56,7 +59,7 @@ In an active Claude Code session, paste this prompt:
 Install the athena skill from https://github.com/taylorparsons/athena-skill — copy the entire skills/athena/ directory into ~/.claude/skills/athena/
 ```
 
-Claude will write `~/.claude/skills/athena/` including `SKILL.md`, `templates/`, `scripts/`, and `core/`.
+Claude will write `~/.claude/skills/athena/` including `SKILL.md`, `references/`, `templates/`, `scripts/`, `agents/`, and `assets/`.
 
 After install:
 - Verify `~/.claude/skills/athena/SKILL.md` exists.
@@ -116,10 +119,15 @@ Open `~/.claude/settings.json` and merge in the `hooks` block below. If you alre
 
 Both hooks are conditional — they check for `scripts/owl` before running and are safe to install globally. They only activate in repos where Owl is present.
 
-**`scripts/owl` requirement:** Each ATHENA project must have a `scripts/owl` script. This script handles:
-- `prune-done` — removes closed feature sessions from `progress.txt`
+**`scripts/owl` requirement:** Each ATHENA project must have a `scripts/owl` wrapper. It routes to `owl.py`, the KB gateway:
+- `context` — compact session-open block (active feature, goal, task state, recent CR/D IDs, latest request)
+- `add-request` / `add-decision` / `add-note` — append audit entries with generated IDs, no reads
+- `show <ID>` / `why <FR-ID>` — retrieve one entry or one full traceability chain
 - `update-index` — regenerates `athena-index.md` from current spec status
-- `write-memory` — extracts active docs (decisions, requests, progress) into memory files for single-session read
+- `write-memory` — writes the active-context snapshot into Claude Code auto-memory
+- `migrate` — one-time conversion of legacy `progress.txt` repos to per-feature `notes.md`
+- `prune-prd` — archives PRD link ceremony and closed backlog lines
+- `prune-done` — legacy no-op on migrated repos
 
 The wrapper is **runtime-agnostic** — it detects owl.py in this priority order:
 1. `scripts/owl.py` in the project (Codex pattern — bundled locally)
@@ -182,7 +190,7 @@ If your project already has ATHENA docs but no `athena-index.md`, you have two o
 **Fast path — paste this prompt into Claude Code:**
 
 ```
-Bootstrap Owl of Athena in this project. Run ./scripts/owl update-index to generate docs/athena-index.md, run ./scripts/install-hooks.sh to install git hooks, run ./scripts/owl prune-done to clean progress.txt, then commit the results.
+Bootstrap Owl of Athena in this project. Run ./scripts/owl update-index to generate docs/athena-index.md, run ./scripts/install-hooks.sh to install git hooks, run ./scripts/owl migrate if docs/progress.txt exists, then commit the results.
 ```
 
 **Manual path:**
@@ -210,64 +218,49 @@ Claude will create the full scaffold including `athena-index.md`. Then run `./sc
 
 ## Owl of Athena (Claude Code)
 
-Owl is a Claude Code sub-agent that runs alongside ATHENA sessions. It handles archive operations and keeps `progress.txt` lean — so the main agent spends tokens on active work, not history.
+Owl has two halves. **Owl-the-script** (`scripts/owl.py`) is the deterministic KB gateway every session uses — it costs zero tokens. **Owl-the-agent** (a Haiku sub-agent, Claude Code only) is dispatched only for judgment calls: narrative summaries of archived features, history questions that need synthesis.
 
-**What Owl does:**
-- Serves as the archive interface: search, retrieve, and summarize closed features on demand
-- Runs `prune-done` at session end to remove fully-closed feature sessions from `progress.txt`
-- Regenerates `athena-index.md` so the main agent loads only active specs at startup
+**What the Owl gateway does:**
+- Opens sessions: `owl context` prints the active feature, goal, task state, recent CR/D IDs, and the latest request — replacing full reads of five docs files
+- Takes appends: requests, decisions, and session notes are written through the script with generated IDs, never by editing the logs
+- Answers queries: `owl show <ID>` for one entry, `owl why <FR-ID>` for a requirement's full chain (sources → tasks → commits)
+- Maintains derived state: `athena-index.md`, the Claude Code memory snapshot, and PRD pruning
 
-**Token impact** (measured on this project using cl100k_base tokenizer, 19 features):
+**Token impact** (measured 2026-07-05 on this repository — identical feature request, cold agents, full loop end to end, v2.0 layout vs v2.1):
 
-| File | Tokens | Loaded with Owl? |
-|---|---|---|
-| `docs/decisions.md` | 7,250 | Yes |
-| `docs/PRD.md` | 7,002 | Yes |
-| All 19 `spec.md` files | 9,015 | **No — replaced by athena-index.md** |
-| `docs/progress.txt` | 4,412 | Yes (shrinks as features close) |
-| `docs/requests.md` | 3,807 | Yes |
-| `docs/athena-index.md` | 1,601 | Yes |
-| `docs/TRACEABILITY.md` | 180 | Yes |
-| **Total without Owl** | **31,666** | |
-| **Total with Owl** | **24,252** | |
-| **Savings** | **7,414 (23%)** | |
+| Harness | v2.0 layout | v2.1 layout | Reduction |
+|---|---:|---:|---:|
+| Claude Code (Fable) | 161,349 tokens | 59,942 tokens | **−63%** |
+| Codex (gpt-5.5, high reasoning) | 225,195 tokens | 194,730 tokens | **−13.5%** |
 
-The spec savings are real and grow with the project — every additional closed feature adds ~470 tokens to the spec load that Owl skips. The larger opportunity is `decisions.md` and `progress.txt`, which grow unboundedly without pruning. `prune-done` targets `progress.txt` at session end; `decisions.md` and `PRD.md` are append-only by design.
+Fixed session-open overhead (what loads before any real work) dropped ~94%: ~26,700–32,600 tokens → ~1,450–1,660. The harness difference is amplification, not effectiveness — Claude's accounting re-carries context every turn, so removing ~28K of early reads compounds; Codex surfaces the overhead roughly once, and its high-reasoning thinking tokens dominate both arms equally. Savings grow with project age: the old layout re-read append-only logs that only grow; the new layout's cost is flat.
 
 ### How a Session Works
 
 ```mermaid
 sequenceDiagram
     participant U as User
-    participant M as Main Agent (Sonnet)
-    participant I as athena-index.md
-    participant O as Owl Agent (Haiku)
-    participant S as scripts/owl.py
+    participant M as Main Agent
+    participant S as scripts/owl (zero-token gateway)
+    participant O as Owl Agent (Haiku, Claude only)
 
     U->>M: Start session
-    M->>I: Load athena-index.md (1,601 tokens)
-    I-->>M: 0 active features, 19 archived — skip 9,015 tokens of specs
-    Note over M: 24,252 tokens vs 31,666 without Owl (23% reduction)
+    M->>S: ./scripts/owl context
+    S-->>M: Active feature, goal, tasks, recent CR/D IDs (~220 tokens)
+    Note over M: On Claude Code the SessionStart hook pre-writes this into memory
+
+    U->>M: New request
+    M->>S: ./scripts/owl add-request <<'EOF' ... EOF
+    S-->>M: CR-20260706-0651 appended (log never read)
 
     U->>M: "What did we build for LinkedIn?"
     M->>O: dispatch("Search archived features for 'linkedin'")
     O->>S: ./scripts/owl search "linkedin"
-    S-->>O: 2 matches found
-    O-->>M: linkedin-personal-style, linkedin-post-variants
-    M-->>U: Summary (no full spec loaded)
+    O-->>M: Narrative summary (no full spec loaded)
 
-    U->>M: Feature 20260413-index-optimization is done
-    M->>O: dispatch("Archive feature 20260413-index-optimization")
-    O->>S: ./scripts/owl archive 20260413-index-optimization
-    S-->>O: Moved to archived in athena-index.md
-    O-->>M: Done
-
-    U->>M: End session
-    Note over M: Claude Code Stop hook fires automatically
-    M->>S: ./scripts/owl prune-done
-    S-->>M: Closed feature sessions removed from progress.txt
-    M->>S: ./scripts/owl update-index
-    S-->>M: athena-index.md regenerated from current spec status
+    U->>M: Feature is done
+    M->>S: ./scripts/owl archive <feature-id>
+    S-->>M: Moved to archived in athena-index.md
 ```
 
 ### When the Main Agent Dispatches to Owl
@@ -281,72 +274,46 @@ The main agent uses the Agent tool to delegate — it does not load archived spe
 | Feature is fully done (tasks + spec + PRD) | `"Archive feature <feature-id>"` |
 | athena-index.md is out of sync | `"Run update-index"` |
 
-### How Owl Determines a Feature is Fully Closed
+### When is a Feature Done?
 
-Owl checks all three in sequence. All must pass before any session history is pruned.
+Three checks must agree before archiving: `tasks.md` has nothing under NEXT or IN PROGRESS (ground truth for completion), `spec.md` says `Status: Done` (formally closed), and the PRD shows it shipped (not just done in isolation). Then `owl archive <id>` moves it in the index — and because session notes live inside the feature's own spec directory, archiving removes its entire history from every future session at zero cost.
 
-```mermaid
-flowchart TD
-    A([Session ends\nStop hook fires]) --> B[prune-done]
-    B --> C{For each feature\nreferenced in progress.txt}
-    C --> D{"tasks.md\nNo items under NEXT\nor IN PROGRESS?"}
-    D -- No --> K([Keep in progress.txt])
-    D -- Yes --> E{"spec.md\nStatus: Done?"}
-    E -- No --> K
-    E -- Yes --> F{"PRD.md\nFeature marked shipped?"}
-    F -- No --> K
-    F -- Yes --> G([Remove all session blocks\nfor this feature])
-    G --> H[update-index\nRegenerates athena-index.md\nfrom tasks.md status]
-```
+### Session Notes: Per-Feature, Not Global
 
-**Why three checks:** `tasks.md` is ground truth for task completion. `spec.md` confirms the feature was formally closed. `PRD.md` confirms the requirement was shipped — not just done in isolation. All three must agree before history is pruned.
-
-### progress.txt: What Changes
-
-`progress.txt` accumulates normally across sessions for active features. Nothing about how you use it changes. Owl prunes it automatically at session end — only removing sessions for features that are fully closed across all three files.
-
-| State | progress.txt behavior |
-|---|---|
-| Feature active | Accumulates across sessions as normal |
-| Feature done in tasks.md only | Kept — spec and PRD not reconciled yet |
-| Feature done in all three | Removed at next session end |
-| Pruned history | Not archived — it lives in tasks.md (DONE section) |
+Execution evidence lives in `docs/specs/<FEATURE_ID>/notes.md`, appended via `owl add-note` (timestamped blocks with agent, model, skills, goal, commands run, and commit hashes). There is no global execution log to grow or prune — the legacy `docs/progress.txt` is retired. Repos still on it keep working (every owl command falls back automatically) until you run the one-time, lossless `./scripts/owl migrate`.
 
 ---
 
 ## Upgrading Existing ATHENA Projects
 
-If your project was already using ATHENA before this update, follow these steps once after pulling the changes. These instructions apply to the `feature/index-based-archival` branch and later.
+If your project was using ATHENA before v2.1.0, run this once after updating the installed skill:
 
 ```mermaid
 flowchart LR
-    A([Existing project\nno athena-index.md]) --> B[Pull branch /\nupdate SKILL.md]
-    B --> B2["Run install-owl.sh\nto install delegation wrapper"]
-    B2 --> C["Run:\n./scripts/owl update-index"]
-    C --> D[athena-index.md created\nfrom existing specs]
-    D --> E["Run:\n./scripts/install-hooks.sh"]
-    E --> F[Git hooks installed\npre-commit + post-commit]
-    F --> G["Optional:\n./scripts/owl prune-done"]
-    G --> H[Closed feature sessions\nremoved from progress.txt]
-    H --> I([Running normally\nOwl fires on session end])
+    A([Existing project\nwith progress.txt]) --> B[Update installed skill\nto current version]
+    B --> B2["Run install-owl.sh\nto install/refresh scripts/owl"]
+    B2 --> C["Run:\n./scripts/owl migrate"]
+    C --> D["Session blocks move to per-feature\nnotes.md; progress.txt removed"]
+    D --> E["Run:\n./scripts/owl update-index"]
+    E --> F["Run:\n./scripts/install-hooks.sh"]
+    F --> I([Running normally\nowl context opens each session])
 ```
 
 **Fast path — paste this into Claude Code:**
 
 ```
-Migrate this project to the current Athena version: from this project's root, run bash /path/to/athena-skill/scripts/install-owl.sh, then ./scripts/owl update-index, ./scripts/owl prune-done, and commit the results.
+Migrate this project to the current Athena version: from this project's root, run bash /path/to/athena-skill/scripts/install-owl.sh, then ./scripts/owl migrate, ./scripts/owl update-index, and commit the results.
 ```
 
 **Manual path:**
 
-1. Pull this branch or merge to your main branch.
-2. From the project root, run `bash /path/to/athena-skill/scripts/install-owl.sh` using a full `athena-skill` checkout. This installs `scripts/owl` as a delegation wrapper that routes all commands (`prune-done`, `update-index`, `write-memory`, etc.) to the authoritative `owl.py` in the Athena skill. If you already have a `scripts/owl` that was a no-op stub, this replaces it with the real implementation.
-3. Run `./scripts/owl update-index` once. This reads your existing `docs/specs/` and generates `docs/athena-index.md`. It checks `tasks.md` first for status — if a feature has no items under NEXT or IN PROGRESS, it marks it Done.
-4. Run `./scripts/install-hooks.sh` to install the pre-commit and post-commit hooks.
-5. Optionally run `./scripts/owl prune-done` to immediately clean closed feature sessions from `progress.txt`. Skip this if you want to review `progress.txt` manually first.
-6. Commit `scripts/owl`, `docs/athena-index.md`, and the updated `progress.txt` to your repo.
+1. Update the installed skill (`~/.claude/skills/athena` and/or `$CODEX_HOME/skills/athena`) to the current version.
+2. From the project root, run `bash /path/to/athena-skill/scripts/install-owl.sh` using a full `athena-skill` checkout. This installs `scripts/owl` as a delegation wrapper that routes all commands to the authoritative `owl.py` in the installed skill.
+3. Run `./scripts/owl migrate` once. Each `progress.txt` session block moves into the matching feature's `notes.md`; blocks that can't be attributed go to `docs/audit/progress-legacy.txt`; `progress.txt` is deleted. The command is idempotent and lossless.
+4. Run `./scripts/owl update-index`, then `./scripts/install-hooks.sh`.
+5. Commit `scripts/owl`, `docs/athena-index.md`, the new `notes.md` files, and the `progress.txt` deletion.
 
-After step 6, Owl runs automatically at session start (`SessionStart` hook) and at session end (`Stop` hook). You do not need to call it manually. If you have not yet done the global hook setup, follow **Step 2** in the Installation section.
+Unmigrated repos keep working — every owl command falls back to `progress.txt` until you migrate.
 
 **What does not change:** `docs/requests.md`, `docs/decisions.md`, `docs/PRD.md`, and all existing spec files are untouched. The traceability audit trail is preserved exactly as-is.
 
@@ -361,34 +328,18 @@ New projects get Owl automatically — no migration step needed.
 ```mermaid
 flowchart TD
     A([New project]) --> B[Install ATHENA skill\ninto ~/.claude/skills/athena]
-    B --> C[Claude scaffolds\ndocs/ structure]
-    C --> D[docs/athena-index.md created\nempty — no features yet]
-    D --> E[Start first feature\nCR → spec → tasks → code]
+    B --> C[First owl add-request creates\ndocs/ logs; templates for spec + tasks]
+    C --> E[Start first feature\nCR → spec → tasks → code → notes]
     E --> F{Feature complete?\ntasks + spec + PRD}
     F -- No --> E
-    F -- Yes --> G[Dispatch Owl:\narchive feature]
-    G --> H[athena-index.md updated\nfeature marked archived]
-    H --> I[Next session opens\nSessionStart: Owl runs prune-done + update-index + write-memory]
-    I --> J([progress.txt stays lean\nthroughout project life])
+    F -- Yes --> G[owl archive:\nfeature + its notes leave\nevery future session]
+    G --> I[Next session opens with\nowl context or the memory snapshot]
+    I --> J([Session cost stays flat\nthroughout project life])
 ```
 
-**Key difference from existing projects:** You start with an empty `athena-index.md`. As you complete features, Owl archives them incrementally. `progress.txt` never accumulates the years of history that existing projects have — it stays bounded from day one.
+**Key difference from existing projects:** No legacy `progress.txt` exists to migrate. Session history lives in each feature's `notes.md` from day one, and archiving a feature removes its history from the loop entirely.
 
 ## Fleet Management
-
-Two scripts manage Athena across all projects on a machine.
-
-### `migrate-all-projects.py` — Migrate all projects at once
-
-Scans for every Athena project (any directory with `docs/requests.md`) and ensures each has the current Owl setup: `scripts/owl` wrapper, `.claude/settings.json` hooks, and `.claude/agents/owl-of-athena.md`.
-
-```bash
-# Dry-run: see what would change
-python3 ~/.claude/skills/athena/scripts/migrate-all-projects.py --dry-run
-
-# Apply migrations
-python3 ~/.claude/skills/athena/scripts/migrate-all-projects.py
-```
 
 ### `sweep-projects.py` — Weekly token-optimization sweep
 
@@ -404,10 +355,10 @@ python3 ~/.claude/skills/athena/scripts/sweep-projects.py --fix
 
 **What it checks:**
 - `athena-index.md` missing or stale (> 7 days)
-- `progress.txt` > 200 lines (recommend `prune-done`)
+- Legacy `progress.txt` still present (recommend `./scripts/owl migrate`)
 - Done specs not yet archived in `athena-index.md`
 - Files in `docs/` > 100 KB or binary assets
-- `requests.md`/`decisions.md` > 150 lines without an `## Archive` section
+- `requests.md`/`decisions.md` > 150 lines without an `## Archive` section (informational — the logs are script-gated and never read in full)
 
 Output is logged to `~/.claude/logs/athena-sweep.log`. Schedule weekly via crontab:
 
@@ -424,20 +375,20 @@ Output is logged to `~/.claude/logs/athena-sweep.log`. Schedule weekly via cront
 
 ## Quick Start (5 minutes)
 
-1. **Review the framework**: Read `core/athena-framework.md` (10-step ATHENA loop)
-2. **Understand the structure**: Check `docs/TRACEABILITY.md` (audit trail entry point)
-3. **Add your first request**: Edit `docs/requests.md`, add a CR-... entry with your requirement
-4. **Create a feature spec**: Copy template from `templates/spec.md` to `docs/specs/<FEATURE_ID>/spec.md`
-5. **Make decisions**: Add to `docs/decisions.md` if you need to interpret the request
-6. **Start executing**: Create `docs/specs/<FEATURE_ID>/tasks.md` from template and tackle one task at a time
+1. **Review the loop**: Read `skills/athena/SKILL.md` — the 5-step ATHENA loop (86 lines)
+2. **Open a session**: Run `./scripts/owl context` (or let the Claude Code memory snapshot do it)
+3. **Capture your first request**: `./scripts/owl add-request <<'EOF' ... EOF` — returns the CR-... ID
+4. **Create a feature spec**: Copy `templates/spec.md` to `docs/specs/<FEATURE_ID>/spec.md`; same for `tasks.md`
+5. **Record decisions**: `./scripts/owl add-decision --cr <CR-ID>` when you interpret the request
+6. **Execute and close**: One task at a time; `./scripts/owl add-note --feature <FEATURE_ID>` for session evidence; commit via `scripts/commit_with_traceability.py`
 
 ## Repository Layout
 
 - `skills/athena/`: installable `athena` package
-- `core/athena-framework.md`: canonical, agent-neutral ATHENA loop
+- `core/athena-framework.md`: background methodology notes (the operative loop is `skills/athena/SKILL.md`)
 - `adapters/`: framework adapter source materials
 - `templates/`: traceability templates
-- `scripts/`: helper automation (`owl.py`, `install-owl.sh`, `install-hooks.sh`, `migrate-all-projects.py`, `sweep-projects.py`, `commit_with_traceability.py`, `bootstrap_git_audit.py`, `print_resume_prompt.py`)
+- `scripts/`: helper automation (`owl.py`, `install-owl.sh`, `install-hooks.sh`, `sweep-projects.py`, `commit_with_traceability.py`, `bootstrap_git_audit.py`, `print_resume_prompt.py`, `tests/`)
 - `VERSION`: source-of-truth framework version (SemVer)
 - `docs/`: this repo's own ATHENA artifacts and examples (walkthrough examples in `docs/examples/`)
 
@@ -445,23 +396,24 @@ Output is logged to `~/.claude/logs/athena-sweep.log`. Schedule weekly via cront
 
 | File | Purpose |
 |------|---------|
-| `core/athena-framework.md` | Complete ATHENA methodology and 10-step loop |
+| `skills/athena/SKILL.md` | The operative ATHENA loop (86 lines) — installed into `~/.claude/skills/athena` / `$CODEX_HOME/skills/athena` |
+| `skills/athena/references/` | Setup/migration, commit ceremony, and recovery procedures — loaded only when needed |
 | `docs/TRACEABILITY.md` | Entry point: navigate from request to code |
 | `docs/requests.md` | Customer inputs (append-only log) |
 | `docs/decisions.md` | Design decisions (append-only log) |
 | `docs/PRD.md` | Living requirements document |
 | `docs/specs/*/spec.md` | Feature specifications with acceptance criteria |
 | `docs/specs/*/tasks.md` | Implementation tasks (Implements: FR-...) |
-| `docs/progress.txt` | Active execution log — closed feature sessions pruned automatically by Owl |
-| `docs/athena-index.md` | Lightweight feature index (~1,100 tokens) — agents load this instead of all specs |
+| `docs/specs/*/notes.md` | Per-feature session evidence (commands, outcomes, commit hashes) — appended via `owl add-note` |
+| `docs/athena-index.md` | Generated feature index — maintained by `owl update-index`, never edited or read directly |
 | `.claude/agents/owl-of-athena.md` | Owl sub-agent definition (Claude Code) — copy to `~/.claude/agents/` |
-| `.claude/settings.json` | SessionStart + Stop hooks — Haiku agent runs before Athena loads, shell cleanup on exit |
-| `scripts/owl.py` | Owl operations: archive, retrieve, search, update-index, prune-done, write-memory |
+| `.claude/settings.json` | SessionStart + Stop hooks — run the owl gateway before Athena loads and on exit |
+| `scripts/owl.py` | The KB gateway: context, add-request/add-decision/add-note, show, why, archive, retrieve, search, update-index, migrate, prune-prd, write-memory |
 | `scripts/install-owl.sh` | Installs `scripts/owl` delegation wrapper into any Athena project |
 | `scripts/install-hooks.sh` | Installs pre-commit and post-commit git hooks |
-| `scripts/migrate-all-projects.py` | Scans all Athena projects on this machine and migrates them to the current Owl setup |
 | `scripts/sweep-projects.py` | Weekly token-optimization sweeper — flags large files, stale index, unarchived specs across all projects |
-| `templates/` | Ready-to-use templates for specs, tasks, requests, decisions, progress |
+| `scripts/tests/` | Unit tests for the owl gateway (`python3 -m unittest discover -s scripts/tests`) |
+| `templates/` | Ready-to-use templates for specs, tasks, notes, requests, decisions, traceability |
 | `scripts/` | Helper utilities (`commit_with_traceability.py`, `bootstrap_git_audit.py`, etc.) |
 | `adapters/claude/` | Claude-specific guidance (`COMMANDS.md`, `CLAUDE_PROMPT.md`) |
 | `adapters/codex/` | Codex skill adapter |

@@ -75,6 +75,7 @@ Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude)
 - FR-ATHENA-033: Cut ATHENA per-session token cost by script-gating all KB access through `./scripts/owl` (new commands: context, add-request, add-decision, add-note, show, why, migrate), retiring `docs/progress.txt` in favor of per-feature `tasks.md` + `notes.md`, rewriting SKILL.md to a ≤130-line core with `references/`, and reducing Codex `AGENTS.md` to trigger + stop-gates, with full Claude/Codex parity via scripts. (Sources: CR-20260705-2015; D-20260705-2025, D-20260705-2026, D-20260705-2027, D-20260705-2028)
 - FR-ATHENA-034: Publish a v2.1.0 release note at `docs/releases/v2.1.0.md` stating per-surface token costs before and after the token diet with % reductions and the measurement basis, in Taylor style. (Sources: CR-20260705-2123; D-20260705-2123)
 - FR-ATHENA-035: Keep the PRD token-lean: `owl prune-prd` archives Metadata link lists and closed backlog lines to `docs/audit/prd-archive.md`, and the loop forbids full PRD reads (grep the target section; `owl show <FR-ID>` for one requirement). (Sources: CR-20260706-0642; D-20260706-0642)
+- FR-ATHENA-036: Keep README.md accurate to the current architecture (script-gated owl gateway, per-feature notes.md, owl migrate path, measured per-harness token numbers, no retired-script references), and publish GitHub releases v2.1.0 and v2.2.0 whose notes state the measured value for both Claude Code and Codex. (Sources: CR-20260706-0651; D-20260706-0652)
 
 ## Non-functional requirements
 - [NFR-ATHENA-001](PRD.md#L60): Exclude local/generated artifacts from commits via `.gitignore`. (Sources: [CR-20260211-0939](requests.md#cr-20260211-0939), [CR-20260211-1010](requests.md#cr-20260211-1010); [D-20260211-0940](decisions.md#d-20260211-0940), [D-20260211-1012](decisions.md#d-20260211-1012))
@@ -94,5 +95,6 @@ Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude)
 - Shipping imported historical docs from unrelated product repos as canonical artifacts in this share repo. (Sources: [CR-20260211-0939](requests.md#cr-20260211-0939); [D-20260211-0940](decisions.md#d-20260211-0940))
 
 ## Next / backlog
+- Shipped (v2.2.0, CR-20260706-0651): `docs/specs/20260706-readme-release-push/spec.md`, `docs/specs/20260706-readme-release-push/tasks.md`, `README.md`, `docs/releases/v2.1.0.md`, and `docs/releases/v2.2.0.md`.
 - Shipped (v2.2.0, CR-20260706-0642): `docs/specs/20260706-prd-diet-codex-config/spec.md`, `docs/specs/20260706-prd-diet-codex-config/tasks.md`, `scripts/owl.py` (prune-prd), and `CHANGELOG.md`.
 - Planned in: `docs/specs/20260603-athena-site-app/spec.md`, `docs/specs/20260603-athena-site-app/tasks.md`, and `docs/superpowers/specs/2026-06-03-athena-site-app-design.md`.
