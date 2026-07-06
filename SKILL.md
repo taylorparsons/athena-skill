@@ -7,7 +7,7 @@ description: PRD-driven delivery loop with a token-lean audit trail (requests �
 
 The audit trail lives in `docs/` but is **script-gated**: never Read `docs/requests.md`, `docs/decisions.md`, `docs/athena-index.md`, or archived specs — all access goes through `./scripts/owl` (deterministic, zero-token). You may Read/Edit directly only:
 - the active feature's `docs/specs/<FEATURE_ID>/spec.md`, `tasks.md`, `notes.md`
-- the `docs/PRD.md` sections you are changing
+- the `docs/PRD.md` sections you are changing — never the full file: locate the section with grep, read only that line range; one requirement → `owl show <FR-ID>`
 - `docs/TRACEABILITY.md`
 
 ## 1) Open the session
@@ -73,6 +73,7 @@ Whenever you interpret ambiguity, choose tradeoffs, or change scope:
 | Trace a requirement to sources and commits | `owl why <FR-...>` |
 | Feature summary / history search | `owl retrieve <id>`, `owl search <keyword>` |
 | Archive a finished feature | `owl archive <id>` |
+| Keep the PRD lean | `owl prune-prd` (archives link lists + closed backlog lines) |
 | Rebuild index / refresh memory | `owl update-index`, `owl write-memory` |
 
 A feature is **done** when `tasks.md` has nothing under NEXT or IN PROGRESS, `spec.md` says `Status: Done`, and the PRD shows it shipped — then run `owl archive <id>`. In Claude Code you may instead dispatch the Owl sub-agent (`.claude/agents/owl-of-athena.md`) when you want a narrative summary; in Codex just run the script.

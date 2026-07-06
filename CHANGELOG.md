@@ -2,6 +2,21 @@
 
 All notable changes to this project are documented in this file.
 
+## v2.2.0 - 2026-07-06
+
+## Summary
+
+PRD diet. Follow-up to the v2.1.0 token diet, targeting the last athena-controlled per-session cost surfaced by the cross-harness A/B experiments: full PRD reads (~6.4K tokens, growing).
+
+## What's Changed
+- New `owl prune-prd` — archives the PRD Metadata `Inputs:`/`Decisions:` link lists and Shipped/Implemented/Planned backlog lines (except those citing active features) to `docs/audit/prd-archive.md`, leaving pointer lines. Idempotent; Goals and FRs are never touched. Applied to this repo: PRD 26.9KB → 20.9KB.
+- SKILL.md hardened: the PRD is never read in full — grep for the section being changed, read only that range; single requirements via `owl show <FR-ID>`.
+- 3 new unit tests (23 total).
+
+## Verification
+- `python3 -m unittest discover -s scripts/tests` — 23/23 pass
+- `owl prune-prd` run twice on this repo (second run: no-op)
+
 ## v2.1.0 - 2026-07-05
 
 ## Summary

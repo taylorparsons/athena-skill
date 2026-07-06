@@ -1031,6 +1031,62 @@ type: project
                         "removed docs/progress.txt")
         }
 
+    def prune_prd(self) -> Dict:
+        """Archive PRD link ceremony and closed backlog lines to docs/audit/prd-archive.md.
+
+        Moves: (1) Metadata `- **Inputs:**` / `- **Decisions:**` link lists,
+        (2) backlog lines marked Shipped/Implemented/Planned that do not cite
+        an active feature. Requirements (Goals/FRs) are never touched.
+        """
+        prd_file = self.docs_dir / "PRD.md"
+        if not prd_file.exists():
+            return {"error": "PRD.md not found"}
+
+        active = self._scan_active_features()
+        lines = prd_file.read_text(encoding="utf-8").split("\n")
+        kept: List[str] = []
+        archived: List[str] = []
+        in_backlog = False
+
+        for line in lines:
+            stripped = line.strip()
+            if (stripped.startswith("- **Inputs:**") or stripped.startswith("- **Decisions:**")) \
+                    and stripped.count("](") >= 3:
+                label = "Inputs" if stripped.startswith("- **Inputs:**") else "Decisions"
+                archived.append(line)
+                kept.append(f"- **{label}:** see docs/audit/prd-archive.md")
+                continue
+            if line.startswith("## "):
+                in_backlog = line.startswith("## Next / backlog")
+            if in_backlog and re.match(r"-\s*(Shipped|Implemented|Planned)", stripped):
+                if not any(feature in line for feature in active):
+                    archived.append(line)
+                    continue
+            kept.append(line)
+
+        if not archived:
+            return {"success": True, "skipped": True,
+                    "message": "✅ PRD already lean — nothing to prune"}
+
+        archive_file = self.docs_dir / "audit" / "prd-archive.md"
+        archive_file.parent.mkdir(parents=True, exist_ok=True)
+        existing = (archive_file.read_text(encoding="utf-8").rstrip("\n") + "\n"
+                    if archive_file.exists()
+                    else "# PRD Archive (pruned by owl prune-prd)\n")
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+        archive_file.write_text(
+            existing + f"\n## Pruned {timestamp}\n" + "\n".join(archived) + "\n",
+            encoding="utf-8")
+        prd_file.write_text("\n".join(kept), encoding="utf-8")
+        saved = sum(len(l) + 1 for l in archived)
+        return {
+            "success": True,
+            "lines_archived": len(archived),
+            "bytes_archived": saved,
+            "message": (f"✅ Pruned {len(archived)} PRD line(s) (~{saved} B) "
+                        "to docs/audit/prd-archive.md")
+        }
+
     def _session_block_to_note(self, block: str) -> str:
         """Rewrite a progress.txt session block as a notes.md `## S-…` entry."""
         lines = block.strip().split("\n")
@@ -1116,6 +1172,7 @@ def main():
         print("  archive <feature-id>             - Move feature to archived")
         print("  update-index                     - Regenerate athena-index.md from specs")
         print("  migrate                          - Convert progress.txt to per-feature notes.md")
+        print("  prune-prd                        - Archive PRD link lists + closed backlog lines")
         print("  prune-done                       - Legacy: prune closed sessions from progress.txt")
         print("  trim-progress                    - Legacy: archive old progress.txt sessions")
         sys.exit(1)
@@ -1157,6 +1214,8 @@ def main():
                               skills=str(flags.get("skills", "") or ""))
     elif command == "migrate":
         result = owl.migrate()
+    elif command == "prune-prd":
+        result = owl.prune_prd()
     elif command == "update-index":
         result = owl.update_index()
     elif command == "prune-done":

@@ -210,5 +210,52 @@ class TestMigrate(OwlTestCase):
         self.assertTrue(result.get("skipped"))
 
 
+class TestPrunePrd(OwlTestCase):
+    PRD = (
+        "# PRD: Test\n\n## Metadata\n"
+        "- **Status:** Active\n"
+        "- **Inputs:** [CR-1](r.md#a), [CR-2](r.md#b), [CR-3](r.md#c), [CR-4](r.md#d)\n"
+        "- **Decisions:** [D-1](d.md#a), [D-2](d.md#b), [D-3](d.md#c)\n\n"
+        "## Functional requirements\n"
+        "- FR-T-001: Keep me. (Sources: CR-1)\n\n"
+        "## Next / backlog\n"
+        "- Shipped (v1, CR-1): `docs/specs/20250101-old-feat/spec.md`.\n"
+        "- Implemented in: `docs/specs/20250102-older/spec.md`.\n"
+        "- Planned in: `docs/specs/20260101-live/spec.md`.\n"
+        "- Open item: do something later.\n"
+    )
+
+    def test_prune_prd_archives_and_points(self):
+        make_feature(self.specs, "20260101-live")  # active feature cited by one backlog line
+        (self.docs / "PRD.md").write_text(self.PRD, encoding="utf-8")
+        result = self.owl.prune_prd()
+        self.assertTrue(result.get("success"))
+        self.assertEqual(result["lines_archived"], 4)  # 2 metadata lists + 2 closed backlog lines
+        prd = (self.docs / "PRD.md").read_text()
+        self.assertIn("- **Inputs:** see docs/audit/prd-archive.md", prd)
+        self.assertIn("- **Decisions:** see docs/audit/prd-archive.md", prd)
+        self.assertIn("FR-T-001: Keep me.", prd)
+        self.assertIn("Planned in: `docs/specs/20260101-live/spec.md`", prd)
+        self.assertIn("Open item: do something later.", prd)
+        self.assertNotIn("20250101-old-feat", prd)
+        archive = (self.docs / "audit" / "prd-archive.md").read_text()
+        self.assertIn("[CR-1](r.md#a)", archive)
+        self.assertIn("20250101-old-feat", archive)
+        self.assertIn("20250102-older", archive)
+
+    def test_prune_prd_idempotent(self):
+        make_feature(self.specs, "20260101-live")
+        (self.docs / "PRD.md").write_text(self.PRD, encoding="utf-8")
+        self.owl.prune_prd()
+        second = self.owl.prune_prd()
+        self.assertTrue(second.get("skipped"))
+
+    def test_prune_prd_missing_and_lean(self):
+        self.assertIn("error", self.owl.prune_prd())
+        (self.docs / "PRD.md").write_text("# PRD\n\n## Goals\n- g1\n", encoding="utf-8")
+        result = self.owl.prune_prd()
+        self.assertTrue(result.get("skipped"))
+
+
 if __name__ == "__main__":
     unittest.main()

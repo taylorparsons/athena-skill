@@ -1,7 +1,7 @@
 # Athena Feature Index
 
 **Purpose**: Lightweight index to reduce token overhead by loading only active features.  
-**Last updated**: 2026-07-05
+**Last updated**: 2026-07-06
 
 ## How to Use This Index
 
@@ -172,12 +172,17 @@
 - **Spec**: docs/specs/20260705-token-diet/spec.md
 - **Summary**: Cut ATHENA per-session token cost ~85% (measured ~26-32K in this repo, target ~4-5K) while keeping full audit-trail queryability, by gating all KB access through the deterministic `owl` script, retiri
 
+### 20260706-prd-diet-codex-config
+- **Status**: Done
+- **Spec**: docs/specs/20260706-prd-diet-codex-config/spec.md
+- **Summary**: Remove the remaining per-session token costs identified by the v2.1 A/B experiments: PRD full-read cost (new `owl prune-prd` + a never-full-read SKILL.md rule), Codex skills-listing overflow (move loo
+
 ---
 
 ## Token Optimization
 
 **Without athena-index.md**:
-- Load all 31 specs = ~15,000 tokens
+- Load all 32 specs = ~15,500 tokens
 
 **With athena-index.md**:
 - Load athena-index.md only = ~1100 tokens
@@ -188,5 +193,5 @@
 **Usage Pattern**:
 1. Athena loads athena-index.md first
 2. Identifies active features (currently: 1)
-3. Skips 30 archived features
+3. Skips 31 archived features
 4. If user asks about archived feature, load on-demand

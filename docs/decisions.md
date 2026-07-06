@@ -967,3 +967,21 @@ Alternatives considered:
 
 Acceptance / test:
 - docs/releases/v2.1.0.md exists, passes scripts/validate_style.py, and states per-surface token numbers with % reductions.
+
+## D-20260706-0642
+Date: 2026-07-06 06:42
+Inputs: CR-20260706-0642
+PRD: Functional requirements
+
+Decision:
+Implement the three approved optimizations: (1) PRD diet — new `owl prune-prd` command archives the PRD Metadata Inputs/Decisions link lists and shipped/implemented backlog lines to docs/audit/prd-archive.md (idempotent, pointer lines left behind), plus a hardened SKILL.md rule: never read docs/PRD.md in full — grep for the sections being changed and read only those ranges, `owl show FR-...` for single requirements. (2) Codex skills cleanup — move the 7 loose non-skill files out of ~/.codex/skills into ~/.codex/skills-archive/ (move, not delete); directories without SKILL.md are reported for user review, not touched. (3) Codex reasoning profile — add [profiles.athena] with model_reasoning_effort "medium" to ~/.codex/config.toml for routine loop work; plugins are inventoried and reported, not disabled.
+
+Rationale:
+Codex A/B showed thinking tokens and full-PRD reads dominate post-v2.1 cost. Goals and FR history stay in the PRD (they are the requirements source of truth); only derived link ceremony and closed backlog lines move to the audit archive. Config moves are reversible (file moves, additive TOML profile).
+
+Alternatives considered:
+- Semantic FR pruning by feature status (rejected: CR-to-feature mapping is not deterministic; risks archiving live requirements)
+- Disabling Codex plugins outright (rejected: may break non-athena workflows; user decides from the inventory)
+
+Acceptance / test:
+- prune-prd unit-tested, idempotent, PRD shrinks with pointers intact; SKILL.md rule present; loose files moved with inventory reported; profile present in config.toml and codex accepts --profile athena.
