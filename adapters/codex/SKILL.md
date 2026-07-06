@@ -1,42 +1,28 @@
 ---
 name: athena-codex
-description: Use the ATHENA framework in Codex for PRD-driven, traceable delivery. Trigger when the user wants iterative execution with auditable CR/Decision/Spec/Task/Progress artifacts and disciplined one-task-at-a-time implementation.
+description: Use the ATHENA framework in Codex for PRD-driven, traceable delivery. Trigger when the user wants iterative execution with auditable CR/Decision/Spec/Task artifacts and disciplined one-task-at-a-time implementation.
 ---
 
 # ATHENA Codex Adapter
 
-Use `../../core/athena-framework.md` as the canonical process.
-Version source of truth: `../../VERSION`.
+The loop is identical on every harness — follow `../../skills/athena/SKILL.md`. This adapter only covers Codex wiring.
 
-## Codex-specific operating notes
+## Codex wiring
 
-- Prefer direct repository execution over discussion-only responses.
-- Keep diffs small and reviewable.
-- Use local tooling to validate implementation changes.
-- Record commands and outcomes in `docs/progress.txt`.
-- If `.git/` exists, create local traceable commits and do not push unless asked.
+- Session open: run `./scripts/owl context` (Codex has no hooks or auto-memory — the script is the mechanism).
+- Keep `~/.codex/AGENTS.md` minimal (trigger + stop-gates only, ≤ 15 lines). Do not duplicate loop steps there — the loop lives in SKILL.md. Recommended block:
 
-## Required file set
+      ## ATHENA — mandatory for all coding work
+      - Invoke the athena skill before any change and follow its loop exactly.
+      - Session open: ./scripts/owl context
+      - Never Read docs/requests.md, docs/decisions.md, or docs/athena-index.md —
+        use ./scripts/owl (add-request, add-decision, add-note, show, why).
+      - No code changes until the current request is captured (owl add-request)
+        and reflected in docs/PRD.md.
+      - If any gate above was skipped, STOP and restart with ATHENA.
 
-Initialize these files using templates from `../../templates/` when missing:
-- `docs/requests.md`
-- `docs/decisions.md`
-- `docs/TRACEABILITY.md`
-- `docs/PRD.md`
-- `docs/progress.txt`
-- `docs/specs/<feature-id>/spec.md`
-- `docs/specs/<feature-id>/tasks.md`
-
-## Optional Codex helper scripts
-
-This repository includes helper scripts under `../../scripts/`:
-- `commit_with_traceability.py`
-- `bootstrap_git_audit.py`
-- `print_resume_prompt.py`
-
-If you need additional helper scripts beyond those bundled here, use `$skill-installer` to install the full `athena` skill package into `$CODEX_HOME/skills`, then run scripts from `$CODEX_HOME/skills/athena/scripts/`.
+- Install the full package with `$skill-installer` into `$CODEX_HOME/skills/athena`, then run scripts from `$CODEX_HOME/skills/athena/scripts/` (or a local `./scripts/owl` wrapper).
 
 ## Versioning
 
-Use Semantic Versioning from `../../VERSION`.
-When process behavior changes in a breaking way, require a major version bump.
+Use Semantic Versioning from `../../VERSION`. Breaking process changes require a major bump.

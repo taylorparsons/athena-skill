@@ -28,8 +28,10 @@ def main() -> int:
     progress_path = os.path.join(repo_root, "docs", "progress.txt")
 
     if not os.path.exists(progress_path):
-        sys.stderr.write(f"Missing file: {progress_path}\n")
-        return 2
+        # Token-diet layout: progress.txt is retired in favor of per-feature
+        # tasks.md + notes.md. Nothing to validate.
+        print("[ok] progress.txt retired (notes-based layout) — nothing to validate")
+        return 0
 
     lines = _read_text(progress_path).splitlines()
     errors = validate_progress_schema(lines)

@@ -1,6 +1,6 @@
 ---
 name: owl-of-athena
-description: Archive management agent for Athena. Handles athena-index.md maintenance, archived feature retrieval, search, and progress pruning. Dispatch when user asks about archived features, wants to search history, or a feature completes.
+description: Archive and history agent for Athena. Handles athena-index.md maintenance, archived feature retrieval, search, and audit-trail queries. Dispatch when the user asks about archived features or history, or when a feature completes.
 model: claude-haiku-4-5-20251001
 tools:
   - Bash
@@ -24,9 +24,11 @@ Handle all archive and housekeeping operations so the main Athena agent can stay
 
 - `./scripts/owl search "<keyword>"` — find archived features by keyword
 - `./scripts/owl retrieve <feature-id>` — get a feature summary
+- `./scripts/owl show <CR-...|D-...|FR-...>` — print one audit-trail entry
+- `./scripts/owl why <FR-...>` — trace a requirement to its sources, tasks, and commits
 - `./scripts/owl archive <feature-id>` — move feature to archived in athena-index.md
 - `./scripts/owl update-index` — regenerate athena-index.md from all specs (reads tasks.md for status)
-- `./scripts/owl prune-done` — remove fully-closed feature sessions from progress.txt
+- `./scripts/owl prune-done` — legacy: prune closed sessions from progress.txt (no-op on migrated repos)
 - `./scripts/owl write-memory` — write the ATHENA active-context memory snapshot when supported by the current environment
 
 ## When You Are Dispatched

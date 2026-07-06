@@ -1,5 +1,7 @@
 # Traceability (How to follow the audit trail)
 
+Prefer the scripts: `./scripts/owl show <CR-...|D-...|FR-...>` prints one entry; `./scripts/owl why <FR-...>` walks the whole chain. To follow it by hand:
+
 ## Start Here
 ### 1) Raw Requests
 - Locate customer requests in `docs/requests.md` (`CR-...`).
@@ -16,5 +18,6 @@
 ### 5) Tasks
 - Read execution mapping in `docs/specs/<FEATURE_ID>/tasks.md` (`T-...`, `Implements: FR-...`).
 
-### 6) Execution Log
-- Review progress evidence in `docs/progress.txt`.
+### 6) Session Notes
+- Review execution evidence in `docs/specs/<FEATURE_ID>/notes.md` (commands, outcomes, commit hashes).
+- Pre-migration session history not attributable to a feature lives in `docs/audit/progress-legacy.txt`.

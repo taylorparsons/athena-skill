@@ -796,3 +796,19 @@ Implement the plan.
 - Implement the finalized Phase 1 README-only `install-owl.sh` correction.
 - Do not update `CHANGELOG.md`, migration scripts, sweeper scripts, packaged skill scripts, hook installers, or validation rules in this phase.
 - Do not delete `skills/athena/scripts/install-owl.sh`; report it as a rejected Option A artifact for separate cleanup.
+
+## CR-20260705-2015
+
+### Metadata
+- **Date:** 2026-07-05 20:15
+- **Source:** chat
+
+### Request (verbatim):
+is athena in this project  in sync with taylorparsons/athena on github and my install on claude code?
+/Users/taylorparsons/.claude/skills/athena
+
+I need you do evaluate athena is see if there is a way to cut it's token usage when using with claude and codex?
+
+### Notes
+- Two asks: (1) sync check across repo / GitHub origin / ~/.claude/skills/athena install; (2) token-usage evaluation for Claude Code and Codex flows.
+- Session deliverable is an assessment; no PRD/code changes made pending user direction.

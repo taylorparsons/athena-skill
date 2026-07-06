@@ -5,9 +5,11 @@ Lightweight agent for athena-index.md maintenance and archive operations
 """
 
 import json
+import re
+import subprocess
 import sys
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Dict, Optional
 
 class OwlOfAthena:
@@ -403,7 +405,8 @@ class OwlOfAthena:
         progress_file = self.docs_dir / "progress.txt"
         prd_file = self.docs_dir / "PRD.md"
         if not progress_file.exists():
-            return {"error": "progress.txt not found"}
+            return {"success": True, "skipped": True,
+                    "message": "✅ progress.txt retired — per-feature notes need no pruning"}
 
         prd_content = prd_file.read_text() if prd_file.exists() else ""
         content = progress_file.read_text()
@@ -594,14 +597,16 @@ class OwlOfAthena:
         memory_file = memory_dir / "project_athena_active.md"
         memory_index = memory_dir / "MEMORY.md"
 
-        # Skip if memory is already newer than progress.txt
+        # Legacy layout only: skip if memory is already newer than progress.txt.
+        # In the notes-based layout the sources are many small files, so we
+        # always rewrite (cheap and idempotent).
         if (progress_file.exists() and memory_file.exists()
                 and memory_file.stat().st_mtime > progress_file.stat().st_mtime):
             return {"success": True, "skipped": True,
                     "message": "memory file is newer than progress.txt — no update needed"}
 
-        context = self._parse_progress(progress_file) if progress_file.exists() else {}
-        active_features = self._extract_active_features()
+        context = self._active_context()
+        active_features = context["active_features"]
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
 
         feature_id = context.get("feature_id", "")
@@ -623,8 +628,8 @@ type: project
 
 {feature_line}
 
-**Why:** {goal if goal else 'See progress.txt for session context.'}
-**How to apply:** Skip reading athena-index.md and progress.txt — use this context directly. Load only the active spec(s) listed below.
+**Why:** {goal if goal else 'See the active feature docs for session context.'}
+**How to apply:** Use this context directly — do not read athena-index.md or the docs/ logs. Load only the active spec(s) listed below; access requests/decisions via ./scripts/owl.
 
 **Active features:**
 {fmt(active_features)}
@@ -650,6 +655,426 @@ type: project
             "message": f"✅ Wrote memory: {feature_id or 'no active feature'}, {len(active_features)} active feature(s)"
         }
 
+    # --- Script-gated KB access (token-diet layout) ---
+    #
+    # New layout: task truth in docs/specs/<id>/tasks.md, session notes in
+    # docs/specs/<id>/notes.md, no docs/progress.txt. All commands fall back
+    # to progress.txt when the repo has not run `owl migrate` yet.
+
+    def _scan_active_features(self) -> List[str]:
+        """Active feature IDs derived directly from specs (index may be stale)."""
+        if not self.specs_dir.exists():
+            return []
+        return [d.name for d in sorted(self.specs_dir.iterdir())
+                if d.is_dir() and (d / "spec.md").exists()
+                and self._extract_status(d) == 'Active']
+
+    def _parse_tasks(self, tasks_file: Path) -> Dict:
+        """Parse IN PROGRESS / NEXT task lists from a tasks.md file."""
+        result: Dict = {"in_progress": [], "next_tasks": []}
+        if not tasks_file.exists():
+            return result
+        section = None
+        for line in tasks_file.read_text(encoding="utf-8").split("\n"):
+            if line.startswith("## IN PROGRESS"):
+                section = "in_progress"
+                continue
+            if line.startswith("## NEXT"):
+                section = "next_tasks"
+                continue
+            if line.startswith("## "):
+                section = None
+                continue
+            stripped = line.strip()
+            if section and stripped.startswith("- "):
+                task = stripped[2:].strip()
+                if task and task.lower() not in ("(none)", "none"):
+                    result[section].append(task)
+        return result
+
+    def _latest_note_meta(self, feature_id: str) -> Dict:
+        """Timestamp + Goal of the latest session block in a feature's notes.md."""
+        result = {"timestamp": "", "goal": ""}
+        notes = self.specs_dir / feature_id / "notes.md"
+        if not notes.exists():
+            return result
+        lines = notes.read_text(encoding="utf-8").split("\n")
+        last = -1
+        for i in range(len(lines) - 1, -1, -1):
+            if lines[i].startswith("## S-"):
+                last = i
+                break
+        if last == -1:
+            return result
+        result["timestamp"] = lines[last][len("## S-"):].strip()
+        for line in lines[last:]:
+            if line.startswith("Goal:"):
+                result["goal"] = line.split("Goal:", 1)[-1].strip()
+                break
+        return result
+
+    def _current_feature(self, active: List[str]) -> str:
+        """Most recently worked active feature (newest note, then tasks.md mtime)."""
+        if not active:
+            return ""
+        if len(active) == 1:
+            return active[0]
+
+        def sort_key(fid: str):
+            ts = self._latest_note_meta(fid)["timestamp"]  # S-IDs sort lexically
+            tasks = self.specs_dir / fid / "tasks.md"
+            mtime = tasks.stat().st_mtime if tasks.exists() else 0
+            return (ts, mtime)
+
+        return sorted(active, key=sort_key, reverse=True)[0]
+
+    def _active_context(self) -> Dict:
+        """Shared context source for `context` and `write-memory` (both layouts)."""
+        progress_file = self.docs_dir / "progress.txt"
+        active = self._scan_active_features()
+        ctx: Dict = {"active_features": active, "feature_id": "", "goal": "",
+                     "in_progress": [], "next_tasks": []}
+
+        if progress_file.exists():  # legacy layout
+            legacy = self._parse_progress(progress_file)
+            ctx["feature_id"] = legacy.get("feature_id") or self._current_feature(active)
+            ctx["goal"] = legacy.get("goal", "")
+            ctx["in_progress"] = legacy.get("in_progress", [])
+            ctx["next_tasks"] = legacy.get("next_tasks", [])
+            return ctx
+
+        feature = self._current_feature(active)
+        ctx["feature_id"] = feature
+        if feature:
+            meta = self._latest_note_meta(feature)
+            spec_file = self.specs_dir / feature / "spec.md"
+            spec_summary = (self._extract_summary(spec_file.read_text())
+                            if spec_file.exists() else "")
+            ctx["goal"] = meta["goal"] or spec_summary
+            tasks = self._parse_tasks(self.specs_dir / feature / "tasks.md")
+            ctx["in_progress"] = tasks["in_progress"]
+            ctx["next_tasks"] = tasks["next_tasks"]
+        return ctx
+
+    def _recent_entry_ids(self, log_file: Path, prefix: str, count: int = 3) -> List[str]:
+        """Last N entry IDs (## CR-... / ## D-... headings) from a log."""
+        if not log_file.exists():
+            return []
+        ids = [line[3:].strip() for line in log_file.read_text(encoding="utf-8").split("\n")
+               if line.startswith(f"## {prefix}")]
+        return ids[-count:]
+
+    def _latest_request_verbatim(self, max_chars: int = 500) -> str:
+        """Verbatim body of the newest CR entry, truncated."""
+        req = self.docs_dir / "requests.md"
+        if not req.exists():
+            return ""
+        lines = req.read_text(encoding="utf-8").split("\n")
+        last = -1
+        for i in range(len(lines) - 1, -1, -1):
+            if lines[i].startswith("## CR-"):
+                last = i
+                break
+        if last == -1:
+            return ""
+        body: List[str] = []
+        in_verbatim = False
+        for line in lines[last:]:
+            low = line.strip().lower()
+            if "request (verbatim)" in low:
+                in_verbatim = True
+                continue
+            if in_verbatim:
+                if line.startswith("### ") or low.startswith("notes:"):
+                    break
+                body.append(line)
+        text = "\n".join(body).strip()
+        return text[:max_chars] + ("…" if len(text) > max_chars else "")
+
+    def context_block(self) -> str:
+        """Compact session-open context (plain text) — replaces reading docs/ files."""
+        ctx = self._active_context()
+        feature = ctx["feature_id"]
+        others = [f for f in ctx["active_features"] if f != feature]
+
+        def fmt(items: List[str]) -> List[str]:
+            return [f"  - {t}" for t in items] if items else ["  (none)"]
+
+        lines = [f"ATHENA CONTEXT — generated {datetime.now().strftime('%Y-%m-%d %H:%M')}"]
+        if feature:
+            lines.append(f"Active feature: {feature}")
+            lines.append(f"Goal: {ctx['goal'] or '(no goal recorded)'}")
+            lines.append(f"Docs: docs/specs/{feature}/spec.md | tasks.md | notes.md")
+        else:
+            lines.append("Active feature: (none) — derive tasks from docs/PRD.md or ask the user")
+        lines.append("IN PROGRESS:")
+        lines += fmt(ctx["in_progress"])
+        lines.append("NEXT (top 5):")
+        lines += fmt(ctx["next_tasks"][:5])
+        if others:
+            lines.append("Other active features: " + ", ".join(others))
+        recent_cr = self._recent_entry_ids(self.docs_dir / "requests.md", "CR-")
+        recent_d = self._recent_entry_ids(self.docs_dir / "decisions.md", "D-")
+        if recent_cr:
+            lines.append("Recent requests: " + ", ".join(recent_cr))
+        if recent_d:
+            lines.append("Recent decisions: " + ", ".join(recent_d))
+        latest = self._latest_request_verbatim()
+        if latest:
+            lines.append("Latest request (verbatim):")
+            lines += [f"  {l}" for l in latest.split("\n")]
+        lines.append("KB access: ./scripts/owl {add-request|add-decision|add-note|show <ID>|why <FR-ID>}"
+                     " — do not Read docs/requests.md or docs/decisions.md directly.")
+        return "\n".join(lines)
+
+    def _unique_entry_id(self, log_file: Path, prefix: str) -> str:
+        """Minute-resolution ID, bumped forward until unused in the target log."""
+        existing = log_file.read_text(encoding="utf-8") if log_file.exists() else ""
+        now = datetime.now()
+        while True:
+            candidate = f"{prefix}-{now.strftime('%Y%m%d-%H%M')}"
+            if f"## {candidate}" not in existing:
+                return candidate
+            now += timedelta(minutes=1)
+
+    def _append_to_log(self, log_file: Path, header: str, entry: str) -> None:
+        self.docs_dir.mkdir(parents=True, exist_ok=True)
+        if not log_file.exists():
+            log_file.write_text(header, encoding="utf-8")
+        content = log_file.read_text(encoding="utf-8").rstrip("\n")
+        log_file.write_text(content + "\n" + entry, encoding="utf-8")
+
+    def add_request(self, text: str, source: str = "chat") -> Dict:
+        """Append a verbatim CR entry to docs/requests.md; returns the new ID."""
+        if not text.strip():
+            return {"error": "empty request text — pipe the verbatim request via stdin"}
+        log = self.docs_dir / "requests.md"
+        cr_id = self._unique_entry_id(log, "CR")
+        ts = datetime.now().strftime("%Y-%m-%d %H:%M")
+        entry = (f"\n## {cr_id}\n\n### Metadata\n- **Date:** {ts}\n- **Source:** {source}\n\n"
+                 f"### Request (verbatim):\n{text.strip()}\n")
+        self._append_to_log(log, "# Customer Requests (append-only)\n", entry)
+        return {"success": True, "id": cr_id,
+                "message": f"✅ Appended {cr_id} to docs/requests.md"}
+
+    def add_decision(self, text: str, cr: str, prd: str = "") -> Dict:
+        """Append a D entry to docs/decisions.md; returns the new ID."""
+        if not text.strip():
+            return {"error": "empty decision text — pipe the decision via stdin"}
+        if not cr or not cr.startswith("CR-"):
+            return {"error": "--cr CR-YYYYMMDD-HHMM is required (comma-separate multiples)"}
+        log = self.docs_dir / "decisions.md"
+        d_id = self._unique_entry_id(log, "D")
+        ts = datetime.now().strftime("%Y-%m-%d %H:%M")
+        entry = (f"\n## {d_id}\nDate: {ts}\nInputs: {cr}\nPRD: {prd or '(n/a)'}\n\n"
+                 f"{text.strip()}\n")
+        self._append_to_log(log, "# Decisions (append-only)\n", entry)
+        return {"success": True, "id": d_id,
+                "message": f"✅ Appended {d_id} to docs/decisions.md"}
+
+    def add_note(self, feature_id: str, text: str, goal: str = "", agent: str = "",
+                 model: str = "", skills: str = "") -> Dict:
+        """Append a timestamped session block to docs/specs/<id>/notes.md."""
+        if not feature_id:
+            return {"error": "--feature <feature-id> is required"}
+        if not text.strip():
+            return {"error": "empty note text — pipe session notes via stdin"}
+        feature_dir = self.specs_dir / feature_id
+        if not feature_dir.is_dir():
+            return {"error": f"Feature {feature_id} not found in docs/specs/"}
+        notes = feature_dir / "notes.md"
+        if not notes.exists():
+            notes.write_text(f"# Session Notes: {feature_id} (append-only)\n",
+                             encoding="utf-8")
+        s_id = f"S-{datetime.now().strftime('%Y%m%d-%H%M')}"
+        header = [f"\n## {s_id}"]
+        for label, value in (("Agent", agent), ("Model", model),
+                             ("Skills", skills), ("Goal", goal)):
+            if value:
+                header.append(f"{label}: {value}")
+        entry = "\n".join(header) + "\n\n" + text.strip() + "\n"
+        content = notes.read_text(encoding="utf-8").rstrip("\n")
+        notes.write_text(content + "\n" + entry, encoding="utf-8")
+        return {"success": True, "id": s_id,
+                "file": f"docs/specs/{feature_id}/notes.md",
+                "message": f"✅ Appended {s_id} to docs/specs/{feature_id}/notes.md"}
+
+    def _extract_log_entry(self, log_file: Path, entry_id: str) -> str:
+        """One entry block (## <id> … next ## heading) from an append-only log."""
+        if not log_file.exists():
+            return ""
+        lines = log_file.read_text(encoding="utf-8").split("\n")
+        block: List[str] = []
+        capturing = False
+        for line in lines:
+            if line.startswith(f"## {entry_id}"):
+                capturing = True
+            elif capturing and line.startswith("## "):
+                break
+            if capturing:
+                block.append(line)
+        return "\n".join(block).strip()
+
+    def show_entry(self, entry_id: str) -> str:
+        """Print exactly one KB entry: CR/D from logs, FR from spec files."""
+        if entry_id.startswith("CR-"):
+            block = self._extract_log_entry(self.docs_dir / "requests.md", entry_id)
+            return block or f"(not found: {entry_id} in docs/requests.md)"
+        if entry_id.startswith("D-"):
+            block = self._extract_log_entry(self.docs_dir / "decisions.md", entry_id)
+            return block or f"(not found: {entry_id} in docs/decisions.md)"
+        if entry_id.startswith("FR-"):
+            matches: List[str] = []
+            for spec in sorted(self.specs_dir.glob("*/spec.md")):
+                for line in spec.read_text(encoding="utf-8").split("\n"):
+                    if re.search(rf"\b{re.escape(entry_id)}\b", line):
+                        matches.append(f"[{spec.parent.name}] {line.strip()}")
+            return "\n".join(matches) or f"(not found: {entry_id} in docs/specs/*/spec.md)"
+        return f"(unsupported ID: {entry_id} — expected CR-…, D-…, or FR-…)"
+
+    def why(self, fr_id: str) -> str:
+        """Traceability chain: FR line → Sources IDs → implementing tasks → commits."""
+        if not fr_id.startswith("FR-"):
+            return f"(unsupported ID: {fr_id} — expected FR-…)"
+        out: List[str] = []
+        for spec in sorted(self.specs_dir.glob("*/spec.md")):
+            fid = spec.parent.name
+            fr_lines = [l.strip() for l in spec.read_text(encoding="utf-8").split("\n")
+                        if re.search(rf"\b{re.escape(fr_id)}\b:", l)]
+            if not fr_lines:
+                continue
+            out.append(f"[{fid}]")
+            source_ids: List[str] = []
+            for line in fr_lines:
+                out.append(f"  {line}")
+                source_ids += re.findall(r"(?:CR|D)-\d{8}-\d{4}", line)
+            if source_ids:
+                out.append("  Sources (full text via `owl show <ID>`): "
+                           + ", ".join(dict.fromkeys(source_ids)))
+            task_ids: List[str] = []
+            tasks_file = spec.parent / "tasks.md"
+            if tasks_file.exists():
+                for line in tasks_file.read_text(encoding="utf-8").split("\n"):
+                    if fr_id in line and "Implements" in line:
+                        out.append(f"  {line.strip()}")
+                        task_ids += re.findall(r"\bT-\d{3}\b", line)
+            # Task IDs repeat across features (every feature has a T-001), so
+            # commits must match both the task ID and the feature ID.
+            greps = [["--all-match", f"--grep={t}", f"--grep={fid}"]
+                     for t in list(dict.fromkeys(task_ids))[:5]] + [[f"--grep={fid}"]]
+            for grep_args in greps:
+                try:
+                    result = subprocess.run(
+                        ["git", "log", "--oneline", "-5"] + grep_args,
+                        capture_output=True, text=True, cwd=self.repo_root, timeout=10)
+                    for commit in result.stdout.strip().split("\n"):
+                        if commit and f"  commit {commit}" not in out:
+                            out.append(f"  commit {commit}")
+                except (subprocess.SubprocessError, OSError):
+                    break
+        if not out:
+            return f"(not found: {fr_id} in docs/specs/*/spec.md)"
+        if not any(l.startswith("  commit") for l in out):
+            out.append("  (no commits found)")
+        return "\n".join(out)
+
+    def migrate(self) -> Dict:
+        """Convert progress.txt to per-feature notes.md + docs/audit/progress-legacy.txt."""
+        progress_file = self.docs_dir / "progress.txt"
+        if not progress_file.exists():
+            return {"success": True, "skipped": True,
+                    "message": "no progress.txt — already migrated"}
+
+        content = progress_file.read_text(encoding="utf-8")
+        blocks: List[str] = []
+        current: List[str] = []
+        for line in content.split("\n"):
+            if line.startswith("Session:") and current:
+                blocks.append("\n".join(current))
+                current = [line]
+            else:
+                current.append(line)
+        if current:
+            blocks.append("\n".join(current))
+
+        migrated = 0
+        legacy = 0
+        for block in blocks:
+            if not block.strip():
+                continue
+            feature_id = self._extract_feature_id(block)
+            if feature_id and (self.specs_dir / feature_id).exists():
+                notes = self.specs_dir / feature_id / "notes.md"
+                if not notes.exists():
+                    notes.write_text(f"# Session Notes: {feature_id} (append-only)\n",
+                                     encoding="utf-8")
+                converted = self._session_block_to_note(block)
+                existing = notes.read_text(encoding="utf-8").rstrip("\n")
+                notes.write_text(existing + "\n\n" + converted + "\n", encoding="utf-8")
+                migrated += 1
+            else:
+                audit_dir = self.docs_dir / "audit"
+                audit_dir.mkdir(parents=True, exist_ok=True)
+                legacy_file = audit_dir / "progress-legacy.txt"
+                existing = (legacy_file.read_text(encoding="utf-8").rstrip("\n") + "\n\n"
+                            if legacy_file.exists() else "")
+                legacy_file.write_text(existing + block.strip() + "\n", encoding="utf-8")
+                legacy += 1
+
+        progress_file.unlink()
+        return {
+            "success": True,
+            "sessions_migrated": migrated,
+            "sessions_to_legacy": legacy,
+            "message": (f"✅ Migrated {migrated} session block(s) to per-feature notes.md, "
+                        f"{legacy} block(s) to docs/audit/progress-legacy.txt; "
+                        "removed docs/progress.txt")
+        }
+
+    def _session_block_to_note(self, block: str) -> str:
+        """Rewrite a progress.txt session block as a notes.md `## S-…` entry."""
+        lines = block.strip().split("\n")
+        first = lines[0]
+        match = re.match(r"Session:\s*(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})", first)
+        if match:
+            y, mo, d, h, mi = match.groups()
+            heading = f"## S-{y}{mo}{d}-{h}{mi}"
+            rest = lines[1:]
+        else:
+            heading = f"## S-migrated"
+            rest = lines
+        return heading + "\n" + "\n".join(rest)
+
+
+def _parse_cli_flags(argv: List[str]):
+    """Split a command's argv tail into ({--flag: value}, [positionals])."""
+    flags: Dict = {}
+    positionals: List[str] = []
+    i = 0
+    while i < len(argv):
+        arg = argv[i]
+        if arg.startswith("--"):
+            key = arg[2:]
+            if i + 1 < len(argv) and not argv[i + 1].startswith("--"):
+                flags[key] = argv[i + 1]
+                i += 2
+            else:
+                flags[key] = True
+                i += 1
+        else:
+            positionals.append(arg)
+            i += 1
+    return flags, positionals
+
+
+def _read_stdin_text(flags: Dict) -> str:
+    """Entry body from --text or piped stdin (never blocks on a TTY)."""
+    if isinstance(flags.get("text"), str):
+        return flags["text"]
+    if not sys.stdin.isatty():
+        return sys.stdin.read()
+    return ""
+
 
 def main():
     """CLI interface for Owl of Athena"""
@@ -669,31 +1094,69 @@ def main():
     # Capture the rest as positional args so legacy callers still work
     parser.add_argument("args", nargs="*")
 
-    parsed, _ = parser.parse_known_args()
+    parsed, unknown = parser.parse_known_args()
     repo_root = Path(parsed.repo).resolve() if parsed.repo else Path.cwd()
-    remaining = parsed.args
+    remaining = parsed.args + unknown
 
     if not remaining:
         print("Usage: owl.py [--repo PATH] <command> [args]")
-        print("Commands:")
-        print("  archive <feature-id>   - Move feature to archived")
-        print("  retrieve <feature-id>  - Get feature summary")
-        print("  search <keyword>       - Search archived features")
-        print("  update-index           - Regenerate athena-index.md from specs (reads tasks.md)")
-        print("  prune-done             - Remove closed feature sessions from progress.txt")
-        print("  trim-progress          - Archive old progress.txt sessions (legacy)")
-        print("  write-memory           - Write Claude Code memory file with active context")
+        print("Session:")
+        print("  context                          - Print compact session-open context (plain text)")
+        print("  write-memory                     - Write Claude Code memory file with active context")
+        print("Append (body via stdin or --text):")
+        print("  add-request [--source s]         - Append verbatim CR entry, returns ID")
+        print("  add-decision --cr CR-... [--prd section]")
+        print("  add-note --feature <id> [--goal g] [--agent a] [--model m] [--skills s]")
+        print("Query:")
+        print("  show <CR-...|D-...|FR-...>       - Print exactly one entry")
+        print("  why <FR-...>                     - Print traceability chain incl. commits")
+        print("  retrieve <feature-id>            - Get feature summary")
+        print("  search <keyword>                 - Search archived features")
+        print("Maintenance:")
+        print("  archive <feature-id>             - Move feature to archived")
+        print("  update-index                     - Regenerate athena-index.md from specs")
+        print("  migrate                          - Convert progress.txt to per-feature notes.md")
+        print("  prune-done                       - Legacy: prune closed sessions from progress.txt")
+        print("  trim-progress                    - Legacy: archive old progress.txt sessions")
         sys.exit(1)
 
     owl = OwlOfAthena(repo_root)
     command = remaining[0]
-    
-    if command == "archive" and len(remaining) > 1:
-        result = owl.archive_feature(remaining[1])
-    elif command == "retrieve" and len(remaining) > 1:
-        result = owl.retrieve_feature(remaining[1])
-    elif command == "search" and len(remaining) > 1:
-        result = owl.search_features(remaining[1])
+    flags, positionals = _parse_cli_flags(remaining[1:])
+
+    # Plain-text commands (agent-facing output, not JSON)
+    if command == "context":
+        print(owl.context_block())
+        return
+    if command == "show" and positionals:
+        print(owl.show_entry(positionals[0]))
+        return
+    if command == "why" and positionals:
+        print(owl.why(positionals[0]))
+        return
+
+    if command == "archive" and positionals:
+        result = owl.archive_feature(positionals[0])
+    elif command == "retrieve" and positionals:
+        result = owl.retrieve_feature(positionals[0])
+    elif command == "search" and positionals:
+        result = owl.search_features(positionals[0])
+    elif command == "add-request":
+        result = owl.add_request(_read_stdin_text(flags),
+                                 source=flags.get("source", "chat"))
+    elif command == "add-decision":
+        result = owl.add_decision(_read_stdin_text(flags),
+                                  cr=str(flags.get("cr", "")),
+                                  prd=str(flags.get("prd", "") or ""))
+    elif command == "add-note":
+        result = owl.add_note(str(flags.get("feature", "")),
+                              _read_stdin_text(flags),
+                              goal=str(flags.get("goal", "") or ""),
+                              agent=str(flags.get("agent", "") or ""),
+                              model=str(flags.get("model", "") or ""),
+                              skills=str(flags.get("skills", "") or ""))
+    elif command == "migrate":
+        result = owl.migrate()
     elif command == "update-index":
         result = owl.update_index()
     elif command == "prune-done":
@@ -704,7 +1167,7 @@ def main():
         result = owl.write_memory()
     else:
         result = {"error": "Invalid command or missing arguments"}
-    
+
     print(json.dumps(result, indent=2))
 
 

@@ -12,6 +12,10 @@ Options:
     --sync       Copy this script to ~/.claude/skills/athena/scripts/ and exit
 
 BASE_DIR defaults to $HOME and /Volumes (if it exists).
+
+LEGACY-AWARE: repos migrated to the notes-based layout (no docs/progress.txt)
+are handled gracefully — prune-done and write-memory no-op or source from
+tasks.md/notes.md. Run `./scripts/owl migrate` in a repo to convert it.
 """
 
 import re
