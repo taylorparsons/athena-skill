@@ -18,11 +18,6 @@
 - **Spec**: docs/specs/20260603-athena-site-app/spec.md
 - **Summary**: No summary available
 
-### 20260705-token-diet
-- **Status**: Active
-- **Spec**: docs/specs/20260705-token-diet/spec.md
-- **Summary**: Cut ATHENA per-session token cost ~85% (measured ~26-32K in this repo, target ~4-5K) while keeping full audit-trail queryability, by gating all KB access through the deterministic `owl` script, retiri
-
 ---
 
 ## Archived Features (Skip unless explicitly requested)
@@ -167,21 +162,26 @@
 - **Spec**: docs/specs/20260602-sync-origin-main/spec.md
 - **Summary**: No summary available
 
+### 20260705-token-diet
+- **Status**: Done
+- **Spec**: docs/specs/20260705-token-diet/spec.md
+- **Summary**: Cut ATHENA per-session token cost ~85% (measured ~26-32K in this repo, target ~4-5K) while keeping full audit-trail queryability, by gating all KB access through the deterministic `owl` script, retiri
+
 ---
 
 ## Token Optimization
 
 **Without athena-index.md**:
-- Load all 30 specs = ~14,000 tokens
+- Load all 30 specs = ~14,500 tokens
 
 **With athena-index.md**:
 - Load athena-index.md only = ~1100 tokens
-- Load 2 active specs = ~600 tokens
-- **Total**: ~1700 tokens
+- Load 1 active specs = ~300 tokens
+- **Total**: ~1400 tokens
 - **Savings**: ~92% reduction
 
 **Usage Pattern**:
 1. Athena loads athena-index.md first
-2. Identifies active features (currently: 2)
-3. Skips 28 archived features
+2. Identifies active features (currently: 1)
+3. Skips 29 archived features
 4. If user asks about archived feature, load on-demand

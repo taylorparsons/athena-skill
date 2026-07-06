@@ -92,6 +92,7 @@ Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude)
 - Shipping imported historical docs from unrelated product repos as canonical artifacts in this share repo. (Sources: [CR-20260211-0939](requests.md#cr-20260211-0939); [D-20260211-0940](decisions.md#d-20260211-0940))
 
 ## Next / backlog
+- Shipped (v2.1.0, CR-20260705-2015): `docs/specs/20260705-token-diet/spec.md`, `docs/specs/20260705-token-diet/tasks.md`, `scripts/owl.py`, `skills/athena/SKILL.md`, `skills/athena/references/`, and `CHANGELOG.md`.
 - Implemented in: `docs/specs/20260416-release-v2-0-0-1/spec.md`, `docs/specs/20260416-release-v2-0-0-1/tasks.md`, `VERSION`, and `CHANGELOG.md`.
 - Implemented in: `docs/specs/20260602-athena-site/spec.md`, `docs/specs/20260602-athena-site/tasks.md`, `site/`, and local static server verification.
 - Planned in: `docs/specs/20260603-athena-site-app/spec.md`, `docs/specs/20260603-athena-site-app/tasks.md`, and `docs/superpowers/specs/2026-06-03-athena-site-app-design.md`.

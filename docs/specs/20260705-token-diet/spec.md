@@ -1,6 +1,6 @@
 # Feature Spec: 20260705-token-diet
 
-Status: Active
+Status: Done
 Created: 2026-07-05 20:25
 Inputs: CR-20260705-2015
 Decisions: D-20260705-2025, D-20260705-2026, D-20260705-2027, D-20260705-2028
@@ -33,7 +33,7 @@ Narrative:
 
 Acceptance scenarios:
 1. Given an existing CR/D/FR ID, When `owl show <ID>` runs, Then exactly that entry is printed. (Verifies: FR-005)
-2. Given an FR ID, When `owl why <FR-ID>` runs, Then the chain FR → Sources (CR/D entries) → implementing tasks → matching commits is printed. (Verifies: FR-006)
+2. Given a requirement ID, When `owl why` runs on it, Then the chain FR → Sources (CR/D entries) → implementing tasks → matching commits is printed. (Verifies: FR-006)
 
 ### US4: progress.txt retirement (Priority: P1)
 Narrative:

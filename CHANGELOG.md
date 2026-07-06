@@ -2,6 +2,35 @@
 
 All notable changes to this project are documented in this file.
 
+## v2.1.0 - 2026-07-05
+
+## Summary
+
+**Token diet.** Per-session token cost drops ~85% (measured ~26-32K → ~4-5K in a mature repo). The audit trail keeps full queryability, but the KB is now **script-gated**: agents never read the `docs/` logs — all access goes through `./scripts/owl`, which is deterministic and costs zero tokens. Full Claude Code / Codex parity via scripts.
+
+## What's Changed
+### Script-gated KB (owl.py)
+- New `owl context` — compact session-open block (active feature, goal, IN PROGRESS/NEXT, recent CR/D IDs, latest request verbatim). Replaces reading five docs files; works identically on Claude Code and Codex.
+- New append commands `owl add-request`, `owl add-decision`, `owl add-note` — write audit entries with generated collision-safe IDs, never loading the logs.
+- New query commands `owl show <CR-|D-|FR-ID>` (one entry) and `owl why <FR-ID>` (requirement → sources → tasks → commits).
+- `write-memory` now sources from `tasks.md`/`notes.md`; `prune-done` is a graceful no-op on migrated repos.
+- 20 unit tests added (`scripts/tests/test_owl.py`).
+
+### progress.txt retired
+- Task truth: per-feature `tasks.md`. Session notes: per-feature `notes.md` (new template). Session-open summary: `owl context`.
+- New `owl migrate` converts existing repos losslessly (per-feature blocks → `notes.md`; unattributable blocks → `docs/audit/progress-legacy.txt`), then removes `progress.txt`. All commands fall back to `progress.txt` on unmigrated repos.
+- `validate_progress_log.py` / `print_resume_prompt.py` handle the retired layout; `templates/progress.txt` removed; `templates/notes.md` added.
+
+### Instruction layer diet
+- `SKILL.md` rewritten: 338 → 86 lines (~3.9K → ~1.3K tokens); detailed procedures moved to `references/` (setup, commits, recovery), loaded only when needed; frontmatter description cut to one sentence.
+- Codex `AGENTS.md` guidance reduced to trigger + stop-gates (≤ 15 lines) — the loop lives only in SKILL.md; Codex adapter rewritten accordingly.
+- Root `SKILL.md`/`templates/` kept as synced copies of the `skills/athena/` package.
+
+## Verification
+- `python3 -m unittest discover -s scripts/tests` — 20/20 pass
+- `node --test site/site.test.mjs` — pass
+- `owl migrate` + `context` + `write-memory` + `prune-done` verified on this repo
+
 ## v2.0.0.1 - 2026-04-16
 
 ## Summary

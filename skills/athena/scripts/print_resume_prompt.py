@@ -87,9 +87,21 @@ def main() -> int:
     progress_path = os.path.join(repo_root, "docs", "progress.txt")
 
     if not os.path.exists(progress_path):
-        sys.stderr.write(f"Missing file: {progress_path}\n")
-        sys.stderr.write("Expected a ATHENA progress log at docs/progress.txt.\n")
-        return 2
+        # Token-diet layout: progress.txt is retired — the owl context block
+        # is the resume prompt.
+        import subprocess
+
+        owl_py = os.path.join(os.path.dirname(os.path.abspath(__file__)), "owl.py")
+        print("# Paste into your agent session")
+        print("$athena")
+        print("Resume from repo state:")
+        result = subprocess.run(
+            [sys.executable, owl_py, "--repo", repo_root, "context"],
+            capture_output=True, text=True,
+        )
+        print(result.stdout.strip())
+        print("Continue the active task; keep tasks.md and notes.md updated via ./scripts/owl.")
+        return 0 if result.returncode == 0 else 2
 
     text = _read_text(progress_path)
     lines = text.splitlines()
