@@ -805,7 +805,7 @@ Implement the plan.
 
 ### Request (verbatim):
 is athena in this project  in sync with taylorparsons/athena on github and my install on claude code?
-/Users/taylorparsons/.claude/skills/athena
+~/.claude/skills/athena
 
 I need you do evaluate athena is see if there is a way to cut it's token usage when using with claude and codex?
 

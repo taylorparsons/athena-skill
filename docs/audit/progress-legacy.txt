@@ -43,8 +43,8 @@ Skills: athena, brainstorming, writing-skills, test-driven-development
 - CR-20260416-1424: update the Athena project safely without breaking Claude files; follow-up approval limited scope to option 1 packaged-surface sync.
 - D-20260416-1425: update only `skills/athena/` packaged wording and required ATHENA audit docs; do not modify `.claude/*`, root README/Owl docs, or install/migration scripts.
 - RED baseline:
-  - `diff -u /Volumes/T9/code/SKILLS/athena/skills/athena/SKILL.md /Users/taylorparsons/.codex/skills/athena/SKILL.md` showed the local working package had Codex dispatch wording but would regress the source package's Claude memory-first flow if copied wholesale.
-  - `diff -u /Volumes/T9/code/SKILLS/athena/skills/athena/agents/owl-of-athena.md /Users/taylorparsons/.codex/skills/athena/agents/owl-of-athena.md` showed the local working package changed the packaged Owl agent model metadata, which the source repo's migration tooling currently copies into `.claude/agents/`.
+  - `diff -u /Volumes/T9/code/SKILLS/athena/skills/athena/SKILL.md ~/.codex/skills/athena/SKILL.md` showed the local working package had Codex dispatch wording but would regress the source package's Claude memory-first flow if copied wholesale.
+  - `diff -u /Volumes/T9/code/SKILLS/athena/skills/athena/agents/owl-of-athena.md ~/.codex/skills/athena/agents/owl-of-athena.md` showed the local working package changed the packaged Owl agent model metadata, which the source repo's migration tooling currently copies into `.claude/agents/`.
 - Changed packaged files:
   - `skills/athena/SKILL.md`
   - `skills/athena/agents/owl-of-athena.md`
