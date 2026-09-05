@@ -11,7 +11,8 @@ class TestPackageParity(unittest.TestCase):
             self.skipTest("standalone installed skill has no repository mirror")
         paths = ["SKILL.md", "scripts/owl.py", "scripts/tests/test_owl.py",
                  "scripts/tests/test_recovery.py", "references/commits.md",
-                 "references/recovery.md", "references/evaluation.md", "references/setup.md"]
+                 "references/recovery.md", "references/evaluation.md", "references/setup.md",
+                 "references/benchmarks.md", "references/benchmark-cases.json"]
         for path in paths:
             with self.subTest(path=path):
                 self.assertEqual((root / path).read_bytes(), (package / path).read_bytes())

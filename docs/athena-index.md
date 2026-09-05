@@ -187,12 +187,17 @@
 - **Spec**: docs/specs/20260905-astra-workflow-hardening/spec.md
 - **Summary**: Apply the review recommendations while retaining traceability and permission boundaries. No remote publication or model benchmark is included.
 
+### 20260905-athena-benchmarks
+- **Status**: Done
+- **Spec**: docs/specs/20260905-athena-benchmarks/spec.md
+- **Summary**: Add the eight recommended workflow benchmarks and push the existing feature branch. This delivers specifications and offline planning, not model execution or measured performance.
+
 ---
 
 ## Token Optimization
 
 **Without athena-index.md**:
-- Load all 34 specs = ~16,500 tokens
+- Load all 35 specs = ~17,000 tokens
 
 **With athena-index.md**:
 - Load athena-index.md only = ~1100 tokens
@@ -203,5 +208,5 @@
 **Usage Pattern**:
 1. Athena loads athena-index.md first
 2. Identifies active features (currently: 1)
-3. Skips 33 archived features
+3. Skips 34 archived features
 4. If user asks about archived feature, load on-demand

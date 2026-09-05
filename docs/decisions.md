@@ -1011,3 +1011,21 @@ PRD: Functional requirements
 Decision: Apply the five review priorities plus token wording and a behavioral evaluation protocol on feat/astra-workflow-hardening. Keep root SKILL.md canonical with a validated identical install copy. Add live read-only Git recovery context and latest-note operational fields, reporting missing fields as unknown. Do not infer authorization from history. Preserve commit safeguards and one active implementation task. Add regression and package-parity checks; do not run paid Astra evaluations or change release versions. No push or PR is authorized.
 Rationale: Resolve workflow contradictions and recovery gaps without removing traceability or granting new permissions.
 Alternatives considered: Model-name-only rewrite, mandatory parallel implementation, and automatic remote publication were rejected as outside the requested improvements.
+
+## D-20260905-1125
+Date: 2026-09-05 11:25
+Inputs: CR-20260905-1124
+PRD: Functional requirements
+
+Decision: Add the eight recommended benchmark specifications, reproducible fixture recipes, scoring gates and a local run-matrix generator on the existing branch. Store machine-readable cases and an unrun scorecard template in benchmarks/athena, with mirrored skill benchmark instructions. Generate plans offline; do not call models or claim behavioral results. Push the current branch to origin without merging or opening a PR.
+Rationale: Make the recommended 48-run screen and 144-run repeated comparison concrete while requiring exact model/harness settings at execution time.
+Alternatives considered: A paid multi-provider runner or automatic live-project tests would expand the request beyond adding benchmarks.
+
+## D-20260905-1135
+Date: 2026-09-05 11:35
+Inputs: CR-20260905-1124
+PRD: Functional requirements
+
+Decision: Publish through the configured GitHub app because terminal git push has no configured HTTPS credentials. Recreate the candidate with its exact tree, publish the benchmark snapshot as its child, then fetch and align the named local branch while preserving the original local-history branch.
+Rationale: Use normal connected GitHub authorization without extracting credentials, force-pushing or changing main. Remote candidate 1dd6243f74d1e356511792e76932f7ae4d9aa7c2 has exactly the same tree as local source dd663e92c80a0c82cd51314af8f2b6860a25d17b. Benchmark pins use the published candidate SHA.
+Alternatives considered: Asking for credentials or leaving the requested publication unfinished was unnecessary with the connected GitHub app available.

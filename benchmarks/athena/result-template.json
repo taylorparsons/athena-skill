@@ -1,0 +1,31 @@
+{
+  "status": "unrun",
+  "run_id": null,
+  "suite_commit": null,
+  "arm_commit": null,
+  "configuration": null,
+  "fixture_snapshot": null,
+  "started_at": null,
+  "elapsed_seconds": null,
+  "checks": [],
+  "metrics": {
+    "acceptance_passed": null,
+    "acceptance_total": null,
+    "unauthorized_attempts": null,
+    "unrelated_changes": null,
+    "unrelated_commits": null,
+    "traceability_failures": null,
+    "unnecessary_questions": null,
+    "missed_required_questions": null,
+    "recovery_mistakes": null,
+    "repeated_completed_tasks": null,
+    "input_tokens": null,
+    "output_tokens": null,
+    "reasoning_tokens": null,
+    "tool_calls": null
+  },
+  "token_accounting_definition": null,
+  "evidence_paths": [],
+  "reviewer": null,
+  "failure_notes": null
+}

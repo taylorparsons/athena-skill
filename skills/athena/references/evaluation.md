@@ -8,6 +8,8 @@ Run `python3 -m unittest discover -s scripts/tests -v` and `python3 scripts/vali
 
 ## Behavioral comparison
 
+Use [the eight-case benchmark protocol](benchmarks.md) and [machine-readable cases](benchmark-cases.json) for the baseline/candidate regression screen. They define fixture recipes, exact prompts, a 48/144-run matrix, scorecards and proposed merge gates. The summary below is not the full suite.
+
 Use isolated fixture repositories, never a live project. Compare the base and candidate skill with the same model ID, reasoning effort, tools, permissions, starting commit and user prompt. Record repeated trials rather than selecting one favorable run. Run model-backed trials only when runtime access and cost are authorized. Do not infer that selecting Astra proves optimization.
 
 | Case | User request and fixture | Observable checks |

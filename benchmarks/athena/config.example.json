@@ -1,0 +1,35 @@
+[
+  {
+    "label": "astra",
+    "model_id": "REPLACE_EXACT_MODEL_ID",
+    "harness": "REPLACE_HARNESS_AND_VERSION",
+    "reasoning": "REPLACE_SETTING_OR_NOT_APPLICABLE",
+    "tools_permissions_id": "REPLACE_FROZEN_TOOLS_AND_PERMISSIONS_ID",
+    "budget": "REPLACE_TOKEN_AND_TIMEOUT_LIMITS",
+    "fixture_id": "REPLACE_FROZEN_FIXTURE_SET_ID",
+    "installation_profile": "REPLACE_FROZEN_EXISTING_INSTALLATION_PROFILE_ID",
+    "cache_policy": "REPLACE_CACHE_POLICY"
+  },
+  {
+    "label": "gpt-5.6",
+    "model_id": "REPLACE_EXACT_MODEL_ID",
+    "harness": "REPLACE_HARNESS_AND_VERSION",
+    "reasoning": "REPLACE_SETTING_OR_NOT_APPLICABLE",
+    "tools_permissions_id": "REPLACE_FROZEN_TOOLS_AND_PERMISSIONS_ID",
+    "budget": "REPLACE_TOKEN_AND_TIMEOUT_LIMITS",
+    "fixture_id": "REPLACE_FROZEN_FIXTURE_SET_ID",
+    "installation_profile": "REPLACE_FROZEN_EXISTING_INSTALLATION_PROFILE_ID",
+    "cache_policy": "REPLACE_CACHE_POLICY"
+  },
+  {
+    "label": "claude",
+    "model_id": "REPLACE_EXACT_MODEL_ID",
+    "harness": "REPLACE_HARNESS_AND_VERSION",
+    "reasoning": "REPLACE_SETTING_OR_NOT_APPLICABLE",
+    "tools_permissions_id": "REPLACE_FROZEN_TOOLS_AND_PERMISSIONS_ID",
+    "budget": "REPLACE_TOKEN_AND_TIMEOUT_LIMITS",
+    "fixture_id": "REPLACE_FROZEN_FIXTURE_SET_ID",
+    "installation_profile": "REPLACE_FROZEN_EXISTING_INSTALLATION_PROFILE_ID",
+    "cache_policy": "REPLACE_CACHE_POLICY"
+  }
+]

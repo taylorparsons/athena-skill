@@ -81,6 +81,8 @@ Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude)
 - FR-ATHENA-038: Include live Git state and labeled recorded authorization, pending-process, and verification fields in read-only recovery context, with unknown defaults and no inferred permissions. (Sources: CR-20260905-1100; D-20260905-1101)
 - FR-ATHENA-039: Validate package parity and recovery behavior and provide a repeatable behavioral evaluation protocol without claiming unmeasured Astra improvements. (Sources: CR-20260905-1100; D-20260905-1101)
 
+- FR-ATHENA-040: Provide eight before/after workflow benchmarks, controlled model/harness run matrices, fixture recipes, scoring metrics and merge gates; publish them on the existing feature branch without running model trials. (Sources: CR-20260905-1124; D-20260905-1125)
+
 ## Non-functional requirements
 - [NFR-ATHENA-001](PRD.md#L60): Exclude local/generated artifacts from commits via `.gitignore`. (Sources: [CR-20260211-0939](requests.md#cr-20260211-0939), [CR-20260211-1010](requests.md#cr-20260211-1010); [D-20260211-0940](decisions.md#d-20260211-0940), [D-20260211-1012](decisions.md#d-20260211-1012))
 - [NFR-ATHENA-002](PRD.md#L61): Keep README focused on public share and cross-agent compatibility. (Sources: [CR-20260211-0908](requests.md#cr-20260211-0908), [CR-20260211-0939](requests.md#cr-20260211-0939))
@@ -99,6 +101,7 @@ Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude)
 - Shipping imported historical docs from unrelated product repos as canonical artifacts in this share repo. (Sources: [CR-20260211-0939](requests.md#cr-20260211-0939); [D-20260211-0940](decisions.md#d-20260211-0940))
 
 ## Next / backlog
+- Implemented on branch (pending merge): benchmark suite in `docs/specs/20260905-athena-benchmarks/spec.md`; evidence: `scripts/tests/test_benchmark_plan.py` and `references/benchmark-cases.json`. (Sources: CR-20260905-1124; D-20260905-1125)
 - Implemented on branch (pending merge): Astra workflow hardening in `docs/specs/20260905-astra-workflow-hardening/spec.md`; evidence: `scripts/tests/test_recovery.py` and `scripts/tests/test_package_parity.py`. (Sources: CR-20260905-1100; D-20260905-1101)
 - Shipped (v2.2.0, CR-20260706-0651): `docs/specs/20260706-readme-release-push/spec.md`, `docs/specs/20260706-readme-release-push/tasks.md`, `README.md`, `docs/releases/v2.1.0.md`, and `docs/releases/v2.2.0.md`.
 - Shipped (v2.2.0, CR-20260706-0642): `docs/specs/20260706-prd-diet-codex-config/spec.md`, `docs/specs/20260706-prd-diet-codex-config/tasks.md`, `scripts/owl.py` (prune-prd), and `CHANGELOG.md`.
