@@ -218,7 +218,9 @@ Claude will create the full scaffold including `athena-index.md`. Then run `./sc
 
 ## Owl of Athena (Claude Code)
 
-Owl has two halves. **Owl-the-script** (`scripts/owl.py`) is the deterministic KB gateway every session uses — it costs zero tokens. **Owl-the-agent** (a Haiku sub-agent, Claude Code only) is dispatched only for judgment calls: narrative summaries of archived features, history questions that need synthesis.
+Owl has two halves. **Owl-the-script** (`scripts/owl.py`) is the deterministic KB gateway used at session open. It runs without an LLM; returned text still consumes model context. **Owl-the-agent** (a Haiku sub-agent, Claude Code only) handles narrative summaries of archived features and history questions that need synthesis.
+
+The canonical workflow is [SKILL.md](SKILL.md). Reviews and diagnoses are read-only; implementation continues through authorized tasks with one active implementation task. Recovery includes live Git state and labeled historical operational notes. These changes have a [behavioral evaluation protocol](references/evaluation.md), not measured Astra performance results.
 
 **What the Owl gateway does:**
 - Opens sessions: `owl context` prints the active feature, goal, task state, recent CR/D IDs, and the latest request — replacing full reads of five docs files
@@ -241,7 +243,7 @@ Fixed session-open overhead (what loads before any real work) dropped ~94%: ~26,
 sequenceDiagram
     participant U as User
     participant M as Main Agent
-    participant S as scripts/owl (zero-token gateway)
+    participant S as scripts/owl (deterministic gateway)
     participant O as Owl Agent (Haiku, Claude only)
 
     U->>M: Start session

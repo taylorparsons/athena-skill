@@ -22,3 +22,6 @@ jobs:
 
       - name: Validate install targets
         run: python3 scripts/validate_install_targets.py
+
+      - name: Run regression and package parity tests
+        run: python3 -m unittest discover -s scripts/tests -v

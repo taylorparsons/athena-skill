@@ -857,3 +857,12 @@ Can you spin up codex and try it
 
 ### Request (verbatim):
 Push these changes to remotes make sure the readme.md is accurate and the install / setup is accurate.  The github release notes need to update the value of the changes for both Claude and codex
+
+## CR-20260905-1100
+
+### Metadata
+- **Date:** 2026-09-05 11:00
+- **Source:** chat
+
+### Request (verbatim):
+Apply the recommended changes on a branch

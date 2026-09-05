@@ -9,17 +9,19 @@ The loop is identical on every harness — follow `../../skills/athena/SKILL.md`
 
 ## Codex wiring
 
-- Session open: run `./scripts/owl context` (Codex has no hooks or auto-memory — the script is the mechanism).
+- Session open: run `./scripts/owl context` regardless of optional harness memory or hooks. Reconcile recorded context with live state and the current request.
 - Keep `~/.codex/AGENTS.md` minimal (trigger + stop-gates only, ≤ 15 lines). Do not duplicate loop steps there — the loop lives in SKILL.md. Recommended block:
 
-      ## ATHENA — mandatory for all coding work
-      - Invoke the athena skill before any change and follow its loop exactly.
+      ## ATHENA for repositories using its audit trail
+      - Invoke athena and select the requested mode before work.
+      - Review, explanation and diagnosis are read-only unless changes are requested.
       - Session open: ./scripts/owl context
       - Never Read docs/requests.md, docs/decisions.md, or docs/athena-index.md —
         use ./scripts/owl (add-request, add-decision, add-note, show, why).
       - No code changes until the current request is captured (owl add-request)
         and reflected in docs/PRD.md.
-      - If any gate above was skipped, STOP and restart with ATHENA.
+      - If a gate was missed, reconcile the missing traceability before further changes.
+      - Preserve completed work; ask if reconciliation requires new scope or permission.
 
 - Install the full package with `$skill-installer` into `$CODEX_HOME/skills/athena`, then run scripts from `$CODEX_HOME/skills/athena/scripts/` (or a local `./scripts/owl` wrapper).
 

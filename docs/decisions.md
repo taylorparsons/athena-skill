@@ -1002,3 +1002,12 @@ Alternatives considered:
 
 Acceptance / test:
 - gh release list shows v2.1.0 and v2.2.0; README greps clean for stale terms; git status clean; origin/main == main.
+
+## D-20260905-1101
+Date: 2026-09-05 11:01
+Inputs: CR-20260905-1100
+PRD: Functional requirements
+
+Decision: Apply the five review priorities plus token wording and a behavioral evaluation protocol on feat/astra-workflow-hardening. Keep root SKILL.md canonical with a validated identical install copy. Add live read-only Git recovery context and latest-note operational fields, reporting missing fields as unknown. Do not infer authorization from history. Preserve commit safeguards and one active implementation task. Add regression and package-parity checks; do not run paid Astra evaluations or change release versions. No push or PR is authorized.
+Rationale: Resolve workflow contradictions and recovery gaps without removing traceability or granting new permissions.
+Alternatives considered: Model-name-only rewrite, mandatory parallel implementation, and automatic remote publication were rejected as outside the requested improvements.

@@ -2,7 +2,7 @@
 
 ## New or adopted repo — create the audit files
 
-Required set (create any that are missing before other work):
+For authorized setup or implementation only, create missing files below. A read-only review does not authorize scaffolding, migration, hooks or configuration changes.
 - `docs/requests.md` — created automatically by the first `owl add-request`
 - `docs/decisions.md` — created automatically by the first `owl add-decision`
 - `docs/PRD.md` — keep minimal and factual; do not invent requirements
@@ -31,5 +31,5 @@ This moves each session block into the matching feature's `notes.md`, parks unre
 
 ## Harness wiring
 
-- **Claude Code**: a `SessionStart` hook should run `./scripts/owl prune-done`, `update-index`, and `write-memory` (see `scripts/patch-claude-settings.py`). The memory file then replaces `owl context` at session open.
-- **Codex**: no hooks — the loop's step 1 (`./scripts/owl context`) does the same job. Keep `~/.codex/AGENTS.md` to trigger + stop-gates only; the loop lives in SKILL.md.
+- **Claude Code**: existing optional hooks may maintain memory (see `scripts/patch-claude-settings.py`). Treat memory as a snapshot; run read-only `./scripts/owl context` to check live state. Do not install or change hooks without authorization.
+- **Codex**: use `./scripts/owl context` independently of optional harness capabilities. Keep any authorized `~/.codex/AGENTS.md` integration to mode selection and boundaries; the loop lives in SKILL.md.

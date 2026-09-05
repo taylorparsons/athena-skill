@@ -1,7 +1,7 @@
 # Athena Feature Index
 
 **Purpose**: Lightweight index to reduce token overhead by loading only active features.  
-**Last updated**: 2026-07-06
+**Last updated**: 2026-09-05
 
 ## How to Use This Index
 
@@ -182,12 +182,17 @@
 - **Spec**: docs/specs/20260706-readme-release-push/spec.md
 - **Summary**: Bring README.md up to v2.2.0 reality (script-gated KB, tasks.md/notes.md instead of progress.txt, owl context/migrate, current package contents, retired scripts removed), publish GitHub releases v2.1.
 
+### 20260905-astra-workflow-hardening
+- **Status**: Done
+- **Spec**: docs/specs/20260905-astra-workflow-hardening/spec.md
+- **Summary**: Apply the review recommendations while retaining traceability and permission boundaries. No remote publication or model benchmark is included.
+
 ---
 
 ## Token Optimization
 
 **Without athena-index.md**:
-- Load all 33 specs = ~16,000 tokens
+- Load all 34 specs = ~16,500 tokens
 
 **With athena-index.md**:
 - Load athena-index.md only = ~1100 tokens
@@ -198,5 +203,5 @@
 **Usage Pattern**:
 1. Athena loads athena-index.md first
 2. Identifies active features (currently: 1)
-3. Skips 32 archived features
+3. Skips 33 archived features
 4. If user asks about archived feature, load on-demand

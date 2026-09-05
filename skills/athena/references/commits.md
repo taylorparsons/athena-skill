@@ -9,13 +9,13 @@ Hard rules:
 ## Staging modes (helper prechecks)
 
 `scripts/commit_with_traceability.py` supports:
-- **Default (broad stage with guardrails)**: blocks `.DS_Store`, common temp/cache paths, likely secret patterns, and large artifacts.
+- Default without explicit scope is rejected unless broad staging has operator confirmation. Prefer `--paths`; checks block `.DS_Store`, common temp/cache paths, likely secrets, and large artifacts.
 - `--paths <p1> <p2> ...` — explicit scope.
 - `--docs-only` — stage only the ATHENA traceability docs (spec/tasks/notes/PRD/TRACEABILITY/requests/decisions).
-- `--all-changes` — stage everything.
+- `--all-changes` requests broad staging; the current helper also requires `--strong-operator`. Use only with explicit authorization for all changes, never as an automatic retry.
 - `--skip-staging-precheck` — only when blocked files are intentionally included.
 
-Review with `git diff --cached` before committing.
+Inspect `git status --short`, `git diff`, and `git diff --cached` before invoking the helper: it stages and commits in one operation. `--paths` limits new staging but does not exclude already-staged files from the commit. If unrelated changes are staged, stop and ask the user to resolve ownership; do not unstage their work without permission.
 
 ## Invocation
 
@@ -23,7 +23,7 @@ Review with `git diff --cached` before committing.
       --feature <FEATURE_ID> --task <T-001> \
       --summary "<what changed>" \
       --cr <CR-...> [--decisions <D-...,...>] \
-      [--paths ... | --docs-only | --all-changes]
+      --paths <task-owned-paths...>
 
 ## Message format
 

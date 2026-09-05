@@ -77,6 +77,10 @@ Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude)
 - FR-ATHENA-035: Keep the PRD token-lean: `owl prune-prd` archives Metadata link lists and closed backlog lines to `docs/audit/prd-archive.md`, and the loop forbids full PRD reads (grep the target section; `owl show <FR-ID>` for one requirement). (Sources: CR-20260706-0642; D-20260706-0642)
 - FR-ATHENA-036: Keep README.md accurate to the current architecture (script-gated owl gateway, per-feature notes.md, owl migrate path, measured per-harness token numbers, no retired-script references), and publish GitHub releases v2.1.0 and v2.2.0 whose notes state the measured value for both Claude Code and Codex. (Sources: CR-20260706-0651; D-20260706-0652)
 
+- FR-ATHENA-037: Keep canonical and packaged workflow instructions consistent, distinguish read-only work from implementation, continue authorized tasks with proportional stop conditions, and document explicit commit paths. (Sources: CR-20260905-1100; D-20260905-1101)
+- FR-ATHENA-038: Include live Git state and labeled recorded authorization, pending-process, and verification fields in read-only recovery context, with unknown defaults and no inferred permissions. (Sources: CR-20260905-1100; D-20260905-1101)
+- FR-ATHENA-039: Validate package parity and recovery behavior and provide a repeatable behavioral evaluation protocol without claiming unmeasured Astra improvements. (Sources: CR-20260905-1100; D-20260905-1101)
+
 ## Non-functional requirements
 - [NFR-ATHENA-001](PRD.md#L60): Exclude local/generated artifacts from commits via `.gitignore`. (Sources: [CR-20260211-0939](requests.md#cr-20260211-0939), [CR-20260211-1010](requests.md#cr-20260211-1010); [D-20260211-0940](decisions.md#d-20260211-0940), [D-20260211-1012](decisions.md#d-20260211-1012))
 - [NFR-ATHENA-002](PRD.md#L61): Keep README focused on public share and cross-agent compatibility. (Sources: [CR-20260211-0908](requests.md#cr-20260211-0908), [CR-20260211-0939](requests.md#cr-20260211-0939))
@@ -95,6 +99,7 @@ Public, clean ATHENA framework repository for cross-agent usage (Codex + Claude)
 - Shipping imported historical docs from unrelated product repos as canonical artifacts in this share repo. (Sources: [CR-20260211-0939](requests.md#cr-20260211-0939); [D-20260211-0940](decisions.md#d-20260211-0940))
 
 ## Next / backlog
+- Implemented on branch (pending merge): Astra workflow hardening in `docs/specs/20260905-astra-workflow-hardening/spec.md`; evidence: `scripts/tests/test_recovery.py` and `scripts/tests/test_package_parity.py`. (Sources: CR-20260905-1100; D-20260905-1101)
 - Shipped (v2.2.0, CR-20260706-0651): `docs/specs/20260706-readme-release-push/spec.md`, `docs/specs/20260706-readme-release-push/tasks.md`, `README.md`, `docs/releases/v2.1.0.md`, and `docs/releases/v2.2.0.md`.
 - Shipped (v2.2.0, CR-20260706-0642): `docs/specs/20260706-prd-diet-codex-config/spec.md`, `docs/specs/20260706-prd-diet-codex-config/tasks.md`, `scripts/owl.py` (prune-prd), and `CHANGELOG.md`.
 - Planned in: `docs/specs/20260603-athena-site-app/spec.md`, `docs/specs/20260603-athena-site-app/tasks.md`, and `docs/superpowers/specs/2026-06-03-athena-site-app-design.md`.
