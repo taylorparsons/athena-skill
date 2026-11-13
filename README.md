@@ -65,6 +65,18 @@ After install:
 - Verify `~/.claude/skills/athena/SKILL.md` exists.
 - Or run `/skills` in Claude Code and confirm `athena` is listed.
 
+#### Claude Code plugin
+
+This repository is also a Claude Code plugin named `athena` (manifest: `.claude-plugin/plugin.json`). To install it from this repository's marketplace (`.claude-plugin/marketplace.json`):
+
+```
+/plugin install athena --marketplace taylorparsons/athena-skill
+```
+
+Requires Claude Code 2.1.275 or later.
+
+The plugin adds the `athena` skill and the Owl of Athena sub-agent (`agents/owl-of-athena.md`). It does not add Owl's hooks (Step 2b), and it does not create the ATHENA docs or `./scripts/owl` in your project. Set those up per project with Step 3 or Option C below.
+
 ---
 
 ### Step 2 — Install Owl of Athena (Claude Code only)
@@ -458,3 +470,13 @@ This checks:
 - GitHub as source of truth (tags/releases)
 - LinkedIn for launch/adoption examples
 - `publishing/launch-checklist.md`
+
+## Requirements
+
+- Claude Code 2.1.275 or later for the plugin install; the Codex install needs only the skill files.
+- `python3` to run `scripts/owl.py` and the other ATHENA scripts.
+- `git` for the commit-traceability scripts and git hooks.
+
+## License
+
+MIT. See [LICENSE](LICENSE).

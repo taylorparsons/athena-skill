@@ -1,0 +1,15 @@
+{
+  "name": "athena-skill",
+  "owner": {
+    "name": "Taylor Parsons"
+  },
+  "description": "ATHENA: a PRD-driven delivery loop with a traceable audit trail, packaged as a Claude Code plugin.",
+  "plugins": [
+    {
+      "name": "athena",
+      "source": "./",
+      "description": "PRD-driven delivery loop with a token-lean audit trail: requests, decisions, specs, tasks, and commits.",
+      "version": "2.2.0"
+    }
+  ]
+}

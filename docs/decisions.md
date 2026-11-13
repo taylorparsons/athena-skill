@@ -1002,3 +1002,59 @@ Alternatives considered:
 
 Acceptance / test:
 - gh release list shows v2.1.0 and v2.2.0; README greps clean for stale terms; git status clean; origin/main == main.
+
+## D-20261113-1035
+Date: 2026-11-13 10:35
+Inputs: CR-20261113-1034
+PRD: (n/a)
+
+D: Plugin folder is the repo root (no copied subfolder). skills/athena/SKILL.md is already the expected skills/<name>/SKILL.md layout, so adding .claude-plugin/plugin.json at the root avoids a third copy of scripts and agents. Root SKILL.md is kept (single-skill install path).
+
+## D-20261113-1036
+Date: 2026-11-13 10:35
+Inputs: CR-20261113-1034
+PRD: (n/a)
+
+D: Plugin name is "athena" (matches the skill name). Recheck against the validator's repository-name note before submission; the GitHub repo is athena-skill.
+
+## D-20261113-1037
+Date: 2026-11-13 10:35
+Inputs: CR-20261113-1034
+PRD: (n/a)
+
+D: Plugin version is 2.2.0, taken from VERSION and matching existing git tag v2.2.0. Not the 0.1.0 example in the request.
+
+## D-20261113-1038
+Date: 2026-11-13 10:35
+Inputs: CR-20261113-1034
+PRD: (n/a)
+
+D: License is MIT, stated in LICENSE (Copyright 2026 Taylor Parsons). Author name "Taylor Parsons" comes from that copyright line. No author email, no contact address: left out, listed as an owner question.
+
+## D-20261113-1039
+Date: 2026-11-13 10:35
+Inputs: CR-20261113-1034
+PRD: (n/a)
+
+D: Move agents/OWL-IMPLEMENTATION.md out of agents/ (to docs/agents/ or similar, after grep for references). It has no frontmatter, so the plugin would load it as an agent. Adding frontmatter would turn an implementation doc into a live agent, so it is moved, not edited.
+
+## D-20261113-1040
+Date: 2026-11-13 10:35
+Inputs: CR-20261113-1034
+PRD: (n/a)
+
+D: Plugin icon is a PNG rendered from skills/athena/assets/athena-warrior-icon.svg (512 to 2048 px, square). The directory accepts only PNG/JPEG for the icon, and the icon is locked on first submit, so the owner must approve it.
+
+## D-20261113-1041
+Date: 2026-11-13 10:35
+Inputs: CR-20261113-1034
+PRD: (n/a)
+
+D: Add .claude-plugin/marketplace.json so /plugin marketplace add taylorparsons/athena-skill works as the README will describe. Without it, the install command in the README has no target.
+
+## D-20261113-1042
+Date: 2026-11-13 10:35
+Inputs: CR-20261113-1034
+PRD: (n/a)
+
+D: Work stays local on branch submission-prep. Nothing is pushed, merged, or submitted. docs/athena-index.md is dirty from the SessionStart hook and is excluded from commits.
