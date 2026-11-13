@@ -901,3 +901,12 @@ Constraints: Work on a new branch named submission-prep. Do not push, merge, or 
 
 ### Request (verbatim):
 create a branch for this and add the needed files and information.  it will be my email taylor.parsons@gmail.com
+
+## CR-20261113-1302
+
+### Metadata
+- **Date:** 2026-11-13 13:02
+- **Source:** chat
+
+### Request (verbatim):
+Yes, I want you to bring the install changes into this branch.

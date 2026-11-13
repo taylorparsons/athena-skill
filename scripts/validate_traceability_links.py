@@ -172,6 +172,11 @@ def validate_repo(repo_root: Path) -> list[str]:
 
     request_ids = _read_ids(requests_path, "CR")
     decision_ids = _read_ids(decisions_path, "D")
+    # `owl archive-logs` moves old entries to month shards; they still count.
+    for shard in sorted((docs_root / "audit").glob("requests-*.md")):
+        request_ids |= _read_ids(shard, "CR")
+    for shard in sorted((docs_root / "audit").glob("decisions-*.md")):
+        decision_ids |= _read_ids(shard, "D")
 
     errors: list[str] = []
 

@@ -1065,3 +1065,10 @@ Inputs: CR-20261113-1228
 PRD: (n/a)
 
 D: Branch submission-prep-contact is cut from submission-prep so the plugin files are included. Owner-supplied email added as author.email in plugin.json and owner.email in marketplace.json; SUBMISSION_NOTES.md contact TODO resolved.
+
+## D-20261113-1302
+Date: 2026-11-13 13:02
+Inputs: CR-20261113-1302
+PRD: (n/a)
+
+D: Copy the installed ~/.claude/skills/athena changes (SKILL.md, agents/owl-of-athena.md, scripts/owl.py, validate_traceability_links.py, tests/test_owl.py) into skills/athena and the root mirrors (SKILL.md, agents/, scripts/). sweep-projects.py already matched. Installed copy scanned first: no personal paths or secrets. Version not bumped; owner to decide.
