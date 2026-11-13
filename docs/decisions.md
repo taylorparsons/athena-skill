@@ -1072,3 +1072,10 @@ Inputs: CR-20261113-1302
 PRD: (n/a)
 
 D: Copy the installed ~/.claude/skills/athena changes (SKILL.md, agents/owl-of-athena.md, scripts/owl.py, validate_traceability_links.py, tests/test_owl.py) into skills/athena and the root mirrors (SKILL.md, agents/, scripts/). sweep-projects.py already matched. Installed copy scanned first: no personal paths or secrets. Version not bumped; owner to decide.
+
+## D-20261113-1305
+Date: 2026-11-13 13:05
+Inputs: CR-20261113-1305
+PRD: (n/a)
+
+D: Bump to 2.3.0 (minor: new owl commands, backward compatible) in VERSION, plugin.json, marketplace.json, SUBMISSION_NOTES.md. CHANGELOG and README call out the sync. Tag v2.3.0 is created only after the PR is merged, on the merge commit; not created now.

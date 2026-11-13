@@ -910,3 +910,12 @@ create a branch for this and add the needed files and information.  it will be m
 
 ### Request (verbatim):
 Yes, I want you to bring the install changes into this branch.
+
+## CR-20261113-1305
+
+### Metadata
+- **Date:** 2026-11-13 13:05
+- **Source:** chat
+
+### Request (verbatim):
+yes bump the version  with a tag after merging,  update the readme.md that call out these updates  and push this commit to the open breanch

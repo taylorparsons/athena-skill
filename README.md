@@ -75,6 +75,8 @@ This repository is also a Claude Code plugin named `athena` (manifest: `.claude-
 
 Requires Claude Code 2.1.275 or later.
 
+**New in v2.3.0:** the log and spec trimming commands above, and this plugin packaging. See `CHANGELOG.md`.
+
 The plugin adds the `athena` skill and the Owl of Athena sub-agent (`agents/owl-of-athena.md`). It does not add Owl's hooks (Step 2b), and it does not create the ATHENA docs or `./scripts/owl` in your project. Set those up per project with Step 3 or Option C below.
 
 ---
@@ -237,6 +239,7 @@ Owl has two halves. **Owl-the-script** (`scripts/owl.py`) is the deterministic K
 - Takes appends: requests, decisions, and session notes are written through the script with generated IDs, never by editing the logs
 - Answers queries: `owl show <ID>` for one entry, `owl why <FR-ID>` for a requirement's full chain (sources → tasks → commits)
 - Maintains derived state: `athena-index.md`, the Claude Code memory snapshot, and PRD pruning
+- Keeps logs lean (v2.3.0): `owl archive-logs` moves old request/decision entries to `docs/audit/`, `owl archive-specs` condenses Done specs (`owl restore-spec <id>` undoes it), and `owl trim` runs both (try `--dry-run` first). `owl show <ID>` still finds archived entries. `owl archive` also condenses the spec; `--keep-spec` opts out.
 
 **Token impact** (measured 2026-07-05 on this repository — identical feature request, cold agents, full loop end to end, v2.0 layout vs v2.1):
 
