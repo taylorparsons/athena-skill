@@ -1058,3 +1058,10 @@ Inputs: CR-20261113-1034
 PRD: (n/a)
 
 D: Work stays local on branch submission-prep. Nothing is pushed, merged, or submitted. docs/athena-index.md is dirty from the SessionStart hook and is excluded from commits.
+
+## D-20261113-1228
+Date: 2026-11-13 12:28
+Inputs: CR-20261113-1228
+PRD: (n/a)
+
+D: Branch submission-prep-contact is cut from submission-prep so the plugin files are included. Owner-supplied email added as author.email in plugin.json and owner.email in marketplace.json; SUBMISSION_NOTES.md contact TODO resolved.

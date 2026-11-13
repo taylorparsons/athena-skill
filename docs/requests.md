@@ -892,3 +892,12 @@ Step 6: Report back.
 - Also state that the repo must be public before the listing goes live, that GitHub must be connected on claude.ai, and that the Claude GitHub App must be installed on the repo.
 
 Constraints: Work on a new branch named submission-prep. Do not push, merge, or change repo visibility without explicit confirmation from the owner. Do not submit anything to the directory.
+
+## CR-20261113-1228
+
+### Metadata
+- **Date:** 2026-11-13 12:28
+- **Source:** chat
+
+### Request (verbatim):
+create a branch for this and add the needed files and information.  it will be my email taylor.parsons@gmail.com

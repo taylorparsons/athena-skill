@@ -17,8 +17,8 @@ The request named the repo `atheha-skill`. The actual repo is `athena-skill`, an
 
 ## TODO: owner must answer before submitting
 
-- **Contact email for Anthropic:** TODO. Not in the manifest.
-- **Author contact or website:** TODO. None found in the repo beyond the GitHub account.
+- **Contact email for Anthropic:** taylor.parsons@gmail.com (supplied by the owner; set as `author.email` in `plugin.json`).
+- **Author website:** TODO. None found in the repo beyond the GitHub account.
 - **License:** confirm MIT. It is taken from `LICENSE`, not chosen here.
 - **Branch or tag to track:** TODO. Options: `main` (default branch) or tag `v2.2.0` (latest tag, matches `VERSION`).
 - **Icon approval:** the directory locks the icon the first time the plugin is saved or submitted. Confirm `.claude-plugin/icon.png` is the one to lock.

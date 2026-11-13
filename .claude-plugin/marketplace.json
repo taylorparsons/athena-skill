@@ -1,7 +1,8 @@
 {
   "name": "athena-skill",
   "owner": {
-    "name": "Taylor Parsons"
+    "name": "Taylor Parsons",
+    "email": "taylor.parsons@gmail.com"
   },
   "description": "ATHENA: a PRD-driven delivery loop with a traceable audit trail, packaged as a Claude Code plugin.",
   "plugins": [
