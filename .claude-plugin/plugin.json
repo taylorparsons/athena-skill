@@ -1,0 +1,14 @@
+{
+  "name": "athena",
+  "version": "2.3.0",
+  "description": "PRD-driven delivery loop with a token-lean audit trail: requests, decisions, specs, tasks, and commits.",
+  "author": {
+    "name": "Taylor Parsons",
+    "email": "taylor.parsons@gmail.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/taylorparsons/athena-skill",
+  "repository": "https://github.com/taylorparsons/athena-skill",
+  "keywords": ["athena", "prd", "traceability", "audit-trail", "workflow"],
+  "icon": ".claude-plugin/icon.png"
+}

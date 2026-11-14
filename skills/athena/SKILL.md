@@ -72,8 +72,11 @@ Whenever you interpret ambiguity, choose tradeoffs, or change scope:
 | Read one entry by ID | `owl show <ID>` (CR-, D-, or FR-) |
 | Trace a requirement to sources and commits | `owl why <FR-...>` |
 | Feature summary / history search | `owl retrieve <id>`, `owl search <keyword>` |
-| Archive a finished feature | `owl archive <id>` |
+| Archive a finished feature | `owl archive <id>` (also condenses its spec.md; `--keep-spec` opts out) |
 | Keep the PRD lean | `owl prune-prd` (archives link lists + closed backlog lines) |
+| Keep requests.md / decisions.md lean | `owl archive-logs [--keep-days 30] [--keep-last 20] [--dry-run]` — old entries move to `docs/audit/<log>-YYYY-MM.md`; `owl show <ID>` still finds them |
+| Keep Done specs lean | `owl archive-specs [--dry-run]` — spec.md shrinks to title/Status/Summary/FR/AS/Sources lines, full text in `docs/audit/specs/<id>.md`; `owl restore-spec <id>` undoes it |
+| Both at once | `owl trim [--dry-run]` — run `--dry-run` first |
 | Rebuild index / refresh memory | `owl update-index`, `owl write-memory` |
 
 A feature is **done** when `tasks.md` has nothing under NEXT or IN PROGRESS, `spec.md` says `Status: Done`, and the PRD shows it shipped — then run `owl archive <id>`. In Claude Code you may instead dispatch the Owl sub-agent (`.claude/agents/owl-of-athena.md`) when you want a narrative summary; in Codex just run the script.

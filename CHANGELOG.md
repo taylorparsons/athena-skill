@@ -2,6 +2,25 @@
 
 All notable changes to this project are documented in this file.
 
+## v2.3.0 - 2026-11-13
+
+## Summary
+
+Syncs the locally installed skill into the repo and packages ATHENA as a Claude Code plugin for the Claude plugin directory.
+
+## What's Changed
+- New `owl archive-logs` — moves old `requests.md` / `decisions.md` entries to `docs/audit/<log>-YYYY-MM.md`; `owl show <ID>` still finds them.
+- New `owl archive-specs` / `owl restore-spec` — condenses Done specs to title, status, summary and FR/AS/Sources lines, with full text in `docs/audit/specs/`; `restore-spec` undoes it.
+- New `owl trim` — runs `archive-logs` and `archive-specs` in one pass; `--dry-run` first.
+- `owl archive` also condenses the spec (`--keep-spec` opts out).
+- `SKILL.md`, the Owl agent, `owl.py`, `validate_traceability_links.py` and tests updated from the installed skill (52 tests).
+- Claude plugin packaging: `.claude-plugin/plugin.json`, `marketplace.json`, icon; install with `/plugin install athena --marketplace taylorparsons/athena-skill`.
+- `agents/OWL-IMPLEMENTATION.md` moved to `docs/agents/` (it is a doc, not an agent).
+
+## Verification
+- `python3 -m unittest discover -s scripts/tests` — 52/52 pass
+- `claude plugin validate --strict --profile directory` — passes
+
 ## v2.2.0 - 2026-07-06
 
 ## Summary

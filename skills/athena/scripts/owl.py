@@ -12,16 +12,23 @@ from pathlib import Path
 from datetime import datetime, timedelta
 from typing import List, Dict, Optional
 
+# Task IDs have outgrown three digits (T-1423), so the width is open-ended.
+TASK_ID_RE = r"\bT-\d{3,}\b"
+
+
 class OwlOfAthena:
     """Archive management agent for Athena"""
-    
+
+    # Markdown thematic breaks: end a paragraph the same way a blank line does.
+    THEMATIC_BREAKS = ('---', '***', '___')
+
     def __init__(self, repo_root: Path):
         self.repo_root = repo_root
         self.docs_dir = repo_root / "docs"
         self.index_path = self.docs_dir / "athena-index.md"
         self.specs_dir = self.docs_dir / "specs"
     
-    def archive_feature(self, feature_id: str) -> Dict:
+    def archive_feature(self, feature_id: str, keep_spec: bool = False) -> Dict:
         """Move feature from Active to Archived in athena-index.md and archive progress"""
         if not self.index_path.exists():
             return {"error": "athena-index.md not found"}
@@ -48,12 +55,20 @@ class OwlOfAthena:
         # Update athena-index.md (move from Active to Archived)
         updated_content = self._move_to_archived(content, feature_id, summary)
         self.index_path.write_text(updated_content)
-        
+
+        # A feature that just left the Active set no longer needs its design
+        # prose on the hot path; keep_spec opts out.
+        spec_condensed = False
+        if not keep_spec:
+            condensed = self.archive_specs([feature_id])
+            spec_condensed = any("bytes_saved" in r for r in condensed.get("specs", []))
+
         return {
             "success": True,
             "feature_id": feature_id,
             "summary": summary,
             "progress_archived": progress_archived,
+            "spec_condensed": spec_condensed,
             "message": f"✅ Moved {feature_id} to archived in athena-index.md"
         }
     
@@ -265,15 +280,19 @@ class OwlOfAthena:
         return 'Done'
 
     def _extract_status_from_tasks(self, tasks_content: str) -> str:
-        """Active if any real task exists under NEXT or IN PROGRESS sections"""
+        """Active if any real task exists under NEXT or IN PROGRESS sections.
+
+        Column-0 bullets only, matching `_parse_tasks`: an indented bullet is a
+        detail line of the task above it, never a task in its own right.
+        """
         in_active_section = False
         for line in tasks_content.split('\n'):
             if line.startswith('## NEXT') or line.startswith('## IN PROGRESS'):
                 in_active_section = True
             elif line.startswith('## '):
                 in_active_section = False
-            elif in_active_section and line.strip().startswith('- '):
-                task_text = line.strip()[2:].strip()
+            elif in_active_section and line.startswith('- '):
+                task_text = line[2:].strip()
                 if task_text and task_text.lower() not in ('(none)', 'none', ''):
                     return 'Active'
         return 'Done'
@@ -288,16 +307,50 @@ class OwlOfAthena:
         return 'Done'
     
     def _extract_summary(self, spec_content: str) -> str:
-        """Extract summary from spec.md"""
+        """Extract the summary paragraph from spec.md.
+
+        A `## Summary` heading may be followed by one or more blank lines before
+        the prose (standard Markdown, and the shape most specs in this repo
+        use), so skip blanks forward, then collect the whole first paragraph and
+        flatten it to a single line: the index stores one summary per line.
+        Reading only `lines[i + 1]` silently produced empty summaries for every
+        blank-line-after-heading spec.
+        """
         lines = spec_content.split('\n')
         for i, line in enumerate(lines):
-            if '## Summary' in line and i + 1 < len(lines):
-                summary = lines[i + 1].strip()
-                if summary.startswith('-'):
-                    summary = summary[1:].strip()
-                return summary[:200]  # Limit length
+            if '## Summary' not in line:
+                continue
+            j = i + 1
+            while j < len(lines) and not lines[j].strip():
+                j += 1
+            paragraph: List[str] = []
+            while j < len(lines):
+                text = lines[j].strip()
+                if not text or text.startswith('#') or text in self.THEMATIC_BREAKS:
+                    break
+                if text[:2] in ('- ', '* ', '+ '):
+                    text = text[2:].strip()
+                paragraph.append(text)
+                j += 1
+            summary = ' '.join(p for p in paragraph if p).strip()
+            return summary[:200] if summary else "No summary available"  # Limit length
         return "No summary available"
-    
+
+    @staticmethod
+    def _index_field(line: str, field: str) -> Optional[str]:
+        """Value of an `athena-index.md` field line, or None if it is not one.
+
+        Tolerates optional list markers and emphasis, so `Status: Active`,
+        `- **Status**: Active` and `* _Status_: Active` all parse. `update-index`
+        emits the bold form, so a literal `'Status:' in line` test never matched
+        a generated index.
+        """
+        pattern = (r'^\s*(?:[-*+]\s+)?(?:\*\*|__|\*|_)?\s*'
+                   + re.escape(field)
+                   + r'\s*(?:\*\*|__|\*|_)?\s*:\s*(.*)$')
+        match = re.match(pattern, line, re.IGNORECASE)
+        return match.group(1).strip() if match else None
+
     def _find_in_index(self, content: str, feature_id: str) -> Optional[Dict]:
         """Find feature in athena-index.md"""
         lines = content.split('\n')
@@ -305,11 +358,15 @@ class OwlOfAthena:
             if f"### {feature_id}" in line:
                 # Extract info from next few lines
                 info = {'feature_id': feature_id}
-                for j in range(i + 1, min(i + 5, len(lines))):
-                    if 'Status:' in lines[j]:
-                        info['status'] = lines[j].split('Status:')[-1].strip()
-                    if 'Summary:' in lines[j]:
-                        info['summary'] = lines[j].split('Summary:')[-1].strip()
+                for j in range(i + 1, min(i + 6, len(lines))):
+                    if lines[j].startswith('### '):
+                        break
+                    status = self._index_field(lines[j], 'Status')
+                    if status is not None:
+                        info['status'] = status
+                    summary = self._index_field(lines[j], 'Summary')
+                    if summary is not None:
+                        info['summary'] = summary
                 return info
         return None
     
@@ -670,7 +727,12 @@ type: project
                 and self._extract_status(d) == 'Active']
 
     def _parse_tasks(self, tasks_file: Path) -> Dict:
-        """Parse IN PROGRESS / NEXT task lists from a tasks.md file."""
+        """Parse IN PROGRESS / NEXT task lists from a tasks.md file.
+
+        Only column-0 bullets are tasks. Indented bullets are a task's own
+        detail lines, and counting them turned a five-task NEXT list into five
+        fragments of one task's prose.
+        """
         result: Dict = {"in_progress": [], "next_tasks": []}
         if not tasks_file.exists():
             return result
@@ -685,9 +747,8 @@ type: project
             if line.startswith("## "):
                 section = None
                 continue
-            stripped = line.strip()
-            if section and stripped.startswith("- "):
-                task = stripped[2:].strip()
+            if section and line.startswith("- "):
+                task = line[2:].strip()
                 if task and task.lower() not in ("(none)", "none"):
                     result[section].append(task)
         return result
@@ -729,31 +790,41 @@ type: project
         return sorted(active, key=sort_key, reverse=True)[0]
 
     def _active_context(self) -> Dict:
-        """Shared context source for `context` and `write-memory` (both layouts)."""
+        """Shared context source for `context` and `write-memory`.
+
+        Hybrid by precedence, not by layout: the selected feature's
+        `docs/specs/<id>/tasks.md` is task truth whenever it exists, and
+        `docs/progress.txt` is the fallback for features that have not been
+        migrated. A repo can hold both at once - progress.txt stays a
+        phase-evidence source per AGENTS.md - and the old "progress.txt exists,
+        so use it" branch made task state invisible in every such repo.
+        """
         progress_file = self.docs_dir / "progress.txt"
         active = self._scan_active_features()
         ctx: Dict = {"active_features": active, "feature_id": "", "goal": "",
                      "in_progress": [], "next_tasks": []}
 
-        if progress_file.exists():  # legacy layout
-            legacy = self._parse_progress(progress_file)
-            ctx["feature_id"] = legacy.get("feature_id") or self._current_feature(active)
-            ctx["goal"] = legacy.get("goal", "")
-            ctx["in_progress"] = legacy.get("in_progress", [])
-            ctx["next_tasks"] = legacy.get("next_tasks", [])
+        legacy = self._parse_progress(progress_file) if progress_file.exists() else {}
+        feature = legacy.get("feature_id") or self._current_feature(active)
+        ctx["feature_id"] = feature
+        if not feature:
             return ctx
 
-        feature = self._current_feature(active)
-        ctx["feature_id"] = feature
-        if feature:
+        tasks_file = self.specs_dir / feature / "tasks.md"
+        if tasks_file.exists():
             meta = self._latest_note_meta(feature)
             spec_file = self.specs_dir / feature / "spec.md"
             spec_summary = (self._extract_summary(spec_file.read_text())
                             if spec_file.exists() else "")
-            ctx["goal"] = meta["goal"] or spec_summary
-            tasks = self._parse_tasks(self.specs_dir / feature / "tasks.md")
+            ctx["goal"] = meta["goal"] or legacy.get("goal", "") or spec_summary
+            tasks = self._parse_tasks(tasks_file)
             ctx["in_progress"] = tasks["in_progress"]
             ctx["next_tasks"] = tasks["next_tasks"]
+            return ctx
+
+        ctx["goal"] = legacy.get("goal", "")
+        ctx["in_progress"] = legacy.get("in_progress", [])
+        ctx["next_tasks"] = legacy.get("next_tasks", [])
         return ctx
 
     def _recent_entry_ids(self, log_file: Path, prefix: str, count: int = 3) -> List[str]:
@@ -915,14 +986,30 @@ type: project
                 block.append(line)
         return "\n".join(block).strip()
 
+    def _find_log_entry(self, log_name: str, entry_id: str) -> str:
+        """Entry from the live log, else from its month archives in docs/audit/.
+
+        `archive-logs` moves old entries out of the live file; they stay
+        reachable here, so `show`, `why` and every cited ID keep resolving.
+        """
+        block = self._extract_log_entry(self.docs_dir / f"{log_name}.md", entry_id)
+        if block:
+            return block
+        for archive in self._archived_log_files(log_name):
+            block = self._extract_log_entry(archive, entry_id)
+            if block:
+                rel = archive.relative_to(self.repo_root).as_posix()
+                return f"{block}\n\n[archived: {rel}]"
+        return ""
+
     def show_entry(self, entry_id: str) -> str:
         """Print exactly one KB entry: CR/D from logs, FR from spec files."""
         if entry_id.startswith("CR-"):
-            block = self._extract_log_entry(self.docs_dir / "requests.md", entry_id)
-            return block or f"(not found: {entry_id} in docs/requests.md)"
+            block = self._find_log_entry("requests", entry_id)
+            return block or f"(not found: {entry_id} in docs/requests.md or docs/audit/)"
         if entry_id.startswith("D-"):
-            block = self._extract_log_entry(self.docs_dir / "decisions.md", entry_id)
-            return block or f"(not found: {entry_id} in docs/decisions.md)"
+            block = self._find_log_entry("decisions", entry_id)
+            return block or f"(not found: {entry_id} in docs/decisions.md or docs/audit/)"
         if entry_id.startswith("FR-"):
             matches: List[str] = []
             for spec in sorted(self.specs_dir.glob("*/spec.md")):
@@ -957,7 +1044,9 @@ type: project
                 for line in tasks_file.read_text(encoding="utf-8").split("\n"):
                     if fr_id in line and "Implements" in line:
                         out.append(f"  {line.strip()}")
-                        task_ids += re.findall(r"\bT-\d{3}\b", line)
+                        # A fixed \d{3} width matched none of them, so every
+                        # commit lookup fell back to the feature-wide grep.
+                        task_ids += re.findall(TASK_ID_RE, line)
             # Task IDs repeat across features (every feature has a T-001), so
             # commits must match both the task ID and the feature ID.
             greps = [["--all-match", f"--grep={t}", f"--grep={fid}"]
@@ -1087,6 +1176,197 @@ type: project
                         "to docs/audit/prd-archive.md")
         }
 
+    # ── Log and spec archiving (keeps the hot-path files lean) ────────────────
+    # requests.md / decisions.md are append-only and grow without bound, and
+    # finished specs carry pages of design prose nobody reads again. Old log
+    # entries move to month shards in docs/audit/, and a Done feature's spec.md
+    # is condensed to its traceability skeleton with the full text kept in
+    # docs/audit/specs/. Nothing is deleted: show/why/validators read the shards.
+
+    LOG_PREFIXES = {"requests": "CR", "decisions": "D"}
+    SPEC_ARCHIVE_MARKER = "Archived-Full:"
+
+    def _audit_dir(self) -> Path:
+        return self.docs_dir / "audit"
+
+    def _archived_log_files(self, log_name: str) -> List[Path]:
+        return sorted(self._audit_dir().glob(f"{log_name}-*.md"))
+
+    def _split_log(self, text: str, prefix: str):
+        """(preamble, [(entry_id, yyyymmdd, block)]) with every byte preserved.
+
+        Entries split only at `## <CR|D>-YYYYMMDD-HHMM` headers; any other
+        heading inside a body (e.g. a pasted `# Codex brief`) stays with its entry.
+        """
+        header = re.compile(rf"^## ({prefix}-(\d{{8}})-\d{{4}})\s*$")
+        lines = text.splitlines(keepends=True)
+        starts = [i for i, l in enumerate(lines) if header.match(l.rstrip("\r\n"))]
+        if not starts:
+            return text, []
+        preamble = "".join(lines[:starts[0]])
+        entries = []
+        for n, start in enumerate(starts):
+            end = starts[n + 1] if n + 1 < len(starts) else len(lines)
+            m = header.match(lines[start].rstrip("\r\n"))
+            entries.append((m.group(1), m.group(2), "".join(lines[start:end])))
+        return preamble, entries
+
+    def archive_logs(self, keep_days: int = 30, keep_last: int = 20,
+                     dry_run: bool = False, today: Optional[datetime] = None) -> Dict:
+        """Move old requests.md / decisions.md entries to docs/audit/<log>-YYYY-MM.md.
+
+        Keeps entries from the last `keep_days` days and always the newest
+        `keep_last`. Archive shards are written before the live file is
+        rewritten, and the move is verified entry-for-entry first.
+        """
+        today = today or datetime.now()
+        cutoff = (today - timedelta(days=keep_days)).strftime("%Y%m%d")
+        report: Dict = {}
+        for log_name, prefix in self.LOG_PREFIXES.items():
+            log_file = self.docs_dir / f"{log_name}.md"
+            if not log_file.exists():
+                continue
+            text = log_file.read_text(encoding="utf-8")
+            preamble, entries = self._split_log(text, prefix)
+            protected = {e[0] for e in entries[-keep_last:]} if keep_last > 0 else set()
+            kept = [e for e in entries if e[0] in protected or e[1] >= cutoff]
+            moving = [e for e in entries if e not in kept]
+            if sorted(e[0] for e in kept + moving) != sorted(e[0] for e in entries):
+                return {"error": f"{log_name}: entry bookkeeping mismatch — nothing written"}
+            new_live = preamble + "".join(e[2] for e in kept)
+            by_month: Dict[str, List] = {}
+            for entry in moving:
+                by_month.setdefault(f"{entry[1][:4]}-{entry[1][4:6]}", []).append(entry)
+            files = {}
+            for month, group in sorted(by_month.items()):
+                shard = self._audit_dir() / f"{log_name}-{month}.md"
+                existing = shard.read_text(encoding="utf-8") if shard.exists() else \
+                    (f"# {log_name.capitalize()} archive {month} "
+                     "(append-only; moved from the live log by owl archive-logs)\n")
+                have = {e[0] for e in self._split_log(existing, prefix)[1]}
+                add = "".join("\n" + e[2].rstrip("\n") + "\n" for e in group if e[0] not in have)
+                files[shard] = existing.rstrip("\n") + "\n" + add
+            report[log_name] = {
+                "entries": len(entries), "archived": len(moving), "kept": len(kept),
+                "bytes_before": len(text.encode("utf-8")),
+                "bytes_after": len(new_live.encode("utf-8")),
+                "shards": sorted(p.relative_to(self.repo_root).as_posix() for p in files),
+            }
+            if dry_run or not moving:
+                continue
+            self._audit_dir().mkdir(parents=True, exist_ok=True)
+            for shard, content in files.items():
+                shard.write_text(content, encoding="utf-8")
+            log_file.write_text(new_live, encoding="utf-8")
+        moved = sum(r["archived"] for r in report.values())
+        saved = sum(r["bytes_before"] - r["bytes_after"] for r in report.values())
+        verb = "Would archive" if dry_run else "Archived"
+        return {"success": True, "dry_run": dry_run, "keep_days": keep_days,
+                "keep_last": keep_last, "logs": report,
+                "message": f"✅ {verb} {moved} log entr{'y' if moved == 1 else 'ies'} "
+                           f"(~{saved} B off the live logs); look them up with `owl show <ID>`"}
+
+    def _condense_spec(self, text: str, archive_rel: str) -> str:
+        """Traceability skeleton of a spec: title, Status, Summary, FR/AS/Sources lines."""
+        fr_line = re.compile(r"^\s*-\s*(FR-[A-Za-z0-9-]+)\s*:")
+        acceptance = re.compile(r"^\s*\d+\.\s+Given\b")
+        fr_colon = re.compile(r"\bFR-[A-Za-z0-9-]+\b:")
+        lines = text.split("\n")
+        keep: List[str] = []
+        seen_title = seen_status = False
+        i = 0
+        while i < len(lines):
+            line = lines[i]
+            if not seen_title and line.startswith("# "):
+                seen_title = True
+                keep += [line, "", f"{self.SPEC_ARCHIVE_MARKER} {archive_rel}",
+                         "Condensed by `owl archive-specs`; the full text is at that path "
+                         "(`owl restore-spec <feature-id>` puts it back).", ""]
+            elif not seen_status and "Status:" in line:
+                seen_status = True
+                keep.append(line)
+            elif "## Summary" in line:
+                keep += ["", line]
+                i += 1
+                while i < len(lines) and not lines[i].strip():
+                    i += 1
+                while i < len(lines) and lines[i].strip() \
+                        and not lines[i].lstrip().startswith("#") \
+                        and lines[i].strip() not in self.THEMATIC_BREAKS:
+                    keep.append(lines[i])
+                    i += 1
+                keep.append("")
+                continue
+            elif (fr_line.match(line) or acceptance.match(line) or fr_colon.search(line)
+                  or "Verifies:" in line or "Sources:" in line
+                  or (line.startswith("#") and "FR-" in line)):
+                keep.append(line)
+            i += 1
+        return "\n".join(keep).rstrip("\n") + "\n"
+
+    def archive_specs(self, feature_ids: Optional[List[str]] = None,
+                      dry_run: bool = False) -> Dict:
+        """Condense Done features' spec.md; full text goes to docs/audit/specs/<id>.md."""
+        done = []
+        for feature_dir in sorted(self.specs_dir.iterdir()):
+            spec = feature_dir / "spec.md"
+            if not feature_dir.is_dir() or not spec.exists():
+                continue
+            if feature_ids is not None and feature_dir.name not in feature_ids:
+                continue
+            if self._extract_status(feature_dir) == "Active":
+                continue
+            done.append(feature_dir)
+        results = []
+        saved_total = 0
+        for feature_dir in done:
+            spec = feature_dir / "spec.md"
+            text = spec.read_text(encoding="utf-8")
+            if self.SPEC_ARCHIVE_MARKER in text:
+                continue
+            archive_file = self._audit_dir() / "specs" / f"{feature_dir.name}.md"
+            if archive_file.exists():
+                results.append({"feature_id": feature_dir.name,
+                                "error": f"{archive_file.name} already exists — left alone"})
+                continue
+            rel = archive_file.relative_to(self.repo_root).as_posix()
+            condensed = self._condense_spec(text, rel)
+            saved = len(text.encode("utf-8")) - len(condensed.encode("utf-8"))
+            if saved <= 0:
+                continue
+            if not dry_run:
+                archive_file.parent.mkdir(parents=True, exist_ok=True)
+                archive_file.write_text(text, encoding="utf-8")
+                spec.write_text(condensed, encoding="utf-8")
+            saved_total += saved
+            results.append({"feature_id": feature_dir.name, "bytes_saved": saved})
+        condensed_n = sum(1 for r in results if "bytes_saved" in r)
+        verb = "Would condense" if dry_run else "Condensed"
+        return {"success": True, "dry_run": dry_run, "specs": results,
+                "message": f"✅ {verb} {condensed_n} Done spec(s) (~{saved_total} B)"}
+
+    def restore_spec(self, feature_id: str) -> Dict:
+        """Put an archived feature's full spec.md back and drop the archive copy."""
+        spec = self.specs_dir / feature_id / "spec.md"
+        archive_file = self._audit_dir() / "specs" / f"{feature_id}.md"
+        if not spec.exists():
+            return {"error": f"Feature {feature_id} not found in docs/specs/"}
+        if not archive_file.exists():
+            return {"error": f"no archived spec for {feature_id} (nothing to restore)"}
+        spec.write_text(archive_file.read_text(encoding="utf-8"), encoding="utf-8")
+        archive_file.unlink()
+        return {"success": True, "feature_id": feature_id,
+                "message": f"✅ Restored full spec.md for {feature_id}"}
+
+    def trim(self, keep_days: int = 30, keep_last: int = 20, dry_run: bool = False) -> Dict:
+        """archive-logs + archive-specs in one pass."""
+        logs = self.archive_logs(keep_days, keep_last, dry_run)
+        if "error" in logs:
+            return logs
+        specs = self.archive_specs(dry_run=dry_run)
+        return {"success": True, "dry_run": dry_run, "logs": logs, "specs": specs,
+                "message": f"{logs['message']}\n{specs['message']}"}
+
     def _session_block_to_note(self, block: str) -> str:
         """Rewrite a progress.txt session block as a notes.md `## S-…` entry."""
         lines = block.strip().split("\n")
@@ -1169,7 +1449,12 @@ def main():
         print("  retrieve <feature-id>            - Get feature summary")
         print("  search <keyword>                 - Search archived features")
         print("Maintenance:")
-        print("  archive <feature-id>             - Move feature to archived")
+        print("  archive <feature-id> [--keep-spec] - Move feature to archived (condenses its spec.md)")
+        print("  archive-logs [--keep-days N] [--keep-last N] [--dry-run]")
+        print("                                   - Move old requests.md/decisions.md entries to docs/audit/")
+        print("  archive-specs [--dry-run]        - Condense Done specs; full text to docs/audit/specs/")
+        print("  restore-spec <feature-id>        - Put a condensed spec's full text back")
+        print("  trim [--keep-days N] [--dry-run] - archive-logs + archive-specs in one pass")
         print("  update-index                     - Regenerate athena-index.md from specs")
         print("  migrate                          - Convert progress.txt to per-feature notes.md")
         print("  prune-prd                        - Archive PRD link lists + closed backlog lines")
@@ -1192,8 +1477,20 @@ def main():
         print(owl.why(positionals[0]))
         return
 
+    keep_days = int(flags.get("keep-days", 30))
+    keep_last = int(flags.get("keep-last", 20))
+    dry_run = bool(flags.get("dry-run"))
+
     if command == "archive" and positionals:
-        result = owl.archive_feature(positionals[0])
+        result = owl.archive_feature(positionals[0], keep_spec=bool(flags.get("keep-spec")))
+    elif command == "archive-logs":
+        result = owl.archive_logs(keep_days, keep_last, dry_run)
+    elif command == "archive-specs":
+        result = owl.archive_specs(dry_run=dry_run)
+    elif command == "restore-spec" and positionals:
+        result = owl.restore_spec(positionals[0])
+    elif command == "trim":
+        result = owl.trim(keep_days, keep_last, dry_run)
     elif command == "retrieve" and positionals:
         result = owl.retrieve_feature(positionals[0])
     elif command == "search" and positionals:

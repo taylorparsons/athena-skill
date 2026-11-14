@@ -857,3 +857,65 @@ Can you spin up codex and try it
 
 ### Request (verbatim):
 Push these changes to remotes make sure the readme.md is accurate and the install / setup is accurate.  The github release notes need to update the value of the changes for both Claude and codex
+
+## CR-20261113-1034
+
+### Metadata
+- **Date:** 2026-11-13 10:34
+- **Source:** chat
+
+### Request (verbatim):
+Goal: Prepare the GitHub repo taylorparsons/atheha-skill to be submitted as a plugin bundle to Anthropic's Claude plugin directory (submitted through claude.ai/directory/manage). Find and fill in what is missing. Do not invent facts about the author, license, data handling, or contacts. Mark anything you cannot determine as TODO and list it in your final report.
+
+Step 1: Audit the repo.
+- Locate the plugin folder. It must contain .claude-plugin/plugin.json. If the repo currently holds only a skill (a SKILL.md with no plugin manifest), wrap it in a plugin folder with a plugin.json. Skills cannot be submitted on their own.
+- Check that any skills live under the plugin folder in the expected layout and that each SKILL.md has valid frontmatter (name, description).
+- Check for a README.md, a LICENSE file, and any MCP (Model Context Protocol) server configuration the plugin references.
+
+Step 2: Fill in plugin.json.
+- Required or expected fields: name (kebab-case), description (one short sentence), version (semantic version, e.g. 0.1.0), author, and license. Keep the name consistent with the repo and skill names.
+- Do not guess the author's contact details or the license. Use TODO if not already present.
+
+Step 3: Fill in the README.
+- What the skill or plugin does, who it is for, how to install it (Claude Code: /plugin marketplace add and /plugin install, or the directory once listed), example prompts or usage, requirements, and license.
+- Only describe behavior that the code and SKILL.md actually show.
+
+Step 4: Privacy and data handling notes (for the submission form).
+- Identify whether the plugin reads or stores personal data, sends data to any service other than the ones it declares, or how long it keeps data. Write these findings into a file named SUBMISSION_NOTES.md at the repo root, labeled as draft answers for the owner to confirm.
+- Flag anything that sends data to an undisclosed destination, since that fails the security scan.
+
+Step 5: Validate.
+- Run `claude plugin validate ./<plugin-folder>` from the folder that contains the plugin folder. Fix any findings and re-run until it passes.
+
+Step 6: Report back.
+- List every change made, every TODO left open, and the questions the owner must answer before submitting: contact email for Anthropic, author name, license choice, data handling answers, and which branch or tag to track.
+- Also state that the repo must be public before the listing goes live, that GitHub must be connected on claude.ai, and that the Claude GitHub App must be installed on the repo.
+
+Constraints: Work on a new branch named submission-prep. Do not push, merge, or change repo visibility without explicit confirmation from the owner. Do not submit anything to the directory.
+
+## CR-20261113-1228
+
+### Metadata
+- **Date:** 2026-11-13 12:28
+- **Source:** chat
+
+### Request (verbatim):
+create a branch for this and add the needed files and information.  it will be my email taylor.parsons@gmail.com
+
+## CR-20261113-1302
+
+### Metadata
+- **Date:** 2026-11-13 13:02
+- **Source:** chat
+
+### Request (verbatim):
+Yes, I want you to bring the install changes into this branch.
+
+## CR-20261113-1305
+
+### Metadata
+- **Date:** 2026-11-13 13:05
+- **Source:** chat
+
+### Request (verbatim):
+yes bump the version  with a tag after merging,  update the readme.md that call out these updates  and push this commit to the open breanch
