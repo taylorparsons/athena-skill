@@ -471,8 +471,6 @@ This checks:
 ## Publishing
 
 - GitHub as source of truth (tags/releases)
-- LinkedIn for launch/adoption examples
-- `publishing/launch-checklist.md`
 
 ## Requirements
 

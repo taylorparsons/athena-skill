@@ -919,3 +919,21 @@ Yes, I want you to bring the install changes into this branch.
 
 ### Request (verbatim):
 yes bump the version  with a tag after merging,  update the readme.md that call out these updates  and push this commit to the open breanch
+
+## CR-20261116-1227
+
+### Metadata
+- **Date:** 2026-11-16 12:27
+- **Source:** chat
+
+### Request (verbatim):
+yes remove it
+
+## CR-20261116-1228
+
+### Metadata
+- **Date:** 2026-11-16 12:27
+- **Source:** chat
+
+### Request (verbatim):
+yes remove publishing/
