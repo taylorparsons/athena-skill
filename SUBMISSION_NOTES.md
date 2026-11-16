@@ -11,7 +11,7 @@
 | License | MIT | `LICENSE` (Copyright 2026 Taylor Parsons) |
 | Author | Taylor Parsons | `LICENSE` copyright line |
 | Repository | https://github.com/taylorparsons/athena-skill (public) | `git remote`; `gh repo view` |
-| Icon | `.claude-plugin/icon.png`, 1024×1024 PNG | rendered from `skills/athena/assets/athena-warrior-icon.svg` |
+| Icon | the PNG icon in `.claude-plugin/`, 1024×1024 PNG | rendered from `skills/athena/assets/athena-warrior-icon.svg` |
 
 The request named the repo `atheha-skill`. The actual repo is `athena-skill`, and all files use that name.
 
@@ -21,7 +21,7 @@ The request named the repo `atheha-skill`. The actual repo is `athena-skill`, an
 - **Author website:** TODO. None found in the repo beyond the GitHub account.
 - **License:** confirm MIT. It is taken from `LICENSE`, not chosen here.
 - **Branch or tag to track:** TODO. Options: `main` (default branch) or tag `v2.3.0` (created after the PR is merged; matches `VERSION`).
-- **Icon approval:** the directory locks the icon the first time the plugin is saved or submitted. Confirm `.claude-plugin/icon.png` is the one to lock.
+- **Icon approval:** the directory locks the icon the first time the plugin is saved or submitted. Confirm the PNG icon in `.claude-plugin/` is the one to lock.
 - **Shipped internal logs:** the plugin is the whole repo (see "Content the plugin ships" below). Decide whether to keep these or exclude them before submitting. Nothing was deleted.
 - **Duplicate Owl agent file:** `agents/owl-of-athena.md` (shipped) and `.claude/agents/owl-of-athena.md` (local) differ by 21 diff lines. The shipped copy matches `skills/athena/agents/owl-of-athena.md`. Confirm the shipped copy is the current one.
 

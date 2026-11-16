@@ -963,3 +963,12 @@ add to .gitignore (usecase-comparison snake-video artifacts: 32 frames over 256 
 
 ### Request (verbatim):
 PAERHAPS ADDRESS THIS AS I AM NOT collecting anything (directory warning: no privacy policy URL; add privacyPolicyUrl to plugin.json or a Privacy link to the README)
+
+## CR-20261116-1337
+
+### Metadata
+- **Date:** 2026-11-16 13:37
+- **Source:** chat
+
+### Request (verbatim):
+can we address this? (directory findings: "Image or font file that the plugin's code could run" naming SUBMISSION_NOTES.md, tasks.md, packaged-codex-surface-sync spec.md, plugin.json; "Uses a credential from the user's machine" naming plugin.json)
