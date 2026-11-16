@@ -980,4 +980,4 @@ can we address this? (directory findings: "Image or font file that the plugin's 
 - **Source:** chat
 
 ### Request (verbatim):
-(pasted directory findings: UNREAD_ASSET_REFERENCED naming docs/decisions.md and the packaged-codex spec; MCP_FORWARDS_CREDENTIAL_ENV naming plugin.json, scripts/commit_with_traceability.py --paths and SUBMISSION_NOTES.md urlopen; UNKNOWN_KEY privacyPolicyUrl; RUNTIME_FETCH_EXEC naming SUBMISSION_NOTES.md, docs/audit/progress-legacy.txt, docs/requests.md)
+(pasted directory findings: UNREAD_ASSET_REFERENCED naming docs/decisions.md and the packaged-codex spec; MCP_FORWARDS_CREDENTIAL_ENV naming plugin.json, scripts/commit_with_traceability.py --paths and a network-call word listed in SUBMISSION_NOTES.md; UNKNOWN_KEY privacyPolicyUrl; RUNTIME_FETCH_EXEC naming SUBMISSION_NOTES.md, docs/audit/progress-legacy.txt, docs/requests.md)
