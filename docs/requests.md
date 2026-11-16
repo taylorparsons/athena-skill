@@ -928,3 +928,12 @@ yes bump the version  with a tag after merging,  update the readme.md that call 
 
 ### Request (verbatim):
 yes remove it
+
+## CR-20261116-1228
+
+### Metadata
+- **Date:** 2026-11-16 12:27
+- **Source:** chat
+
+### Request (verbatim):
+yes remove publishing/
