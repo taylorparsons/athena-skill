@@ -1093,3 +1093,10 @@ Inputs: CR-20261116-1228
 PRD: (n/a)
 
 D: Remove publishing/ (LinkedIn drafts and launch checklist) from the repo at the owner's request. PRD FR-ATHENA-009 and FR-ATHENA-010 are marked "Removed" in place (not deleted) so the audit trail stays intact; README Publishing section trimmed to the GitHub line. History keeps the files.
+
+## D-20261116-1317
+Date: 2026-11-16 13:17
+Inputs: CR-20261116-1317
+PRD: (n/a)
+
+D: Add usecase-comparison/**/artifacts/ to .gitignore and untrack the 34 tracked files (git rm --cached; files stay on disk, history keeps them). A .gitignore entry alone does not stop tracked files from shipping in the plugin. Scope limited to artifacts/ so the text docs under usecase-comparison remain.

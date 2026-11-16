@@ -4,3 +4,6 @@ TASK_SKILL_MAP.md
 .env
 __pycache__/
 *.pyc
+
+# usecase-comparison run artifacts (frames, videos): large binaries, not shipped
+usecase-comparison/**/artifacts/

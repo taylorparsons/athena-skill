@@ -937,3 +937,12 @@ yes remove it
 
 ### Request (verbatim):
 yes remove publishing/
+
+## CR-20261116-1317
+
+### Metadata
+- **Date:** 2026-11-16 13:17
+- **Source:** chat
+
+### Request (verbatim):
+add to .gitignore (usecase-comparison snake-video artifacts: 32 frames over 256 KiB and 2 video.mp4 flagged by the directory)
