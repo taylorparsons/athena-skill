@@ -954,3 +954,12 @@ add to .gitignore (usecase-comparison snake-video artifacts: 32 frames over 256 
 
 ### Request (verbatim):
 1. rename to what?  Athena loop/
+
+## CR-20261116-1329
+
+### Metadata
+- **Date:** 2026-11-16 13:29
+- **Source:** chat
+
+### Request (verbatim):
+PAERHAPS ADDRESS THIS AS I AM NOT collecting anything (directory warning: no privacy policy URL; add privacyPolicyUrl to plugin.json or a Privacy link to the README)

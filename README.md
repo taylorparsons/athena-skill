@@ -481,3 +481,15 @@ This checks:
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+## Privacy
+
+Athena Loop does not collect, transmit, or sell any data. The author receives nothing from your use of it.
+
+- **No network calls.** The scripts in this repository make no network requests and include no telemetry or analytics. The plugin declares no connectors or MCP servers.
+- **Local files only.** ATHENA writes your requests, decisions, specs, and tasks to the `docs/` folder of your own project. Requests are stored verbatim, so anything you type into one (including names or emails) is saved there.
+- **Optional local writes.** `owl write-memory` writes a snapshot to `~/.claude/projects/<repo>/memory/`. The install and sweep scripts can edit `~/.claude/settings.json` and `~/.claude/CLAUDE.md` or write `~/.claude/logs/athena-sweep.log`, but only when you run them.
+- **Retention.** Nothing is deleted automatically. Local files stay until you delete them.
+- **Model provider.** Your Claude Code session is handled by Anthropic under its own terms, as with any Claude Code session. That is outside this plugin.
+
+Questions: taylor.parsons@gmail.com

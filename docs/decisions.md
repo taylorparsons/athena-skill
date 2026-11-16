@@ -1106,3 +1106,10 @@ Inputs: CR-20261116-1302
 PRD: (n/a)
 
 D: Rename the plugin from "athena" to "athena-loop" (displayName "Athena Loop") because the directory reports "athena" belongs to another connector. Skill name stays "athena" (skills/athena/SKILL.md unchanged). Marketplace plugin entry, README install command and SUBMISSION_NOTES updated. No version bump; listing tracks main.
+
+## D-20261116-1329
+Date: 2026-11-16 13:29
+Inputs: CR-20261116-1329
+PRD: (n/a)
+
+D: Add a "Privacy" section to README.md (facts from the code audit: no network calls, no telemetry, local files only) and set privacyPolicyUrl in plugin.json to its README anchor. Wording says the author collects nothing and lists what is written locally, so it stays accurate with the form answers.

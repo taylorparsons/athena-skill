@@ -8,6 +8,7 @@
     "email": "taylor.parsons@gmail.com"
   },
   "license": "MIT",
+  "privacyPolicyUrl": "https://github.com/taylorparsons/athena-skill#privacy",
   "homepage": "https://github.com/taylorparsons/athena-skill",
   "repository": "https://github.com/taylorparsons/athena-skill",
   "keywords": ["athena", "prd", "traceability", "audit-trail", "workflow"],
