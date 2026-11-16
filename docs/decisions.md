@@ -1120,3 +1120,10 @@ Inputs: CR-20261116-1337
 PRD: (n/a)
 
 D: Reduce literal references to the icon file path. Drop the icon field from plugin.json (the directory finds .claude-plugin/icon.png by convention; checked with the validator) and reword the path in SUBMISSION_NOTES.md and the feature tasks.md. Append-only logs are not edited. No credential-reading code exists in the repo (grepped); that finding needs the directory's detail text.
+
+## D-20261116-1356
+Date: 2026-11-16 13:56
+Inputs: CR-20261116-1356
+PRD: (n/a)
+
+D: Reword SUBMISSION_NOTES.md so it no longer lists network-API names or an install-script shell command (the scanner matched my own audit text, producing the "can send data off the machine" half of the credential finding and one RUNTIME_FETCH_EXEC finding). Redact the installer command in docs/audit/progress-legacy.txt (derived legacy audit). docs/requests.md (verbatim, append-only) and docs/decisions.md are left unedited pending owner approval. privacyPolicyUrl is a listing field the directory reads; kept ("No action needed").

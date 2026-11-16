@@ -40,7 +40,7 @@ Draft: The plugin's code reads and writes files on the user's machine. It does n
 Draft: The code has no retention or deletion policy. Logs are append-only and persist until the user deletes them. `owl archive` moves the feature entry in `athena-index.md` and its progress lines into `progress-archive.txt`. Spec files stay in place.
 
 **Does it send data to any service other than the ones it declares?**
-Draft: No. The scripts make no network calls. The only subprocesses are local `git`, `find`, `owl`, and `python3` calls. Checked by grepping all tracked `.py`, `.sh`, `.js`, `.ts`, and `.yml` files for `curl`, `wget`, `urllib`, `requests.*`, `httpx`, `urlopen`, `socket`, and `fetch(`. No matches in code. Matches appear only in historical docs and logs (see below).
+Draft: No. The scripts make no network calls. The only subprocesses are local `git`, `find`, `owl`, and `python3` calls. Checked by searching all tracked `.py`, `.sh`, `.js`, `.ts`, and `.yml` files for command-line download tools, HTTP client libraries, raw sockets, and browser fetch calls. No matches in code. Matches appear only in historical docs and logs (see below).
 
 **Declared services.** The plugin declares none. Claude Code and the model host receive whatever the user types, as in any Claude Code session. That is platform behavior, not plugin behavior.
 
@@ -52,7 +52,7 @@ Only when the user or an agent asks. The docs say `git push` and PR creation nee
 - **No secrets found.** Grepped all tracked files for GitHub tokens, OpenAI-style keys, AWS keys, Slack tokens, private key blocks, and `password`/`token`/`api_key` assignments. No matches.
 - **No personal identifiers in code.** No `/Users/taylorparsons` path and no personal email in code. One `notes.md` match for "gmail" is a plugin name in an inventory list.
 - **Hard-coded machine paths in logs and docs.** `/Volumes/T9/code/SKILLS/athena` appears in historical docs and logs (`docs/requests.md`, `docs/decisions.md`, `docs/progress-archive.txt`, `docs/audit/progress-legacy.txt`, `usecase-comparison/**`). Not in code.
-- **`curl | bash` text in logs.** `docs/requests.md` (line 142) and `docs/audit/progress-legacy.txt` (line 109) contain `curl -fsSL https://claude.ai/install.sh | bash`. Recorded text, not run by the plugin. A scanner may flag it.
+- **Installer command text in logs.** `docs/requests.md` (line 142) and `docs/audit/progress-legacy.txt` record a one-line Claude Code installer command. It is recorded text, not run by the plugin. A scanner may flag it.
 - **localhost URLs in logs.** `http://localhost:8765` and `http://127.0.0.1:8766` appear in historical logs and specs. These are local dev servers, not external destinations.
 - **Shell hooks.** `scripts/install-owl.sh` writes project `.claude/settings.json` with SessionStart and Stop hooks that run shell commands. The plugin does not include `hooks/`, so it does not install these. They are a manual step (README Step 2b).
 

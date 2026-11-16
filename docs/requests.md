@@ -972,3 +972,12 @@ PAERHAPS ADDRESS THIS AS I AM NOT collecting anything (directory warning: no pri
 
 ### Request (verbatim):
 can we address this? (directory findings: "Image or font file that the plugin's code could run" naming SUBMISSION_NOTES.md, tasks.md, packaged-codex-surface-sync spec.md, plugin.json; "Uses a credential from the user's machine" naming plugin.json)
+
+## CR-20261116-1356
+
+### Metadata
+- **Date:** 2026-11-16 13:56
+- **Source:** chat
+
+### Request (verbatim):
+(pasted directory findings: UNREAD_ASSET_REFERENCED naming docs/decisions.md and the packaged-codex spec; MCP_FORWARDS_CREDENTIAL_ENV naming plugin.json, scripts/commit_with_traceability.py --paths and a network-call word listed in SUBMISSION_NOTES.md; UNKNOWN_KEY privacyPolicyUrl; RUNTIME_FETCH_EXEC naming SUBMISSION_NOTES.md, docs/audit/progress-legacy.txt, docs/requests.md)
