@@ -981,3 +981,12 @@ can we address this? (directory findings: "Image or font file that the plugin's 
 
 ### Request (verbatim):
 (pasted directory findings: UNREAD_ASSET_REFERENCED naming docs/decisions.md and the packaged-codex spec; MCP_FORWARDS_CREDENTIAL_ENV naming plugin.json, scripts/commit_with_traceability.py --paths and a network-call word listed in SUBMISSION_NOTES.md; UNKNOWN_KEY privacyPolicyUrl; RUNTIME_FETCH_EXEC naming SUBMISSION_NOTES.md, docs/audit/progress-legacy.txt, docs/requests.md)
+
+## CR-20261116-1425
+
+### Metadata
+- **Date:** 2026-11-16 14:25
+- **Source:** chat
+
+### Request (verbatim):
+(pasted directory result for Athena Loop v2.3.0 commit 187dbb0: State Failed, "Refused by directory policy" - scripts, programs and files outside the allowed types are accepted only from Verified organizations; fix: put the plugin in a subfolder and submit that folder)

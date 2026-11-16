@@ -67,7 +67,7 @@ After install:
 
 #### Claude Code plugin
 
-This repository is also a Claude Code plugin named `athena-loop` (manifest: `.claude-plugin/plugin.json`). To install it from this repository's marketplace (`.claude-plugin/marketplace.json`):
+This repository is also a Claude Code plugin named `athena-loop` (manifest: `plugins/athena-loop/.claude-plugin/plugin.json`). To install it from this repository's marketplace (`.claude-plugin/marketplace.json`, which points at the scripts-free plugin folder `plugins/athena-loop/`):
 
 ```
 /plugin install athena-loop --marketplace taylorparsons/athena-skill

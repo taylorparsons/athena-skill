@@ -1127,3 +1127,10 @@ Inputs: CR-20261116-1356
 PRD: (n/a)
 
 D: Reword SUBMISSION_NOTES.md so it no longer lists network-API names or an install-script shell command (the scanner matched my own audit text, producing the "can send data off the machine" half of the credential finding and one RUNTIME_FETCH_EXEC finding). Redact the installer command in docs/audit/progress-legacy.txt (derived legacy audit). docs/requests.md (verbatim, append-only) and docs/decisions.md are left unedited pending owner approval. privacyPolicyUrl is a listing field the directory reads; kept ("No action needed").
+
+## D-20261116-1425
+Date: 2026-11-16 14:25
+Inputs: CR-20261116-1425
+PRD: (n/a)
+
+D: Package the plugin as a scripts-free subfolder plugins/athena-loop/ (manifest, icon, README, LICENSE, skills/athena Markdown + references + templates, owl agent Markdown). Excluded: scripts (.py/.sh/owl), the SVG asset, docs/, usecase-comparison/. Rationale: the owner's GitHub account is not a Verified organization, so the directory refuses scripts and other files outside its allowed types; the plugin never installed ./scripts/owl into projects anyway (README Option C bootstraps them from GitHub). Copies come from skills/athena; the Codex install path skills/athena is untouched.
