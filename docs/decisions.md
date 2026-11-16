@@ -1079,3 +1079,10 @@ Inputs: CR-20261113-1305
 PRD: (n/a)
 
 D: Bump to 2.3.0 (minor: new owl commands, backward compatible) in VERSION, plugin.json, marketplace.json, SUBMISSION_NOTES.md. CHANGELOG and README call out the sync. Tag v2.3.0 is created only after the PR is merged, on the merge commit; not created now.
+
+## D-20261116-1227
+Date: 2026-11-16 12:27
+Inputs: CR-20261116-1227
+PRD: (n/a)
+
+D: Read "remove it" as the two LinkedIn PDFs only (linkedin-post.pdf, linkedin-post-v2.pdf). publishing/ stays: PRD FR-ATHENA-009/010 require its drafts and README links its checklist. PDFs removed from the tree via git rm; history keeps them.

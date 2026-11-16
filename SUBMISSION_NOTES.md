@@ -63,7 +63,7 @@ The plugin source is the repo root, so an install copies everything tracked. Tha
 - `docs/requests.md` (894 lines of the author's verbatim requests) and `docs/decisions.md` (1060 lines)
 - `docs/progress-archive.txt`, `docs/audit/*`, `docs/specs/*` (historical feature specs)
 - `usecase-comparison/**`, including two `transcript-run*.jsonl` files in `usecase-comparison/hard-exit-experiment/ralph-run/.claude/`
-- `publishing/*` drafts and two LinkedIn PDFs
+- `publishing/*` drafts (the two LinkedIn PDFs were removed in v2.3.1 prep)
 - `CHANGELOG.md`, `CODEOWNERS`, `SECURITY.md`
 
 Owner decision: keep these in the listing, or move internal logs out of the repo before submitting. Nothing was moved or deleted in this change.
