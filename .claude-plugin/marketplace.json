@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "athena-loop",
-      "source": "./",
+      "source": "./plugins/athena-loop",
       "description": "PRD-driven delivery loop with a token-lean audit trail: requests, decisions, specs, tasks, and commits.",
       "version": "2.3.0"
     }

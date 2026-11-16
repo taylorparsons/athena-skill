@@ -11,6 +11,7 @@
 | License | MIT | `LICENSE` (Copyright 2026 Taylor Parsons) |
 | Author | Taylor Parsons | `LICENSE` copyright line |
 | Repository | https://github.com/taylorparsons/athena-skill (public) | `git remote`; `gh repo view` |
+| Plugin path (submission form) | `plugins/athena-loop` | the plugin is a scripts-free subfolder; the repo root is not the plugin |
 | Icon | the PNG icon in `.claude-plugin/`, 1024×1024 PNG | rendered from `skills/athena/assets/athena-warrior-icon.svg` |
 
 The request named the repo `atheha-skill`. The actual repo is `athena-skill`, and all files use that name.
@@ -58,15 +59,14 @@ Only when the user or an agent asks. The docs say `git push` and PR creation nee
 
 ## Content the plugin ships
 
-The plugin source is the repo root, so an install copies everything tracked. That includes:
+The directory refused the earlier version (repo root as the plugin) because the owner's account is not a Verified organization, and unverified publishers may ship only Markdown, text, JSON, YAML, and PNG/JPEG/GIF/WebP/ICO files. The plugin is now the subfolder `plugins/athena-loop/`, which contains only:
 
-- `docs/requests.md` (894 lines of the author's verbatim requests) and `docs/decisions.md` (1060 lines)
-- `docs/progress-archive.txt`, `docs/audit/*`, `docs/specs/*` (historical feature specs)
-- `usecase-comparison/**`, including two `transcript-run*.jsonl` files in `usecase-comparison/hard-exit-experiment/ralph-run/.claude/`
-- LinkedIn PDFs and `publishing/` drafts were removed from the repo
-- `CHANGELOG.md`, `CODEOWNERS`, `SECURITY.md`
+- `.claude-plugin/plugin.json` and the PNG icon
+- `skills/athena/` (`SKILL.md`, `references/`, `templates/`, and the Owl agent Markdown)
+- `agents/owl-of-athena.md`
+- `README.md` and `LICENSE`
 
-Owner decision: keep these in the listing, or move internal logs out of the repo before submitting. Nothing was moved or deleted in this change.
+No scripts, programs, SVG, or logs are in the plugin. Submit with plugin path `plugins/athena-loop`. The repo's `docs/`, `scripts/`, and `usecase-comparison/` stay outside it. The plugin copy comes from `skills/athena`; keep them in sync.
 
 ## Not verified
 
