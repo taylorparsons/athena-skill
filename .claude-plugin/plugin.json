@@ -11,6 +11,5 @@
   "privacyPolicyUrl": "https://github.com/taylorparsons/athena-skill#privacy",
   "homepage": "https://github.com/taylorparsons/athena-skill",
   "repository": "https://github.com/taylorparsons/athena-skill",
-  "keywords": ["athena", "prd", "traceability", "audit-trail", "workflow"],
-  "icon": ".claude-plugin/icon.png"
+  "keywords": ["athena", "prd", "traceability", "audit-trail", "workflow"]
 }

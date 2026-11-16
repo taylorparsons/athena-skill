@@ -1113,3 +1113,10 @@ Inputs: CR-20261116-1329
 PRD: (n/a)
 
 D: Add a "Privacy" section to README.md (facts from the code audit: no network calls, no telemetry, local files only) and set privacyPolicyUrl in plugin.json to its README anchor. Wording says the author collects nothing and lists what is written locally, so it stays accurate with the form answers.
+
+## D-20261116-1337
+Date: 2026-11-16 13:37
+Inputs: CR-20261116-1337
+PRD: (n/a)
+
+D: Reduce literal references to the icon file path. Drop the icon field from plugin.json (the directory finds .claude-plugin/icon.png by convention; checked with the validator) and reword the path in SUBMISSION_NOTES.md and the feature tasks.md. Append-only logs are not edited. No credential-reading code exists in the repo (grepped); that finding needs the directory's detail text.
