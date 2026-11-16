@@ -6,7 +6,7 @@
 
 | Field | Value | Source |
 |---|---|---|
-| Name | `athena` | `.claude-plugin/plugin.json`; matches skill name |
+| Name | `athena-loop` (display name "Athena Loop") | `.claude-plugin/plugin.json`; renamed because the directory reports `athena` is taken. The skill itself is still named `athena` |
 | Version | `2.3.0` | `VERSION`; tag `v2.3.0` is created after merge |
 | License | MIT | `LICENSE` (Copyright 2026 Taylor Parsons) |
 | Author | Taylor Parsons | `LICENSE` copyright line |

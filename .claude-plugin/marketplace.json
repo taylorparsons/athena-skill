@@ -7,7 +7,7 @@
   "description": "ATHENA: a PRD-driven delivery loop with a traceable audit trail, packaged as a Claude Code plugin.",
   "plugins": [
     {
-      "name": "athena",
+      "name": "athena-loop",
       "source": "./",
       "description": "PRD-driven delivery loop with a token-lean audit trail: requests, decisions, specs, tasks, and commits.",
       "version": "2.3.0"

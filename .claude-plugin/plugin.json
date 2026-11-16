@@ -1,5 +1,6 @@
 {
-  "name": "athena",
+  "name": "athena-loop",
+  "displayName": "Athena Loop",
   "version": "2.3.0",
   "description": "PRD-driven delivery loop with a token-lean audit trail: requests, decisions, specs, tasks, and commits.",
   "author": {

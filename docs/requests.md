@@ -946,3 +946,11 @@ yes remove publishing/
 
 ### Request (verbatim):
 add to .gitignore (usecase-comparison snake-video artifacts: 32 frames over 256 KiB and 2 video.mp4 flagged by the directory)
+## CR-20261116-1302
+
+### Metadata
+- **Date:** 2026-11-16 13:02
+- **Source:** chat
+
+### Request (verbatim):
+1. rename to what?  Athena loop/
