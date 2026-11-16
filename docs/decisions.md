@@ -1100,3 +1100,9 @@ Inputs: CR-20261116-1317
 PRD: (n/a)
 
 D: Add usecase-comparison/**/artifacts/ to .gitignore and untrack the 34 tracked files (git rm --cached; files stay on disk, history keeps them). A .gitignore entry alone does not stop tracked files from shipping in the plugin. Scope limited to artifacts/ so the text docs under usecase-comparison remain.
+## D-20261116-1302
+Date: 2026-11-16 13:02
+Inputs: CR-20261116-1302
+PRD: (n/a)
+
+D: Rename the plugin from "athena" to "athena-loop" (displayName "Athena Loop") because the directory reports "athena" belongs to another connector. Skill name stays "athena" (skills/athena/SKILL.md unchanged). Marketplace plugin entry, README install command and SUBMISSION_NOTES updated. No version bump; listing tracks main.
